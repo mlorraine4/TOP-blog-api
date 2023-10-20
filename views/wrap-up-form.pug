@@ -1,0 +1,19 @@
+extends layout
+
+block content
+
+    div(class="wrap-up-form-content")
+        h1 #{title}
+        form(action='' method='POST' id='wrap-up-form' class='form')
+            label(for='month') Month
+            input#month(name='month' type='text' required value=(undefined===wrapUp ? '' : wrapUp.month))
+            label(for='year') Year
+            input#year(name='year' type='number' value=(undefined===wrapUp ? '' : wrapUp.year))
+            label(for='summary') Summary (ex: 4 books, 4 manga)
+            input#summary(name='summary' type='text' value=(undefined===wrapUp ? '' : wrapUp.summary))
+            label(for='cover_url') Cover Image Url
+            input#cover_url(name='cover_url' type='text' value=(undefined===wrapUp ? '' : wrapUp.cover_url))               
+            button(type='submit' class='form-submit-button') save
+        if errors
+            each error in errors
+                li!= error.msg

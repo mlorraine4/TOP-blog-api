@@ -1,0 +1,11 @@
+extends layout
+
+block content
+
+  h1 Book Reviews
+  div(class='flex-wrap')
+    each review in reviews
+      div(class='post-container')
+        img(src=he.decode(review.book.book_cover_url) class='post-img')
+        a(href=review.url class='post-url') url
+        a(href=review.url class='post-title')  A Review: #{review.book.title} by #{review.book.author}

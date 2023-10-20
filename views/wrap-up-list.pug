@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 #{title}
+  div(class='flex-wrap')
+    each wrapUp in wrapUps
+      div(class='post-container')
+          img(class='post-img' src=wrapUp.cover_url)
+          a(href=wrapUp.url class='post-url') url
+          a(href=wrapUp.url class='post-title') #{wrapUp.month}
+    else  
+      p There are no monthly wrap ups.

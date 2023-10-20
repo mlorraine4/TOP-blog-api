@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  if user 
+    p Welcome, #{user.display_name}!
+    a(href='/gardenofpages/dashboard') Dashboard
+    a(href='/gardenofpages/account') Account
+  p
+    a(href="/gardenofpages/new-book-review") Add Review
+  p
+    a(href="/gardenofpages/new-book") Add Book
+  p
+    a(href="/gardenofpages/new-monthly-wrap-up") Add Monthly Wrap Up
+  p
+    a(href="/gardenofpages/library") My Library
+
+  div(class='flex-wrap')
+    each post in posts
+      div(class='post-container')
+        if post.book
+          img(class='post-img' src=he.decode(post.book.book_cover_url))
+          a(href=`/gardenofpages/book-review/${post._id}` class='post-url') url
+          a(href=`/gardenofpages/book-review/${post._id}` class='post-date') #{moment.utc(post.timestamp).format("MMM Do")}
+          a(href=`/gardenofpages/book-review/${post._id}` class='post-title') A Review: #{post.book.title} by #{post.book.author}
+        else
+          img(class='post-img' src=post.cover_url)
+          a(href=`gardenofpages/monthly-wrap-up/${post.year}/${post.month}` class='post-url') url
+          a(href=`gardenofpages/monthly-wrap-up/${post.year}/${post.month}` class='post-date') #{moment.utc(post.timestamp).format("MMM Do")}
+          a(href=`gardenofpages/monthly-wrap-up/${post.year}/${post.month}` class='post-title') #{post.month}
+    else  
+      p There are no posts.

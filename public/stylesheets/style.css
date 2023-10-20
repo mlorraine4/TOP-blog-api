@@ -1,0 +1,395 @@
+:root {
+  --dark-purple: #330066;
+  --green: #0a7412;
+  --dark-green: #072c0c;
+  --light-purple: #a474d8;
+  --faded: rgb(188, 169, 209);
+  --black: #1B1212;
+  --faded-black: rgba(13, 13, 13, 0.5);
+}
+
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
+  background-color: #240147;
+  position: relative;
+  color: white;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+button, .edit-url {
+  border-radius: 8px;
+  border: none;
+}
+
+input {
+  margin: 10px;
+}
+
+h1 {
+  text-align: center;
+}
+
+label {
+  margin: 10px;
+}
+
+#calendar-container {
+  width: min-content;
+  margin: auto;
+}
+
+.center-margin-top {
+  margin: 250px auto 50px auto;
+  width: 80%;
+  min-width: 950px;
+}
+
+.flex-col-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-submit-button, .edit-url {
+  padding: 5px;
+  margin: 10px auto 10px auto;
+  background-color: var(--light-purple);
+  color: white;
+}
+
+.form-submit-button {
+  width: min-content;
+  font-size: 1.2em;
+}
+
+.form-submit-button:hover, .edit-url:hover {
+  box-shadow: 2px 2px 2px whitesmoke;
+}
+
+#header {
+  position: fixed;
+  top: 0;
+  z-index: 100;
+}
+
+.header-img-container {
+  width: 100vw;
+  height: 150px;
+  background-color: white;
+  display: flex;
+}
+
+.sm-img-container {
+  height: 100%;
+  width: 33%;
+}
+
+.lg-img-container {
+  height: 100%;
+  width: 66%;
+}
+
+.header-img {
+  display: block;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+.nav-bar {
+  width: 100vw;
+  height: 60px;
+  background-color: var(--black);
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.wrap-up-link {
+  border: 0.5px solid black;
+}
+
+.navLink {
+  color: white;
+  text-decoration: none;
+}
+
+.navLink:hover {
+  color: var(--light-purple);
+}
+
+/* forms */
+.form-content, .review-form-content, .form, .black-background {
+  margin: auto;
+  background-color: var(--faded-black);
+  padding: 20px;
+}
+
+.review-form-content {
+  width: 800px;
+}
+
+#wrap-up-form {
+  width: 400px;
+}
+
+.form-content {
+  width: 500px;
+}
+
+.book-cover-img {
+  width: 40%;
+  height: auto;
+  margin: auto;
+}
+
+.book-review-container {
+  width: 80%;
+  min-width: 500px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin: auto;
+  background-color: var(--faded-black);
+  padding: 50px;
+}
+
+.tags {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* book review form tag inputs */
+.tags-input {
+  display: inline-block;
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  box-shadow: 2px 2px 5px #00000033;
+  width: 50%;
+  background-color: white;
+}
+
+.tags-input ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tags-input li {
+  display: inline-block;
+  background-color: var(--light-purple);
+  color: white;
+  border-radius: 20px;
+  padding: 5px 10px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.tags-input input[type="text"] {
+  outline: none;
+  padding: 5px;
+  font-size: 14px;
+  border: 2px solid var(--light-purple);
+  border-radius: 8px;
+}
+
+.tags-input input[type="text"]:focus {
+  outline: none;
+}
+
+.tags-input .delete-button {
+  background-color: transparent;
+  color: #999;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.error {
+  color: red;
+}
+
+.success {
+  color: green;
+}
+
+.no-opacity {
+  opacity: 0;
+}
+
+/* WRAP UP LIST */
+.white-title {
+  font-size: 3em;
+  color: white;
+  font-style: italic;
+}
+
+/* Posts: for Book Reviews and Monthly Wrap Ups */
+
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.post-container {
+  background-color: black;
+  width: 300px;
+  height: 400px;
+  color: white;
+  position: relative;
+  margin: 10px;
+}
+
+.post-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.5);
+  opacity: 0.5;
+}
+
+.post-url {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.post-date {
+  position: absolute;
+  text-align: center;
+  top: 20px;
+  left: 0;
+  right: 0;
+}
+
+.post-title {
+  position: absolute;
+  bottom: 20px;
+  width: min-content;
+  left: 0;
+  right: 0;
+  margin: auto;
+  font-size: 2em;
+  text-align: center;
+}
+
+.post-title:hover {
+  color: var(--light-purple);
+}
+
+.library-item {
+  height: 150px;
+  width: 100px;
+  margin: 10px;
+  position: relative;
+}
+
+.library-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.5);
+}
+
+/* WRAP UP DETAIL */
+.wrap-up-detail-book-container {
+  width: 250px;
+}
+
+.wrap-up-detail-book-cover-img {
+  height: 225px;
+  width: 150px;
+  box-shadow: 2px 2px 2px solid white;
+}
+
+.wrap-up-detail-title {
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+  padding: 20px;
+}
+
+.wrap-up-detail-sub-title {
+  font-size: 1.5em;
+  text-align: center;
+  color: var(--light-purple);
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+/* MENU DROP DOWN */
+/* Dropdown Button */
+.dropbtn {
+  background-color: var(--black);
+  color: white;
+  padding: 16px;
+  border: none;
+  cursor: pointer;
+  width: 160px;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+  color: var(--light-purple)
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  border: 2px solid black;
+  position: absolute;
+  top: 52px;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: var(--faded);}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+
+/* 404 page */
+.not-found-info {
+  background-color: var(--faded-black);
+  width: 80%;
+  height: 400px;
+  min-width: 400px;
+  font-size: 2em;
+  margin: auto;
+  text-align: center;
+  padding: 20px;
+}

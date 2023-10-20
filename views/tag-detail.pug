@@ -1,0 +1,11 @@
+//- This is a list of all posts with a specific tag name (ie "fantasy")
+extends layout
+
+block content
+
+    div(class='post-list-container')
+    each review in reviews
+      div(class='post-container')
+        img(src=he.decode(review.book.book_cover_url) class='post-img')
+        a(href=review.url class='post-url') url
+        a(href=review.url class='post-title')  A Review: #{review.book.title} by #{review.book.author}

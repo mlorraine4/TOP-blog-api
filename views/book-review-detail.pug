@@ -1,0 +1,19 @@
+extends layout
+
+block content
+
+    div(class="book-review-container")
+        p A Review of #{review.book.title} by #{review.book.author}
+        img(src=he.decode(review.book.book_cover_url), class="book-cover-img")
+        
+        p!= review.body
+        
+        div(class='tags')
+            each tag in review.tags
+                a(href=tag.url) ##{tag.name}
+        
+        p Comments:
+        
+        if user.is_admin
+            a(href=`${review.url}/update` class='edit-url') Edit
+            a(href=`${review.url}/delete` class='edit-url') Delete

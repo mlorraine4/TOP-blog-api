@@ -1,0 +1,36 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+  body
+    div(id="header")
+      div(class='header-img-container')
+        div(class='sm-img-container')
+          img(src="/images/book-stars.png" class='header-img')
+        div(class='lg-img-container')
+          img(src="/images/book-review-header.jpg" class='header-img')
+        div(class='sm-img-container')
+          img(src="/images/book-stars.png" class='header-img')
+      div(class='nav-bar')
+        a(href="/" class="navLink") Home 
+        a(href="/gardenofpages/book-reviews" class="navLink") Book Reviews
+        div(class="dropdown")
+          button(onclick="dropDown()" class="dropbtn") Monthly Wrap Ups
+          div(id="myDropdown" class="dropdown-content")
+            a(href="/gardenofpages/monthly-wrap-ups" class='wrap-up-link') All
+            a(href="/gardenofpages/monthly-wrap-up/2024" class='wrap-up-link') 2024
+            a(href="/gardenofpages/monthly-wrap-up/2023" class='wrap-up-link') 2023
+            a(href="/gardenofpages/monthly-wrap-up/2022" class='wrap-up-link') 2022
+            a(href="/gardenofpages/monthly-wrap-up/2021" class='wrap-up-link') 2021
+        a(href="/gardenofpages/tbr-list" class="navLink" class='wrap-up-link') TBR Masterlist
+        a(href="/gardenofpages/upcoming-releases" class="navLink") Upcoming Releases
+        if user 
+          a(href="/gardenofpages/log-out" class="navLink") Log Out
+        else
+          a(href="/gardenofpages/log-in" class="navLink") Log In
+    div(class="center-margin-top")
+      block content 
+
+  script(type="application/javascript" src="/javascripts/drop-down.js")

@@ -1,0 +1,16 @@
+extends layout
+
+block content
+    p Welcome, #{user.display_name}!
+
+    if user.is_admin
+        p
+            a(href='/gardenofpages/account') Your Account
+        p
+            a(href="/gardenofpages/new-book-review") Add Review
+        p
+            a(href="/gardenofpages/new-book") Add Book
+        p
+            a(href="/gardenofpages/new-monthly-wrap-up") Add Monthly Wrap Up
+        p
+            a(href="/gardenofpages/library") My Library
