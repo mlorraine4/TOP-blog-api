@@ -1,21 +1,20 @@
 extends layout
 
 block content
+    #content
 
-    h1 Sign Up
-    p
-      a(href='/') Back to Home
-      
-    form#sign-up-form(action='' method='POST')
-        label(for='username') Username
-        input(name='username' type='text'  required value=(undefined===user ? '' : user.username))
-        label(for='display_name') Display Name
-        input(name='display_name'  type='text' required value=(undefined===user ? '' : user.display_name))
-        label(for='password') Password
-        input(name='password' type='password' required)
-        label(for='confirm_password') Confirm Password
-        input(name='confirm_password' type='password'  required)
-        button(type='submit') Sign Up
-    if errors
-        each error in errors
-            li!= error.msg
+        h1 Sign Up
+        
+        form#sign-up-form(action='' method='POST')
+            label(for='username') Username
+            input(name='username' type='text'  required value=(undefined===user ? '' : user.username))
+            label(for='display_name') Display Name
+            input(name='display_name'  type='text' required value=(undefined===user ? '' : user.display_name))
+            label(for='password') Password
+            input(name='password' type='password' required)
+            label(for='confirm_password') Confirm Password
+            input(name='confirm_password' type='password'  required)
+            button(type='submit' class="form-submit-button") Sign Up
+        if errors
+            each error in errors
+                li!= error.msg

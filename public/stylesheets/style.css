@@ -24,6 +24,8 @@ a {
 form {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  margin: auto;
 }
 
 button, .edit-url {
@@ -75,12 +77,12 @@ label {
 }
 
 .form-submit-button {
-  width: min-content;
   font-size: 1.2em;
 }
 
-.form-submit-button:hover, .edit-url:hover {
-  box-shadow: 2px 2px 2px whitesmoke;
+.form-submit-button:hover, .edit-url:hover {  
+  background-color: white;
+  color: #a474d8;
 }
 
 #header {

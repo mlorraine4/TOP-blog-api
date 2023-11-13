@@ -56,7 +56,10 @@ exports.sign_up_post = async (req, res, next) => {
 };
 
 exports.calendar_get = asyncHandler(async (req, res, next) => {
-  res.render("upcoming-releases-calendar", { title: "Upcoming Releases" });
+  res.render("upcoming-releases-calendar", {
+    user: req.user,
+    title: "Upcoming Releases",
+  });
 });
 
 exports.user_dashboard_get = asyncHandler(async (req, res, next) => {

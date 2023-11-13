@@ -11,5 +11,7 @@ block content
         p #{book.rating}/5 stars
 
     if user && user.is_admin
-      a(href=`${book.url}/update` class='edit-url') Edit
-      a(href=`${book.url}/delete` class='edit-url') Delete
+      p 
+        a(href=`${book.url}/update` class='edit-url') Edit
+      p
+        a(href=`${book.url}/delete` class='edit-url') Delete

@@ -12,6 +12,7 @@ exports.tag_list_get = asyncHandler(async (req, res, next) => {
 
     if (tag !== null) {
       res.render("tag-detail", {
+        user: req.user,
         reviews: reviews,
       });
       return;

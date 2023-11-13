@@ -65,6 +65,7 @@ router.post(
   "/book-review/:id/delete",
   bookReviewController.book_review_delete_post
 );
+router.get("/tbr-list", bookController.masterlist_get);
 
 /// TAGS
 router.get("/tags/:name", tagController.tag_list_get);

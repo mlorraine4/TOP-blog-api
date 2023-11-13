@@ -15,5 +15,7 @@ block content
         p Comments:
         
         if user && user.is_admin
-            a(href=`${review.url}/update` class='edit-url') Edit
-            a(href=`${review.url}/delete` class='edit-url') Delete
+            p 
+                a(href=`${review.url}/update` class='edit-url') Edit
+            p
+                a(href=`${review.url}/delete` class='edit-url') Delete

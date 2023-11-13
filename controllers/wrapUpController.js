@@ -7,7 +7,11 @@ exports.wrapUp_list_get = asyncHandler(async (req, res, next) => {
   try {
     const wrapUps = await MonthlyWrapUp.find().sort({ timestamp: -1 }).exec();
 
-    res.render("wrap-up-list", { wrapUps: wrapUps, title: "Monthly Wrap Ups" });
+    res.render("wrap-up-list", {
+      user: req.user,
+      wrapUps: wrapUps,
+      title: "Monthly Wrap Ups",
+    });
   } catch (err) {
     return next(err);
   }
@@ -20,6 +24,7 @@ exports.wrapUp_yearly_list_get = asyncHandler(async (req, res, next) => {
       .exec();
 
     res.render("wrap-up-list", {
+      user: req.user,
       wrapUps: wrapUps,
       title: req.params.year,
     });
@@ -61,6 +66,7 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
       // const formattedPages = totalPages.toLocaleString("en-US");
 
       res.render("wrap-up-detail", {
+        user: req.user,
         wrapUp: wrapUp,
         books: books,
         month: req.params.month,
@@ -135,6 +141,7 @@ exports.wrapUp_form_post = [
       if (wrapUpDB === null) {
         if (!month.includes(req.params.month)) {
           res.render("wrap-up-form", {
+            user: req.user,
             title: "Edit Wrap Up",
             wrapUp: wrapUp,
             errors: [
@@ -148,6 +155,7 @@ exports.wrapUp_form_post = [
         if (!errors.isEmpty()) {
           // Form data is not valid. Re-render form with data and errors.
           res.render("wrap-up-form", {
+            user: req.user,
             title: "Edit Wrap Up",
             wrapUp: wrapUp,
             errors: errors.array(),
@@ -161,6 +169,7 @@ exports.wrapUp_form_post = [
       } else {
         // Monthly wrap up already exists.
         res.render("wrap-up-form", {
+          user: req.user,
           title: "Edit Wrap Up",
           wrapUp: wrapUp,
           errors: [
@@ -258,6 +267,7 @@ exports.wrapUp_update_post = [
 
         if (!month.includes(req.body.month)) {
           res.render("wrap-up-form", {
+            user: req.user,
             title: "Edit Wrap Up",
             wrapUp: updatedWrapUp,
             errors: [
@@ -268,6 +278,7 @@ exports.wrapUp_update_post = [
           return;
         } else if (!errors.isEmpty()) {
           res.render("wrap-up-form", {
+            user: req.user,
             title: "Edit Wrap Up",
             wrapUp: updatedWrapUp,
             errors: errors.array(),

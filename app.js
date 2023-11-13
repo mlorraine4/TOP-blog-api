@@ -8,6 +8,8 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
 const User = require("./models/user");
+const compression = require("compression");
+const helmet = require("helmet");
 require("dotenv").config();
 
 /* TODO MASTERLIST
@@ -76,6 +78,31 @@ passport.deserializeUser(async (id, done) => {
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        "img-src": [
+          "'self'",
+          "https://firebasestorage.googleapis.com",
+          "https://calendar.google.com",
+        ],
+        frameSrc: ["'self'", "*.google.com/"],
+      },
+    },
+  })
+);
+app.use(compression()); // Compress all routes
+
+// Set up rate limiter: maximum of twenty requests per minute
+const RateLimit = require("express-rate-limit");
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 20,
+});
+// Apply rate limiter to all requests
+app.use(limiter);
+
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   next();
@@ -102,10 +129,7 @@ app.use(
 );
 
 // he node module
-app.use(
-  "/he",
-  express.static(path.join(__dirname, "node_modules", "he"))
-);
+app.use("/he", express.static(path.join(__dirname, "node_modules", "he")));
 app.locals.he = require("he");
 
 // moment node module

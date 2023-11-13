@@ -255,3 +255,7 @@ exports.book_delete_post = asyncHandler(async (req, res, next) => {
     res.redirect("/library");
   }
 });
+
+exports.masterlist_get = asyncHandler(async (req, res, next) => {
+  res.render("masterlist", {user: req.user});
+})

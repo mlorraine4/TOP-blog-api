@@ -45,7 +45,7 @@ exports.post_list_get = asyncHandler(async (req, res, next) => {
 exports.book_review_list_get = asyncHandler(async (req, res, next) => {
   try {
     let bookReviews = await BookReview.find().populate("book").exec();
-    res.render("book-review-list", { reviews: bookReviews });
+    res.render("book-review-list", { user: req.user, reviews: bookReviews });
   } catch (err) {
     return next(err);
   }
@@ -152,6 +152,7 @@ exports.book_review_form_post = [
           if (!errors.isEmpty()) {
             // There are errors. Re-render form with errors.
             res.render("book-review-form", {
+              user: req.user,
               title: "Add Review",
               bookReview: book_review,
               errors: errors.array(),
@@ -171,6 +172,7 @@ exports.book_review_form_post = [
       } else {
         // Book does not exist yet. Re-render form with error.
         res.render("book-review-form", {
+          user: req.user,
           title: "Add Review",
           errors: [
             { msg: "Book does not exist. Save book before adding a review." },
@@ -199,6 +201,7 @@ exports.book_review_update_get = asyncHandler(async (req, res, next) => {
 
     if (bookReview !== null) {
       res.render("book-review-form", {
+        user: req.user,
         title: "Edit Book Review",
         bookReview: bookReview,
       });
@@ -280,6 +283,7 @@ exports.book_review_update_post = [
 
         if (!errors.isEmpty()) {
           res.render("book-review-form", {
+            user: req.user,
             title: "Edit Review",
             bookReview: newBookReview,
             errors: errors.array(),
@@ -311,7 +315,10 @@ exports.book_review_delete_get = asyncHandler(async (req, res, next) => {
       .exec();
 
     if (book_review !== null) {
-      res.render("book-review-delete", { book_review: book_review });
+      res.render("book-review-delete", {
+        user: req.user,
+        book_review: book_review,
+      });
       return;
     } else {
       res.redirect("/gardenofpages/404");

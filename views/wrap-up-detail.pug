@@ -14,5 +14,7 @@ block content
         p There are no books for this month.
     
     if user && user.is_admin
-      a(href=`${wrapUp.url}/update` class='edit-url') Edit
-      a(href=`${wrapUp.url}/delete` class='edit-url') Delete
+      p
+        a(href=`${wrapUp.url}/update` class='edit-url') Edit
+      p
+        a(href=`${wrapUp.url}/delete` class='edit-url') Delete
