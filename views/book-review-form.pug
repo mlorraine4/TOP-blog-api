@@ -2,9 +2,9 @@ extends layout
 
 block content
     
-    #content(class="review-form-content")
+    #content
         h1 #{title}
-        form(action='' method='POST' id='book-review-form')
+        form#book-review-form(action='' method='POST')
             p Book
             input#title(name='title' type='text' placeholder='title' value=(undefined===bookReview ? '' : bookReview.book.title))
             input#author(name='author' type='text' placeholder='author' value=(undefined===bookReview ? '' : bookReview.book.author))

@@ -13,11 +13,11 @@ exports.book_list_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.book_form_get = asyncHandler(async (req, res, next) => {
-  // if (req.user) {
-  res.render("book-form", { user: req.user, title: "Add Book" });
-  // } else {
-  //   res.redirect("/gardenofpages/log-in");
-  // }
+  if (req.user) {
+    res.render("book-form", { user: req.user, title: "Add Book" });
+  } else {
+    res.redirect("/gardenofpages/log-in");
+  }
 });
 
 exports.book_form_post = [
@@ -257,5 +257,5 @@ exports.book_delete_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.masterlist_get = asyncHandler(async (req, res, next) => {
-  res.render("masterlist", {user: req.user});
-})
+  res.render("masterlist", { user: req.user });
+});

@@ -21,7 +21,6 @@ require("dotenv").config();
   - Create header with button links
     - book reviews
     - monthly read list
-    - Upcoming Releases calendar (create one on google)
   - search bar
   - night/day mode
 */

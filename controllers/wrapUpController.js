@@ -108,7 +108,7 @@ exports.wrapUp_form_post = [
       // if (req.user) {
       const errors = validationResult(req);
 
-      const month = [
+      const monthArr = [
         "January",
         "February",
         "March",
@@ -123,7 +123,11 @@ exports.wrapUp_form_post = [
         "December",
       ];
 
-      const date = req.body.month + "1, " + req.body.year;
+      const dateString = req.body.month + "1, " + req.body.year;
+      const date = new Date(dateString);
+      const month = date.getMonth();
+      const year = date.getFullYear();
+      const myDate = new Date(year, month + 1, 0);
 
       const wrapUpDB = await MonthlyWrapUp.findOne({
         month: req.body.month,
@@ -135,11 +139,11 @@ exports.wrapUp_form_post = [
         month: req.body.month,
         summary: req.body.summary,
         cover_url: req.body.cover_url,
-        timestamp: new Date(date),
+        timestamp: myDate,
       });
 
       if (wrapUpDB === null) {
-        if (!month.includes(req.params.month)) {
+        if (!monthArr.includes(req.body.month)) {
           res.render("wrap-up-form", {
             user: req.user,
             title: "Edit Wrap Up",
@@ -240,7 +244,7 @@ exports.wrapUp_update_post = [
       }).exec();
 
       if (wrapUpDB !== null) {
-        const month = [
+        const monthArr = [
           "January",
           "February",
           "March",
@@ -255,17 +259,21 @@ exports.wrapUp_update_post = [
           "December",
         ];
 
-        const date = req.body.month + "1, " + req.body.year;
+        const dateString = req.body.month + "1, " + req.body.year;
+        const date = new Date(dateString);
+        const month = date.getMonth();
+        const year = date.getFullYear();
+        const myDate = new Date(year, month + 1, 0);
 
         const updatedWrapUp = new MonthlyWrapUp({
           year: req.body.year,
           month: req.body.month,
           summary: req.body.summary,
           cover_url: req.body.cover_url,
-          timestamp: new Date(date),
+          timestamp: myDate,
         });
 
-        if (!month.includes(req.body.month)) {
+        if (!monthArr.includes(req.body.month)) {
           res.render("wrap-up-form", {
             user: req.user,
             title: "Edit Wrap Up",

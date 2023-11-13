@@ -2,6 +2,9 @@
 
 const init = (() => {
   let index = 0;
+  const form = document.getElementById("submit-form");
+
+  form.onclick = submitForm;
 
   const addInput = () => {
     index++;
@@ -30,43 +33,43 @@ const init = (() => {
     inputContainer.append(container);
   };
 
+  function submitForm() {
+    let dates_read = [];
+    let containers = document.querySelectorAll(".input-container");
+    const form = document.querySelector("#book-form");
+    const hiddenInput = document.querySelector("#dates_read");
+
+    containers.forEach((el) => {
+      if (el.querySelector("input").value !== "") {
+        dates_read.push(el.querySelector("input").value);
+      }
+    });
+
+    hiddenInput.value = dates_read;
+    form.submit();
+
+    // let data = {
+    //   date_read: dates_read,
+    //   title: document.querySelector("#title").value,
+    //   author: document.querySelector("#author").value,
+    //   series: document.querySelector("#series").value,
+    //   series_number: document.querySelector("#series_number").value,
+    //   book_cover: document.querySelector("#book_cover").value,
+    //   pages: document.querySelector("#pages").value,
+    //   rating: document.querySelector("#rating").value,
+    // };
+
+    // postData("/gardenofpages/new-book", data)
+    //   .then((response) => {
+    //     console.log(response);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+  }
+
   return { addInput };
 })();
-
-function submitForm() {
-  let dates_read = [];
-  let containers = document.querySelectorAll(".input-container");
-  const form = document.querySelector("#book-form");
-  const hiddenInput = document.querySelector("#dates_read");
-
-  containers.forEach((el) => {
-    if (el.querySelector("input").value !== "") {
-      dates_read.push(el.querySelector("input").value);
-    }
-  });
-
-  hiddenInput.value = dates_read;
-  form.submit();
-
-  // let data = {
-  //   date_read: dates_read,
-  //   title: document.querySelector("#title").value,
-  //   author: document.querySelector("#author").value,
-  //   series: document.querySelector("#series").value,
-  //   series_number: document.querySelector("#series_number").value,
-  //   book_cover: document.querySelector("#book_cover").value,
-  //   pages: document.querySelector("#pages").value,
-  //   rating: document.querySelector("#rating").value,
-  // };
-
-  // postData("/gardenofpages/new-book", data)
-  //   .then((response) => {
-  //     console.log(response);
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
-}
 
 // async function postData(url = "", data = {}) {
 //   // Default options are marked with *
