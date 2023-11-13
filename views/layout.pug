@@ -6,13 +6,8 @@ html
 
   body
     div(id="header")
-      div(class='header-img-container')
-        div(class='sm-img-container')
-          img(src="/images/book-stars.png" class='header-img')
-        div(class='lg-img-container')
-          img(src="/images/book-review-header.jpg" class='header-img')
-        div(class='sm-img-container')
-          img(src="/images/book-stars.png" class='header-img')
+      #img-background
+        img(src="/images/book-review-header.jpg" class='header-img')
       div(class='nav-bar')
         a(href="/" class="navLink") Home 
         a(href="/gardenofpages/book-reviews" class="navLink") Book Reviews
@@ -27,6 +22,7 @@ html
         a(href="/gardenofpages/tbr-list" class="navLink" class='wrap-up-link') TBR Masterlist
         a(href="/gardenofpages/upcoming-releases" class="navLink") Upcoming Releases
         if user 
+          a(href="/gardenofpages/dashboard" class="navLink") Dashboard
           a(href="/gardenofpages/log-out" class="navLink") Log Out
         else
           a(href="/gardenofpages/log-in" class="navLink") Log In

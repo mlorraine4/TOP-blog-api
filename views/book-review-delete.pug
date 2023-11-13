@@ -1,7 +1,7 @@
 extends layout
 
 block content
-    div.black-background
+    div#content
         h1 A Review of #{book_review.book.title} by #{book_review.book.author}
         p Do you really want to delete this Review?
         form(method='POST' action='')

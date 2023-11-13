@@ -1,16 +1,18 @@
 extends layout
 
 block content
-  div(class='wrap-up-detail-title') Books Read in #{month} #{year}
-  div(class='flex-wrap')
-    each book in books
-      div(class='flex-col-center wrap-up-detail-book-container')
-        img(class='wrap-up-detail-book-cover-img' src=he.decode(book.book_cover_url))
-        p #{book.title}
-        p By: #{book.author}
-        p #{book.rating}/5 stars
-    else 
-      p There are no books for this month.
-  
-  a(href=`${wrapUp.url}/update` class='edit-url') Edit
-  a(href=`${wrapUp.url}/delete` class='edit-url') Delete
+  #content
+    div(class='wrap-up-detail-title') Books Read in #{month} #{year}
+    div(class='flex-wrap')
+      each book in books
+        div(class='flex-col-center wrap-up-detail-book-container')
+          img(class='wrap-up-detail-book-cover-img' src=he.decode(book.book_cover_url))
+          p #{book.title}
+          p By: #{book.author}
+          p #{book.rating}/5 stars
+      else 
+        p There are no books for this month.
+    
+    if user && user.is_admin
+      a(href=`${wrapUp.url}/update` class='edit-url') Edit
+      a(href=`${wrapUp.url}/delete` class='edit-url') Delete

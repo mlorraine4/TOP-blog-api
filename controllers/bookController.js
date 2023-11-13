@@ -6,7 +6,7 @@ const BookReview = require("../models/bookReview");
 exports.book_list_get = asyncHandler(async (req, res, next) => {
   try {
     const books = await Book.find().exec();
-    res.render("library", { books: books });
+    res.render("library", { user: req.user, books: books });
   } catch (err) {
     return next(err);
   }
@@ -84,6 +84,7 @@ exports.book_form_post = [
 
         if (!errors.isEmpty()) {
           res.render("book-form", {
+            user: req.user,
             title: "Add Book",
             book: book,
             errors: errors.array(),
@@ -109,7 +110,7 @@ exports.book_detail_get = asyncHandler(async (req, res, next) => {
     const book = await Book.findById(req.params.id).exec();
 
     if (book !== null) {
-      res.render("book-detail", { book: book });
+      res.render("book-detail", { user: req.user, book: book });
       return;
     } else {
       res.redirect("/gardenofpages/404");
@@ -125,6 +126,7 @@ exports.book_update_get = asyncHandler(async (req, res, next) => {
 
     if (book !== null) {
       res.render("book-form", {
+        user: req.user,
         title: "Edit Book",
         book: book,
       });
@@ -193,6 +195,7 @@ exports.book_update_post = [
 
         if (!errors.isEmpty()) {
           res.render("book-form", {
+            user: req.user,
             title: "Add Book",
             book: updatedBook,
             errors: errors.array(),
@@ -223,7 +226,11 @@ exports.book_delete_get = asyncHandler(async (req, res, next) => {
   ]);
 
   if (book !== null) {
-    res.render("book-delete", { book: book, book_review: bookReview });
+    res.render("book-delete", {
+      user: req.user,
+      book: book,
+      book_review: bookReview,
+    });
     return;
   } else {
     res.redirect("/library");
@@ -238,6 +245,7 @@ exports.book_delete_post = asyncHandler(async (req, res, next) => {
 
   if (bookReview !== null) {
     res.render("book-review-delete", {
+      user: req.user,
       book_review: bookReview,
       book: book,
     });

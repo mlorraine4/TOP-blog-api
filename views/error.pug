@@ -1,7 +1,8 @@
 extends layout
 
 block content
-  div(class='center-margin-top')
-    h1= message
-    h2= error.status
-    pre #{error.stack}
+  #content
+    div(class='center-margin-top')
+      h1= message
+      h2= error.status
+      pre #{error.stack}

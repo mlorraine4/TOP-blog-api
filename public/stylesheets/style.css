@@ -43,6 +43,12 @@ label {
   margin: 10px;
 }
 
+#content {
+  background-color: var(--faded-black);
+  margin: auto;
+  padding: 20px;
+}
+
 #calendar-container {
   width: min-content;
   margin: auto;
@@ -82,29 +88,16 @@ label {
   top: 0;
   z-index: 100;
 }
-
-.header-img-container {
+#img-background {
   width: 100vw;
-  height: 150px;
   background-color: white;
-  display: flex;
-}
-
-.sm-img-container {
-  height: 100%;
-  width: 33%;
-}
-
-.lg-img-container {
-  height: 100%;
-  width: 66%;
 }
 
 .header-img {
   display: block;
-  max-height: 100%;
-  max-width: 100%;
-  object-fit: cover;
+  height: 150px;
+  width: auto;
+  margin: auto;
 }
 
 .nav-bar {
@@ -131,12 +124,6 @@ label {
 }
 
 /* forms */
-.form-content, .review-form-content, .form, .black-background {
-  margin: auto;
-  background-color: var(--faded-black);
-  padding: 20px;
-}
-
 .review-form-content {
   width: 800px;
 }
@@ -161,8 +148,6 @@ label {
   display: flex;
   flex-direction: column;
   text-align: center;
-  margin: auto;
-  background-color: var(--faded-black);
   padding: 50px;
 }
 
@@ -392,4 +377,9 @@ label {
   margin: auto;
   text-align: center;
   padding: 20px;
+}
+
+#log-in-form, #sign-up-form {
+  width: 400px;
+  margin: auto;
 }

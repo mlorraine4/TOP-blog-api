@@ -3,6 +3,8 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 
+// TODO: add confirm password and make sure username isn't taken to sign up post
+
 // GET request for log in form.
 exports.log_in_GET = asyncHandler(async (req, res, next) => {
   if (!req.user) {

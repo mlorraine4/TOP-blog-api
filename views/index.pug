@@ -3,16 +3,6 @@ extends layout
 block content
   if user 
     p Welcome, #{user.display_name}!
-    a(href='/gardenofpages/dashboard') Dashboard
-    a(href='/gardenofpages/account') Account
-  p
-    a(href="/gardenofpages/new-book-review") Add Review
-  p
-    a(href="/gardenofpages/new-book") Add Book
-  p
-    a(href="/gardenofpages/new-monthly-wrap-up") Add Monthly Wrap Up
-  p
-    a(href="/gardenofpages/library") My Library
 
   div(class='flex-wrap')
     each post in posts

@@ -59,7 +59,7 @@ exports.book_review_detail_get = asyncHandler(async (req, res, next) => {
       .exec();
 
     if (review !== null) {
-      res.render("book-review-detail", { review: review });
+      res.render("book-review-detail", { review: review, user: req.user });
       return;
     } else {
       res.redirect("/gardenofpages/404");

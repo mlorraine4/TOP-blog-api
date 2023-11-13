@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  div(class='black-background')
+  #content
     div(class='wrap-up-detail-title') #{book.title} by #{book.author}
     if book.series && book.series.length !== 0
       div(class='wrap-up-detail-sub-title') #{book.series} ##{book.series_number}
@@ -10,5 +10,6 @@ block content
         img(class='wrap-up-detail-book-cover-img' src=he.decode(book.book_cover_url))
         p #{book.rating}/5 stars
 
-          a(href=`${book.url}/update` class='edit-url') Edit
-          a(href=`${book.url}/delete` class='edit-url') Delete
+    if user && user.is_admin
+      a(href=`${book.url}/update` class='edit-url') Edit
+      a(href=`${book.url}/delete` class='edit-url') Delete
