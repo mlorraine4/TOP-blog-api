@@ -5,7 +5,10 @@ const BookReview = require("../models/bookReview");
 
 exports.book_list_get = asyncHandler(async (req, res, next) => {
   try {
-    const books = await Book.find().exec();
+    const books = await Book.find()
+      .sort({ author: 1 })
+      .collation({ locale: "en", caseLevel: true })
+      .exec();
     res.render("library", { user: req.user, books: books });
   } catch (err) {
     return next(err);

@@ -3,8 +3,8 @@ extends layout
 block content
   #content
     h1 My Books
-    div(class='flex-wrap')
-      each book in books
-        div(class='library-item')
-          img(src=he.decode(book.book_cover_url) class='library-img')
-          a(href=book.url class='post-url')
+    each book in books
+      //- div(class='library-item')
+        //- img(src=he.decode(book.book_cover_url) class='library-img')
+      p
+        a(href=book.url) #{book.title} by #{book.author}

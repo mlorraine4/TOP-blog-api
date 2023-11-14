@@ -3,7 +3,6 @@ var router = express.Router();
 
 // TODO: add form required for all inputs
 // TODO: draw new header, imgs for months
-// TODO: gary's server for hosting, mongo db, and firebase storage
 // TODO: remove proxy in json package, only for development
 
 const wrapUpController = require("../controllers/wrapUpController");
