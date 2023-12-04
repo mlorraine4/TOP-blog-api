@@ -23,7 +23,6 @@
     "helmet": "^7.1.0",
     "http-errors": "~1.6.3",
     "moment": "^2.29.4",
-    "mongodb": "^6.1.0",
     "mongoose": "^7.5.3",
     "morgan": "~1.9.1",
     "passport": "^0.6.0",

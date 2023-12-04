@@ -3,6 +3,8 @@ extends layout
 block content
   if user 
     p Welcome, #{user.display_name}!
+    p 
+      a(href="/gardenofpages/library") Library 
 
   div(class='flex-wrap')
     each post in posts
