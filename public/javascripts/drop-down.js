@@ -1,4 +1,4 @@
-const init = (() => {
+const initDropDown = (() => {
   const dropDown = document.getElementById("myDropdown");
   const dropBtn = document.getElementById("drop-btn");
 

@@ -10,6 +10,7 @@ const userController = require("../controllers/userController");
 const bookController = require("../controllers/bookController");
 const bookReviewController = require("../controllers/bookReviewController");
 const tagController = require("../controllers/tagController");
+const commentController = require("../controllers/commentController");
 
 /// USERS
 router.get("/log-in", userController.log_in_GET);
@@ -30,6 +31,15 @@ router.get("/monthly-wrap-up/:year", wrapUpController.wrapUp_yearly_list_get);
 router.get("/monthly-wrap-up/:year/:month", wrapUpController.wrapUp_detail_get);
 router.get("/monthly-wrap-up/:year/:month/update", wrapUpController.wrapUp_update_get);
 router.post("/monthly-wrap-up/:year/:month/update", wrapUpController.wrapUp_update_post);
+// Comments
+router.post(
+  "/monthly-wrap-up/:year/:month/new-comment",
+  commentController.wrap_up_comment_form_post
+);
+router.post(
+  "/monthly-wrap-up/:year/:month/comment/:id/delete",
+  commentController.wrap_up_comment_delete_post
+);
 
 /// BOOK
 router.get("/library", bookController.book_list_get);
@@ -65,6 +75,15 @@ router.post(
   bookReviewController.book_review_delete_post
 );
 router.get("/tbr-list", bookController.masterlist_get);
+// Comments
+router.post(
+  "/book-review/:id/new-comment",
+  commentController.
+);
+router.post(
+  "/book-review/:id/comment/:commentid/delete",
+  commentController.
+);
 
 /// TAGS
 router.get("/tags/:name", tagController.tag_list_get);

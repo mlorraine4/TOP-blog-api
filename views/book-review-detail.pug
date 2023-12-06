@@ -11,11 +11,33 @@ block content
         div(class='tags')
             each tag in review.tags
                 a(href=tag.url) ##{tag.name}
-        
-        p Comments:
-        
+                
         if user && user.is_admin
             p 
                 a(href=`${review.url}/update` class='edit-url') Edit
             p
                 a(href=`${review.url}/delete` class='edit-url') Delete
+
+        div#comments
+            h2 #{review.comments.length} Comments
+            button#open-form Comment
+            form#comment-form(class="hide")
+                button#close-form(type="button") x
+                label(for='name') Name
+                input#name(name='name' type='text'  required value=(undefined===guest ? '' : guest.name))
+                label(for='text') Comment
+                input#text(name='text'  type='text' required value=(undefined===guest ? '' : guest.text))
+                button(type='submit') Submit
+
+            each comment in review.comments 
+                div.comment-container(id=comment._id)
+                if user && user.is_admin
+                    img.delete-comment(src="/images/delete.png")
+                div.comment-header
+                    div.comment-name #{comment.name}
+                    div.comment-date #{comment.timestamp}
+                div.comment-text #{comment.text}
+            
+    
+    script(type="application/javascript" src="/javascripts/book-review-comment-form.js")
+

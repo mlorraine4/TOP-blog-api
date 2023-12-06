@@ -100,7 +100,7 @@ const limiter = RateLimit({
   max: 20,
 });
 // Apply rate limiter to all requests
-app.use(limiter);
+// app.use(limiter);
 
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;

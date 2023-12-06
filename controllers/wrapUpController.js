@@ -38,7 +38,7 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
     const wrapUp = await MonthlyWrapUp.findOne({
       month: req.params.month,
       year: req.params.year,
-    }).exec();
+    }).populate("comments").exec();
 
     if (wrapUp !== null) {
       const dateString = req.params.month + " 1, " + req.params.year;
@@ -84,14 +84,14 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.wrapUp_form_get = asyncHandler(async (req, res, next) => {
-  // if (req.user) {
-  res.render("wrap-up-form", {
-    user: req.user,
-    title: "Add Monthly Wrap Up",
-  });
-  // } else {
-  //   res.redirect("/");
-  // }
+  if (req.user) {
+    res.render("wrap-up-form", {
+      user: req.user,
+      title: "Add Monthly Wrap Up",
+    });
+  } else {
+    res.redirect("/");
+  }
 });
 
 exports.wrapUp_form_post = [

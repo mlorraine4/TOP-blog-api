@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const CommentSchema = new Schema({
-  user: { type: String, required: true, maxLength: 15 },
+  name: { type: String, required: true, maxLength: 15 },
   text: { type: String, required: true, maxLength: 200 },
   timestamp: { type: Date, required: true },
 });

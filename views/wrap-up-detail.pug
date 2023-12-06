@@ -12,9 +12,33 @@ block content
           p #{book.rating}/5 stars
       else 
         p There are no books for this month.
-    
+
     if user && user.is_admin
       p
         a(href=`${wrapUp.url}/update` class='edit-url') Edit
       p
         a(href=`${wrapUp.url}/delete` class='edit-url') Delete
+    
+    div#comments
+      h2 #{wrapUp.comments.length} Comments
+      button#open-form Comment
+      form#comment-form(class="hide")
+        button#close-form(type="button") x
+        label(for='name') Name
+        input#name(name='name' type='text'  required value=(undefined===guest ? '' : guest.name))
+        label(for='text') Comment
+        input#text(name='text'  type='text' required value=(undefined===guest ? '' : guest.text))
+        button(type='submit') Submit
+
+      each comment in wrapUp.comments 
+        div.comment-container(id=comment._id)
+          if user && user.is_admin
+            img.delete-comment(src="/images/delete.png")
+          div.comment-header
+            div.comment-name #{comment.name}
+            div.comment-date #{comment.timestamp}
+          div.comment-text #{comment.text}
+  
+  script(type="application/javascript" src="/javascripts/wrap-up-comment-form.js")
+
+

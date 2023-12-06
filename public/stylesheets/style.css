@@ -33,6 +33,10 @@ button, .edit-url {
   border: none;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 input {
   margin: 10px;
 }
@@ -47,6 +51,10 @@ label {
 
 form input {
   width: 80%;
+}
+
+.hide {
+  display: none;
 }
 
 #content {
@@ -332,7 +340,6 @@ form input {
   color: white;
   padding: 16px;
   border: none;
-  cursor: pointer;
   width: 160px;
 }
 
@@ -387,4 +394,86 @@ form input {
 
 #log-in-form, #sign-up-form {
   width: 400px;
+}
+
+/* COMMENT */
+#comment-form {
+  position: absolute;
+  width: 400px;
+  background-color: #330066;
+  z-index: 2;
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  top: -80px;
+}
+
+#comments {
+  width: 80%;
+  margin: auto;
+  position: relative;
+  text-align: center;
+}
+
+#open-form {
+  background-color: #a474d8;
+  color: white;
+  padding: 5px;
+  width: min-content;
+}
+
+#open-form:hover {
+  background-color: white;
+  color: #240147;
+}
+
+.comment-container {
+  margin: 10px;
+  padding: 10px;
+  border-bottom: 1px solid var(--light-purple);
+  position: relative;
+  text-align: left;
+}
+
+.comment-header {
+  display: flex;
+  align-items: bottom;
+  padding-bottom: 10px;
+}
+
+.comment-name {
+  font-weight: bold;
+}
+
+.comment-date {
+  font-size: 0.5em;
+  font-weight: 100;
+  padding: 5px;
+}
+
+.comment-text {
+  font-size: 1.2em;
+}
+
+.delete-comment, #close-form {
+  position: absolute;
+  right: 20px;
+  padding: 5px;
+  top: 10px;
+}
+
+.delete-comment {
+  height: 15px;
+  width: 15px;
+}
+
+.delete-comment:hover {
+  cursor: pointer;
+}
+
+#close-form {
+  background-color: inherit;
+  color: white;
 }
