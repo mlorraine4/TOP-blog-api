@@ -63,20 +63,19 @@ exports.calendar_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.user_dashboard_get = asyncHandler(async (req, res, next) => {
-  // TODO: add if admin to user-dashboard page
-  // if (req.user) {
-  res.render("user-dashboard", { title: "Dashboard", user: req.user });
-  // } else {
-  //   res.redirect("/");
-  // }
+  if (req.user) {
+    res.render("user-dashboard", { title: "Dashboard", user: req.user });
+  } else {
+    res.redirect("/");
+  }
 });
 
 exports.user_account_get = asyncHandler(async (req, res, next) => {
-  // if (req.user) {
-  res.render("account", { title: "Account", user: req.user });
-  // } else {
-  //   res.redirect("/");
-  // }
+  if (req.user) {
+    res.render("account", { title: "Account", user: req.user });
+  } else {
+    res.redirect("/");
+  }
 });
 
 exports.not_found = asyncHandler(async (req, res, next) => {

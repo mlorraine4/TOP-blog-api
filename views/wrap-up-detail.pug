@@ -25,10 +25,12 @@ block content
       form#comment-form(class="hide")
         button#close-form(type="button") x
         label(for='name') Name
-        input#name(name='name' type='text'  required value=(undefined===guest ? '' : guest.name))
+        input#name(name='name' type='text')
         label(for='text') Comment
-        input#text(name='text'  type='text' required value=(undefined===guest ? '' : guest.text))
+        input#text(name='text'  type='text' required)
         button(type='submit') Submit
+        #error-container 
+          ul
 
       each comment in wrapUp.comments 
         div.comment-container(id=comment._id)

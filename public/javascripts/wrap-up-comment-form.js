@@ -3,25 +3,32 @@ const initCommentForm = (() => {
   const openBtn = document.getElementById("open-form");
   const closeBtn = document.getElementById("close-form");
   const commentSection = document.getElementById("comments");
+  const errorContainer = document.getElementById("error-container");
 
   openBtn.onclick = toggleForm;
   closeBtn.onclick = toggleForm;
 
   form.onsubmit = (e) => {
     e.preventDefault();
+    const input = form.elements["name"].value;
+
     let data = {
-      name: form.elements["name"].value,
+      name: input === "" ? "Guest" : input,
       text: form.elements["text"].value,
       timestamp: Date.now(),
     };
 
-    postData(document.URL, data)
-      .then((response) => {
-        if (response.ok) {
-          appendComment(data);
-        }
-      });
-  }
+    postData(document.URL + "/new-comment", data).then(async (response) => {
+      if (response.ok) {
+        hideErrors();
+        clearForm();
+        appendComment(data);
+      } else {
+        const data = await response.json();
+        displayErrors(data);
+      }
+    });
+  };
 
   async function postData(url = "", data = {}) {
     // Default options are marked with *
@@ -69,13 +76,38 @@ const initCommentForm = (() => {
     commentSection.insertBefore(container, commentForm.nextSibling);
   }
 
+  function displayErrors(data) {
+    errorContainer.opacity = 1;
+
+    if (data.errors) {
+      data.errors.forEach((error) => {
+        const li = document.createElement("li");
+        li.innerHTML = error.msg;
+        errorContainer.querySelector("ul").append(li);
+      });
+    } else {
+      const li = document.createElement("li");
+      li.innerHTML = "There was an error saving your comment";
+      errorContainer.querySelector("ul").append(li);
+    }
+  }
+
+  function hideErrors() {
+    errorContainer.opacity = 0;
+  }
+
   function toggleForm() {
     form.classList.toggle("hide");
   }
 
+  function clearForm() {
+    form.elements["name"].value = "";
+    form.elements["text"].value = "";
+  }
+
   window.addEventListener("click", (e) => {
     if (e.target.classList.contains("delete-comment")) {
-        deleteComment(e.target);
+      deleteComment(e.target);
     }
   });
 
@@ -85,4 +117,3 @@ const initCommentForm = (() => {
     commentSection.removeChild(target.parentElement);
   }
 })();
-
