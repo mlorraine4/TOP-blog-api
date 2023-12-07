@@ -59,7 +59,7 @@ exports.book_review_comment_form_post = [
         timestamp: req.body.timestamp,
       });
 
-      const bookReview = await WrapUp.findByIdAndUpdate(
+      const bookReview = await BookReview.findByIdAndUpdate(
         req.params.id,
         { $push: { comments: comment } }
       ).exec();
@@ -68,7 +68,6 @@ exports.book_review_comment_form_post = [
 
       return res.status(200).send();
     } catch (err) {
-      console.log(err);
       return next(err);
     }
   }),
@@ -77,7 +76,8 @@ exports.book_review_comment_form_post = [
 exports.book_review_comment_delete_post = asyncHandler(async (req, res, next) => {
   if (req.user) {
     try {
-      const result = await Comment.findByIdAndDelete(req.params.id).exec();
+      console.log(req.params);
+      const result = await Comment.findByIdAndDelete(req.params.commentid).exec();
       console.log(result);
       if (result !== null) {
         return res.status(200).send();

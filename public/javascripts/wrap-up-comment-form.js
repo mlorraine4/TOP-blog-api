@@ -42,8 +42,31 @@ const initCommentForm = (() => {
   }
 
   function appendComment(data) {
-    console.log(data);
+    const commentSection = document.getElementById("comments");
+    const commentForm = document.getElementById("comment-form");
 
+    const container = document.createElement("div");
+    container.classList.add("comment-container");
+
+    const header = document.createElement("div");
+    header.classList.add("comment-header");
+
+    const name = document.createElement("div");
+    name.classList.add("comment-name");
+    name.innerHTML = data.name;
+
+    const date = document.createElement("div");
+    date.classList.add("comment-date");
+    date.innerHTML = data.date;
+
+    const text = document.createElement("div");
+    text.classList.add("comment-text");
+    text.innerHTML = data.text;
+
+    header.append(name, date);
+    container.append(header, text);
+
+    commentSection.insertBefore(container, commentForm.nextSibling);
   }
 
   function toggleForm() {

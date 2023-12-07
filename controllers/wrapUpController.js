@@ -38,7 +38,9 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
     const wrapUp = await MonthlyWrapUp.findOne({
       month: req.params.month,
       year: req.params.year,
-    }).populate("comments").exec();
+    })
+      .populate({ path: "comments", options: { sort: { timestamp: -1 } } })
+      .exec();
 
     if (wrapUp !== null) {
       const dateString = req.params.month + " 1, " + req.params.year;

@@ -3,6 +3,7 @@ const initCommentForm = (() => {
   const openBtn = document.getElementById("open-form");
   const closeBtn = document.getElementById("close-form");
   const commentSection = document.getElementById("comments");
+  const errorMsg = document.getElementById("error-msg");
 
   openBtn.onclick = toggleForm;
   closeBtn.onclick = toggleForm;
@@ -17,7 +18,13 @@ const initCommentForm = (() => {
 
     postData(document.URL + "/new-comment", data).then((response) => {
       if (response.ok) {
+        hideError();
         appendComment(data);
+        form.elements["name"].value = "";
+        form.elements["text"].value = "";
+        toggleForm();
+      } else {
+        displayError();
       }
     });
   };
@@ -41,7 +48,39 @@ const initCommentForm = (() => {
   }
 
   function appendComment(data) {
-    console.log(data);
+    const commentSection = document.getElementById("comments");
+    const commentForm = document.getElementById("comment-form");
+
+    const container = document.createElement("div");
+    container.classList.add("comment-container");
+
+    const header = document.createElement("div");
+    header.classList.add("comment-header");
+
+    const name = document.createElement("div");
+    name.classList.add("comment-name");
+    name.innerHTML = data.name;
+  
+    const date = document.createElement("div");
+    date.classList.add("comment-date");
+    date.innerHTML = data.timestamp;
+
+    const text = document.createElement("div");
+    text.classList.add("comment-text");
+    text.innerHTML = data.text;
+
+    header.append(name, date);
+    container.append(header, text);
+
+    commentSection.insertBefore(container, commentForm.nextSibling);
+  }
+
+  function displayError() {
+    errorMsg.opacity = 1;
+  }
+
+  function hideError() {
+    errorMsg.opacity = 0;
   }
 
   function toggleForm() {

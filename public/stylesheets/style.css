@@ -81,7 +81,7 @@ form input {
   justify-content: center;
 }
 
-.form-submit-button, .edit-url {
+.form-submit-button, .edit-url, #comment-form button[type="submit"] {
   padding: 5px;
   margin: 10px auto 10px auto;
   background-color: var(--light-purple);
@@ -92,7 +92,7 @@ form input {
   font-size: 1.2em;
 }
 
-.form-submit-button:hover, .edit-url:hover {  
+.form-submit-button:hover, .edit-url:hover, #comment-form button[type="submit"]:hover {  
   background-color: white;
   color: #a474d8;
 }
@@ -168,6 +168,11 @@ form input {
 .tags {
   display: flex;
   justify-content: space-between;
+  width: 70%;
+  background-color: rgb(60, 20, 100);
+  padding: 20px;
+  margin: auto;
+  font-style: italic;
 }
 
 /* book review form tag inputs */
@@ -476,4 +481,9 @@ form input {
 #close-form {
   background-color: inherit;
   color: white;
+}
+
+#error-msg {
+  opacity: 0;
+  font-weight: bold;
 }

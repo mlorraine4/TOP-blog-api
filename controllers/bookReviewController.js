@@ -3,6 +3,7 @@ const { body, validationResult } = require("express-validator");
 const BookReview = require("../models/bookReview");
 const Book = require("../models/book");
 const Tags = require("../models/tags");
+const Comment = require("../models/comment");
 
 exports.post_list_get = asyncHandler(async (req, res, next) => {
   try {
@@ -56,6 +57,7 @@ exports.book_review_detail_get = asyncHandler(async (req, res, next) => {
     const review = await BookReview.findById(req.params.id)
       .populate("book")
       .populate("tags")
+      .populate({path: "comments", options: {sort: {timestamp: -1}}})
       .exec();
 
     if (review !== null) {

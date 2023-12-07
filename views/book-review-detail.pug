@@ -28,15 +28,16 @@ block content
                 label(for='text') Comment
                 input#text(name='text'  type='text' required value=(undefined===guest ? '' : guest.text))
                 button(type='submit') Submit
+                div#error-msg Error: There was a problem submitting your comment. 
 
             each comment in review.comments 
                 div.comment-container(id=comment._id)
-                if user && user.is_admin
-                    img.delete-comment(src="/images/delete.png")
-                div.comment-header
-                    div.comment-name #{comment.name}
-                    div.comment-date #{comment.timestamp}
-                div.comment-text #{comment.text}
+                    if user && user.is_admin
+                        img.delete-comment(src="/images/delete.png")
+                    div.comment-header
+                        div.comment-name #{comment.name}
+                        div.comment-date #{comment.timestamp}
+                    div.comment-text #{comment.text}
             
     
     script(type="application/javascript" src="/javascripts/book-review-comment-form.js")

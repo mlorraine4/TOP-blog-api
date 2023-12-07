@@ -78,11 +78,11 @@ router.get("/tbr-list", bookController.masterlist_get);
 // Comments
 router.post(
   "/book-review/:id/new-comment",
-  commentController.
+  commentController.book_review_comment_form_post
 );
 router.post(
   "/book-review/:id/comment/:commentid/delete",
-  commentController.
+  commentController.book_review_comment_delete_post
 );
 
 /// TAGS
