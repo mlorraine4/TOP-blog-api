@@ -12,18 +12,6 @@ const compression = require("compression");
 const helmet = require("helmet");
 require("dotenv").config();
 
-/* TODO MASTERLIST
-  - Add new post, upload img file to firebase storage
-    - slider for rating (1 - 5 stars, with halfs included)
-    - custom img for each rating (1.5/5 stars, etc)
-    - file input/loader for new review
-  - Edit posts
-  - Create header with button links
-    - book reviews
-    - monthly read list
-  - search bar
-  - night/day mode
-*/
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const siteRouter = require("./routes/gardenofpages");

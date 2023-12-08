@@ -169,10 +169,11 @@ form input {
   display: flex;
   justify-content: space-between;
   width: 70%;
-  background-color: rgb(60, 20, 100);
   padding: 20px;
   margin: auto;
   font-style: italic;
+  border-top: 1px solid #a474d8;
+  border-bottom: 1px solid #a474d8;
 }
 
 /* book review form tag inputs */

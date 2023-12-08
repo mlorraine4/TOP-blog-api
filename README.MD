@@ -17,7 +17,8 @@ This is my project submission for The Odin Project's [Blog API](https://www.theo
 * Firebase Storage
 
 ## Dependencies
-* Passport
+* Passport: User Authentication
+* Passport Local: User session persistence
 * BcryptJS: creates a hashed password to save in database for better security
 * TinyMCE: a rich text editor
 

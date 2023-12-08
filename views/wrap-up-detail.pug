@@ -38,9 +38,10 @@ block content
             img.delete-comment(src="/images/delete.png")
           div.comment-header
             div.comment-name #{comment.name}
-            div.comment-date #{comment.timestamp}
+            div.comment-date #{moment(comment.timestamp).startOf('hour').fromNow()}
           div.comment-text #{comment.text}
   
   script(type="application/javascript" src="/javascripts/wrap-up-comment-form.js")
+  script(type="application/javascript" src="/javascripts/moment.min.js")
 
 
