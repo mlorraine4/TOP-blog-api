@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const MonthlyWrapUp = require("../models/monthlyWrapUp");
 const Book = require("../models/book");
+const moment = require("moment");
 
 exports.wrapUp_list_get = asyncHandler(async (req, res, next) => {
   try {
@@ -43,6 +44,7 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
       .exec();
 
     if (wrapUp !== null) {
+      // Wrap Up exists. Query for books read during the month.
       const dateString = req.params.month + " 1, " + req.params.year;
       const date = new Date(dateString);
       const month = date.getMonth();
@@ -133,12 +135,7 @@ exports.wrapUp_form_post = [
         const month = date.getMonth();
         const year = date.getFullYear();
         const myDate = new Date(year, month + 1, 0);
-
-        const wrapUpDB = await MonthlyWrapUp.findOne({
-          month: req.body.month,
-          year: req.body.year,
-        }).exec();
-
+        
         const wrapUp = new MonthlyWrapUp({
           year: req.body.year,
           month: req.body.month,
@@ -147,21 +144,19 @@ exports.wrapUp_form_post = [
           timestamp: myDate,
         });
 
-        if (wrapUpDB === null) {
+        if (!monthArr.includes(req.body.month)) {
           // Month provided is not a valid month.
-          if (!monthArr.includes(req.body.month)) {
-            res.render("wrap-up-form", {
-              user: req.user,
-              title: "Edit Wrap Up",
-              wrapUp: wrapUp,
-              errors: [
-                ...errors.array(),
-                { msg: `${req.body.month} is not a correct month format.` },
-              ],
-            });
-            return;
-          }
-
+          return res.render("wrap-up-form", {
+            user: req.user,
+            title: "Edit Wrap Up",
+            wrapUp: wrapUp,
+            errors: [
+              ...errors.array(),
+              { msg: `${req.body.month} is not a correct month format.` },
+            ],
+          });
+        } else {
+          // Month is valid. Check for other errors.
           if (!errors.isEmpty()) {
             // Form data is not valid. Re-render form with data and errors.
             res.render("wrap-up-form", {
@@ -172,24 +167,31 @@ exports.wrapUp_form_post = [
             });
             return;
           } else {
-            // Data is valid. Save monthly wrap up.
-            const result = await wrapUp.save();
-            res.redirect(result.url);
+            // Form data is valid. Check if wrap up already exists.
+
+            const wrapUpDB = await MonthlyWrapUp.findOne({
+              month: req.body.month,
+              year: req.body.year,
+            }).exec();
+
+            if (wrapUpDB === null) {
+              // Wrap up does not already exist. Save new wrap up.
+              const result = await wrapUp.save();
+              res.redirect(result.url);
+            } else {
+              // Wrap up already exists. Return error.
+              res.render("wrap-up-form", {
+                user: req.user,
+                title: "Edit Wrap Up",
+                wrapUp: wrapUp,
+                errors: [
+                  {
+                    msg: `${req.body.month} ${req.body.year} wrap up already exists.`,
+                  },
+                ],
+              });
+            }
           }
-        } else {
-          // Monthly wrap up already exists.
-          res.render("wrap-up-form", {
-            user: req.user,
-            title: "Edit Wrap Up",
-            wrapUp: wrapUp,
-            errors: [
-              ...errors.array(),
-              {
-                msg: `${req.body.month} ${req.body.year} wrap up already exists.`,
-              },
-            ],
-          });
-          return;
         }
       } else {
         // User is not logged in.
@@ -204,35 +206,34 @@ exports.wrapUp_form_post = [
 ];
 
 exports.wrapUp_update_get = asyncHandler(async (req, res, next) => {
-    try {
-      if (req.user) {
-        const wrapUp = await MonthlyWrapUp.findOne({
-          month: req.params.month,
-          year: req.params.year,
-        }).exec();
+  try {
+    if (req.user) {
+      const wrapUp = await MonthlyWrapUp.findOne({
+        month: req.params.month,
+        year: req.params.year,
+      }).exec();
 
-        if (wrapUp !== null) {
-          res.render("wrap-up-form", {
-            user: req.user,
-            wrapUp: wrapUp,
-            title: "Edit Monthly Wrap Up",
-          });
-          return;
-        } else {
-          // No results.
-          const err = new Error("Wrap Up does not exist.");
-          err.status = 404;
-          return next(err);
-        }
+      if (wrapUp !== null) {
+        return res.render("wrap-up-form", {
+          user: req.user,
+          wrapUp: wrapUp,
+          title: "Edit Monthly Wrap Up",
+        });
       } else {
-        // User is not logged in.
-        const err = new Error("You must be an authorized user.");
-        err.status = 401;
+        // No results.
+        const err = new Error("Wrap Up does not exist.");
+        err.status = 404;
         return next(err);
       }
-    } catch (err) {
+    } else {
+      // User is not logged in.
+      const err = new Error("You must be an authorized user.");
+      err.status = 401;
       return next(err);
     }
+  } catch (err) {
+    return next(err);
+  }
 });
 
 exports.wrapUp_update_post = [
@@ -285,7 +286,7 @@ exports.wrapUp_update_post = [
           });
 
           if (!monthArr.includes(req.body.month)) {
-            res.render("wrap-up-form", {
+            return res.render("wrap-up-form", {
               user: req.user,
               title: "Edit Wrap Up",
               wrapUp: updatedWrapUp,
@@ -294,15 +295,13 @@ exports.wrapUp_update_post = [
                 { msg: `${req.body.month} is not a correct month format.` },
               ],
             });
-            return;
           } else if (!errors.isEmpty()) {
-            res.render("wrap-up-form", {
+            return res.render("wrap-up-form", {
               user: req.user,
               title: "Edit Wrap Up",
               wrapUp: updatedWrapUp,
               errors: errors.array(),
             });
-            return;
           } else {
             // Data is valid. Update monthly wrap up.
             const result = await MonthlyWrapUp.findByIdAndUpdate(
@@ -310,7 +309,7 @@ exports.wrapUp_update_post = [
               updatedWrapUp,
               {}
             );
-            res.redirect(result.url);
+            return res.redirect(result.url);
           }
         } else {
           // No results.

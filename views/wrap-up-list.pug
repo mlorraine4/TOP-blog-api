@@ -8,6 +8,7 @@ block content
         div(class='post-container')
             img(class='post-img' src=wrapUp.cover_url)
             a(href=wrapUp.url class='post-url') url
+            a(href=wrapUp.url class='post-date') #{moment(wrapUp.timestamp).utc().format("MMM Do")}
             a(href=wrapUp.url class='post-title') #{wrapUp.month}
       else  
         p There are no monthly wrap ups.
