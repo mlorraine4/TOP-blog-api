@@ -13,7 +13,6 @@ const helmet = require("helmet");
 require("dotenv").config();
 
 var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
 const siteRouter = require("./routes/gardenofpages");
 
 var app = express();
@@ -123,7 +122,6 @@ app.locals.he = require("he");
 app.locals.moment = require("moment");
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
 app.use("/gardenofpages", siteRouter);
 
 // catch 404 and forward to error handler

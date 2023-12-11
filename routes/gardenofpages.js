@@ -45,11 +45,11 @@ router.post(
 router.get("/library", bookController.book_list_get);
 router.get("/new-book", bookController.book_form_get);
 router.post("/new-book", bookController.book_form_post);
-router.get("/book/:id/", bookController.book_detail_get);
-router.get("/book/:id/update", bookController.book_update_get);
-router.post("/book/:id/update", bookController.book_update_post);
-router.get("/book/:id/delete", bookController.book_delete_get);
-router.post("/book/:id/delete", bookController.book_delete_post);
+router.get("/book/:author/:title/", bookController.book_detail_get);
+router.get("/book/:author/:title/update", bookController.book_update_get);
+router.post("/book/:author/:title/update", bookController.book_update_post);
+router.get("/book/:author/:title/delete", bookController.book_delete_get);
+router.post("/book/:author/:title/delete", bookController.book_delete_post);
 
 /// BOOK REVIEW
 // Home page get.

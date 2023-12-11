@@ -7,4 +7,4 @@ block content
       //- div(class='library-item')
         //- img(src=he.decode(book.book_cover_url) class='library-img')
       p
-        a(href=book.url) #{book.title} by #{book.author}
+        a(href=book.url) #{he.decode(book.title)} by #{he.decode(book.author)}

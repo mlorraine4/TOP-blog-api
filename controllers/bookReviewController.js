@@ -38,7 +38,7 @@ exports.post_list_get = asyncHandler(async (req, res, next) => {
       .sort({ timestamp: -1 })
       .exec();
 
-    res.render("index", { posts: result, user: req.user });
+    return res.render("index", { posts: result, user: req.user });
   } catch (err) {
     return next(err);
   }
@@ -47,7 +47,10 @@ exports.post_list_get = asyncHandler(async (req, res, next) => {
 exports.book_review_list_get = asyncHandler(async (req, res, next) => {
   try {
     const bookReviews = await BookReview.find().populate("book").exec();
-    res.render("book-review-list", { user: req.user, reviews: bookReviews });
+    return res.render("book-review-list", {
+      user: req.user,
+      reviews: bookReviews,
+    });
   } catch (err) {
     return next(err);
   }
@@ -62,10 +65,16 @@ exports.book_review_detail_get = asyncHandler(async (req, res, next) => {
       .exec();
 
     if (review !== null) {
-      res.render("book-review-detail", { review: review, user: req.user });
-      return;
+      // Review exists.
+      return res.render("book-review-detail", {
+        review: review,
+        user: req.user,
+      });
     } else {
-      res.sendStatus(404);
+      // No results.
+      const err = new Error("Book does not exist.");
+      err.status = 404;
+      return next(err);
     }
   } catch (err) {
     return next(err);
@@ -74,9 +83,12 @@ exports.book_review_detail_get = asyncHandler(async (req, res, next) => {
 
 exports.book_review_form_get = asyncHandler(async (req, res, next) => {
   if (req.user) {
-    res.render("book-review-form", { user: req.user });
+    return res.render("book-review-form", { user: req.user });
   } else {
-    res.redirect("/gardenofpages/log-in");
+    // User is not logged in.
+    const err = new Error("You must be an authorized user.");
+    err.status = 401;
+    return next(err);
   }
 });
 
@@ -91,8 +103,8 @@ exports.book_review_form_post = [
     .escape(),
 
   asyncHandler(async (req, res, next) => {
-    if (req.user) {
-      try {
+    try {
+      if (req.user) {
         const errors = validationResult(req);
         const book = await Book.findOne({
           title: req.body.title,
@@ -154,13 +166,13 @@ exports.book_review_form_post = [
 
             if (!errors.isEmpty()) {
               // There are errors. Re-render form with errors.
-              res.render("book-review-form", {
+              return res.render("book-review-form", {
                 user: req.user,
                 title: "Add Review",
                 bookReview: book_review,
                 errors: errors.array(),
               });
-              return;
+
             } else {
               // Data is valid. Save book review.
               const result = await book_review.save();
@@ -174,16 +186,55 @@ exports.book_review_form_post = [
           }
         } else {
           // Book does not exist yet. Re-render form with error.
-          res.render("book-review-form", {
+          return res.render("book-review-form", {
             user: req.user,
             title: "Add Review",
             errors: [
-              { msg: "Book does not exist. Save book before adding a review." },
+              {
+                msg: "Book does not exist. Save book before adding a review.",
+              },
             ],
           });
-          return;
         }
-      } catch (err) {
+      } else {
+        // User is not logged in.
+        const err = new Error("You must be an authorized user.");
+        err.status = 401;
+        return next(err);
+      }
+    } catch (err) {
+      return next(err);
+    }
+  }),
+];
+
+exports.book_review_update_get = asyncHandler(async (req, res, next) => {
+  try {
+    if (req.user) {
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        // ID can be a valid Mongoose _id
+        const bookReview = await BookReview.findById(req.params.id)
+          .populate("book")
+          .populate("tags")
+          .exec();
+
+        if (bookReview !== null) {
+          // Book review exists.
+          return res.render("book-review-form", {
+            user: req.user,
+            title: "Edit Book Review",
+            bookReview: bookReview,
+          });
+        } else {
+          // No results.
+          const err = new Error("Book Review does not exist.");
+          err.status = 404;
+          return next(err);
+        }
+      } else {
+        // Id is not valid.
+        const err = new Error("Book Review does not exist.");
+        err.status = 400;
         return next(err);
       }
     } else {
@@ -192,46 +243,9 @@ exports.book_review_form_post = [
       err.status = 401;
       return next(err);
     }
-  }),
-];
-
-exports.book_review_update_get = asyncHandler(async (req, res, next) => {
-  if (req.user) {
-
-  if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-    try {
-      const bookReview = await BookReview.findById(req.params.id)
-        .populate("book")
-        .populate("tags")
-        .exec();
-
-      if (bookReview !== null) {
-        res.render("book-review-form", {
-          user: req.user,
-          title: "Edit Book Review",
-          bookReview: bookReview,
-        });
-        return;
-      } else {
-        // No results.
-        const err = new Error("Book Review does not exist.");
-        err.status = 404;
-        return next(err);
-      }
-    } catch (err) {
-      return next(err);
-    }
-  } else {
-    const err = new Error("Book id ${req.params.id} is not a valid id.");
-    err.status = 404;
+  } catch (err) {
     return next(err);
   }
-} else {
-  // User is not logged in.
-  const err = new Error("You must be an authorized user.");
-  err.status = 401;
-  return next(err);
-}
 });
 
 exports.book_review_update_post = [
@@ -245,8 +259,8 @@ exports.book_review_update_post = [
     .escape(),
 
   asyncHandler(async (req, res, next) => {
-    if (req.user) {
-      try {
+    try {
+      if (req.user) {
         const errors = validationResult(req);
 
         const bookReview = await BookReview.findById(req.params.id)
@@ -302,13 +316,13 @@ exports.book_review_update_post = [
           });
 
           if (!errors.isEmpty()) {
-            res.render("book-review-form", {
+            // Form data is not valid. Re-render with errors.
+            return res.render("book-review-form", {
               user: req.user,
               title: "Edit Review",
               bookReview: newBookReview,
               errors: errors.array(),
             });
-            return;
           } else {
             // Form data is valid. Update book review.
             const updatedBookReview = await BookReview.findByIdAndUpdate(
@@ -316,13 +330,43 @@ exports.book_review_update_post = [
               newBookReview,
               {}
             );
-            res.redirect(updatedBookReview.url);
+            return res.redirect(updatedBookReview.url);
           }
         } else {
           // No results.
-          return res.sendStatus(404);
+          const err = new Error("Book review does not exist.");
+          err.status = 404;
+          return next(err);
         }
-      } catch (err) {
+      } else {
+        // User is not logged in.
+        const err = new Error("You must be an authorized user.");
+        err.status = 401;
+        return next(err);
+      }
+    } catch (err) {
+      return next(err);
+    }
+  }),
+];
+
+exports.book_review_delete_get = asyncHandler(async (req, res, next) => {
+  try {
+    if (req.user) {
+      const book_review = await BookReview.findById(req.params.id)
+        .populate("book")
+        .exec();
+
+      if (book_review !== null) {
+        // Book review exists.
+        return res.render("book-review-delete", {
+          user: req.user,
+          book_review: book_review,
+        });
+      } else {
+        // No results.
+        const err = new Error("Book review does not exist.");
+        err.status = 404;
         return next(err);
       }
     } else {
@@ -331,51 +375,23 @@ exports.book_review_update_post = [
       err.status = 401;
       return next(err);
     }
-  }),
-];
-
-exports.book_review_delete_get = asyncHandler(async (req, res, next) => {
-  if (req.user) {
-    try {
-      const book_review = await BookReview.findById(req.params.id)
-        .populate("book")
-        .exec();
-
-      if (book_review !== null) {
-        res.render("book-review-delete", {
-          user: req.user,
-          book_review: book_review,
-        });
-        return;
-      } else {
-        // No results.
-        const err = new Error("Book review does not exist.");
-        err.status = 404;
-        return next(err);
-      }
-    } catch (err) {
-      return next(err);
-    }
-  } else {
-    // User is not logged in.
-    const err = new Error("You must be an authorized user.");
-    err.status = 401;
+  } catch (err) {
     return next(err);
   }
 });
 
 exports.book_review_delete_post = asyncHandler(async (req, res, next) => {
-  if (req.user) {
-    try {
+  try {
+    if (req.user) {
       await BookReview.findByIdAndDelete(req.params.id).exec();
-      res.redirect("/gardenofpages/book-reviews");
-    } catch (err) {
+      return res.redirect("/gardenofpages/book-reviews");
+    } else {
+      // User is not logged in.
+      const err = new Error("You must be an authorized user.");
+      err.status = 401;
       return next(err);
     }
-  } else {
-    // User is not logged in.
-    const err = new Error("You must be an authorized user.");
-    err.status = 401;
+  } catch (err) {
     return next(err);
   }
 });

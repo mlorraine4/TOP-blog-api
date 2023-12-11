@@ -5,9 +5,9 @@ block content
     if user && user.is_admin
       p 
         a(href="/gardenofpages/library") My Library 
-    div(class='wrap-up-detail-title') #{book.title} by #{book.author}
+    div(class='wrap-up-detail-title') #{he.decode(book.title)} by #{he.decode(book.author)}
     if book.series && book.series.length !== 0
-      div(class='wrap-up-detail-sub-title') #{book.series} ##{book.series_number}
+      div(class='wrap-up-detail-sub-title') #{he.decode(book.series)} ##{book.series_number}
     div(class='flex-wrap')
       div(class='flex-col-center wrap-up-detail-book-container')
         img(class='wrap-up-detail-book-cover-img' src=he.decode(book.book_cover_url))

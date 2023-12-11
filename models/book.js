@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const Schema = mongoose.Schema;
 
 const BookSchema = new Schema({
@@ -9,8 +8,10 @@ const BookSchema = new Schema({
   series_number: { type: Number },
   book_cover_url: { type: String, required: true },
   pages: { type: Number, required: true, max: 5000 },
-  rating: { type: Number, required: true, max: 5},
+  rating: { type: Number, required: true, max: 5 },
   date_read: [{ type: Date }],
+  encodedTitle: { type: String, required: true},
+  encodedAuthor: {type: String, required: true}
 });
 
 BookSchema.virtual("url").get(function () {
@@ -22,7 +23,7 @@ BookSchema.virtual("url").get(function () {
   //   .toLowerCase()
   //   .replace(/[^\w\s-]+/g, "")
   //   .replace(/\s+/g, "-");
-  return `/gardenofpages/book/${this._id}`;
+  return `/gardenofpages/book/${this.encodedAuthor}/${this.encodedTitle}`;
 });
 
 // Export model

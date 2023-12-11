@@ -12,7 +12,8 @@ block content
             a.edit-url(href=book_review.url) A Review of #{book.title} by #{book.author}
 
         else
-            p Do you really want to delete this book?
+            p Do you really want to delete 
+                span #[strong #{book.title} by #{book.author}?]
 
             form(method='POST' action='')
                 input#bookid(type='hidden',name='bookid', required='true', value=book._id )

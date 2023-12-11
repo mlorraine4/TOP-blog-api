@@ -19,7 +19,10 @@ exports.book_form_get = asyncHandler(async (req, res, next) => {
   if (req.user) {
     return res.render("book-form", { user: req.user, title: "Add Book" });
   } else {
-    return res.redirect("/gardenofpages/log-in");
+    // User is not logged in.
+    const err = new Error("You must be an authorized user.");
+    err.status = 401;
+    return next(err);
   }
 });
 
@@ -83,6 +86,14 @@ exports.book_form_post = [
             book_cover_url: req.body.book_cover,
             rating: req.body.rating,
             date_read: datesArray,
+            encodedTitle: req.body.title
+              .toLowerCase()
+              .replace(/[^\w\s-]+/g, "")
+              .replace(/\s+/g, "-"),
+            encodedAuthor: req.body.author
+              .toLowerCase()
+              .replace(/[^\w\s-]+/g, "")
+              .replace(/\s+/g, "-"),
           });
 
           if (!errors.isEmpty()) {
@@ -113,9 +124,15 @@ exports.book_form_post = [
 
 exports.book_detail_get = asyncHandler(async (req, res, next) => {
   try {
-    const book = await Book.findById(req.params.id).exec();
+    // const book = await Book.findById(req.params.id).exec();
+
+    const book = await Book.findOne({
+      encodedTitle: req.params.title,
+      encodedAuthor: req.params.author,
+    }).exec();
 
     if (book !== null) {
+      console.log(book);
       // Book exists.
       return res.render("book-detail", { user: req.user, book: book });
     } else {
@@ -131,7 +148,12 @@ exports.book_detail_get = asyncHandler(async (req, res, next) => {
 
 exports.book_update_get = asyncHandler(async (req, res, next) => {
   try {
-    const book = await Book.findById(req.params.id).exec();
+    // const book = await Book.findById(req.params.id).exec();
+
+    const book = await Book.findOne({
+      encodedTitle: req.params.title,
+      encodedAuthor: req.params.author,
+    }).exec();
 
     if (book !== null) {
       // Book exists.
@@ -177,7 +199,11 @@ exports.book_update_post = [
   asyncHandler(async (req, res, next) => {
     try {
       if (req.user) {
-        const book = Book.findById(req.params.id).exec();
+        // const book = Book.findById(req.params.id).exec();
+        const book = await Book.findOne({
+          encodedTitle: req.params.title,
+          encodedAuthor: req.params.author,
+        }).exec();
 
         if (book !== null) {
           // Book exists.
@@ -205,6 +231,14 @@ exports.book_update_post = [
             rating: req.body.rating,
             date_read: datesArray,
             _id: req.params.id,
+            encodedTitle: req.body.title
+              .toLowerCase()
+              .replace(/[^\w\s-]+/g, "")
+              .replace(/\s+/g, "-"),
+            encodedAuthor: req.body.author
+              .toLowerCase()
+              .replace(/[^\w\s-]+/g, "")
+              .replace(/\s+/g, "-"),
           });
 
           if (!errors.isEmpty()) {
@@ -246,7 +280,10 @@ exports.book_delete_get = asyncHandler(async (req, res, next) => {
   try {
     if (req.user) {
       const [book, bookReview] = await Promise.all([
-        Book.findById(req.params.id).exec(),
+        Book.findOne({
+          encodedTitle: req.params.title,
+          encodedAuthor: req.params.author,
+        }).exec(),
         BookReview.findOne({ book: req.params.id }).exec(),
       ]);
 
@@ -279,7 +316,10 @@ exports.book_delete_post = asyncHandler(async (req, res, next) => {
   try {
     if (req.user) {
       const [book, bookReview] = await Promise.all([
-        Book.findById(req.params.id).exec(),
+        Book.findOne({
+          encodedTitle: req.params.title,
+          encodedAuthor: req.params.author,
+        }).exec(),
         BookReview.findOne({ book: req.params.id }).exec(),
       ]);
 

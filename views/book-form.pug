@@ -8,11 +8,11 @@ block content
         form#book-form(action='' method='POST')
             p Book Info:
             label(for='title') Title
-            input#title(name='title' type='text' value=(undefined===book ? '' : book.title))
+            input#title(name='title' type='text' value=(undefined===book ? '' : he.decode(book.title)))
             label(for='author') Author
-            input#author(name='author' type='text' value=(undefined===book ? '' : book.author))
+            input#author(name='author' type='text' value=(undefined===book ? '' : he.decode(book.author)))
             label(for='series') Series (optional)
-            input#series(name='series' type='text' value=(undefined===book ? '' : book.series))
+            input#series(name='series' type='text' value=(undefined===book || undefined===book.series ? '' : he.decode(book.series)))
             label(for='series_number') Number in Series (optional)
             input#series_number(name='series_number' type='number' value=(undefined===book ? '' : book.series_number))
             label(for='pages') Number of Pages
