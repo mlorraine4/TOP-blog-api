@@ -11,9 +11,9 @@ block content
       div(class='post-container')
         if post.book
           img(class='post-img' src=he.decode(post.book.book_cover_url))
-          a(href=`/gardenofpages/book-review/${post._id}` class='post-url') url
-          a(href=`/gardenofpages/book-review/${post._id}` class='post-date') #{moment.utc(post.timestamp).format("MMM Do")}
-          a(href=`/gardenofpages/book-review/${post._id}` class='post-title') A Review: #{post.book.title} by #{post.book.author}
+          a(href=`gardenofpages/book-review/${post.book.encodedAuthor}/${post.book.encodedTitle}` class='post-url') url
+          a(href=`gardenofpages/book-review/${post.book.encodedAuthor}/${post.book.encodedTitle}` class='post-date') #{moment.utc(post.timestamp).format("MMM Do")}
+          a(href=`gardenofpages/book-review/${post.book.encodedAuthor}/${post.book.encodedTitle}` class='post-title') A Review: #{post.book.title} by #{post.book.author}
         else
           img(class='post-img' src=post.cover_url)
           a(href=`gardenofpages/monthly-wrap-up/${post.year}/${post.month}` class='post-url') url

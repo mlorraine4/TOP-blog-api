@@ -21,7 +21,6 @@ router.post("/sign-up", userController.sign_up_post);
 router.get("/upcoming-releases", userController.calendar_get);
 router.get("/dashboard", userController.user_dashboard_get);
 router.get("/account", userController.user_account_get);
-router.get("/404", userController.not_found);
 
 /// MONTHLY WRAP UP
 router.get("/monthly-wrap-ups", wrapUpController.wrapUp_list_get);
@@ -57,21 +56,24 @@ router.get("/", bookReviewController.post_list_get);
 router.get("/book-reviews", bookReviewController.book_review_list_get);
 router.get("/new-book-review", bookReviewController.book_review_form_get);
 router.post("/new-book-review", bookReviewController.book_review_form_post);
-router.get("/book-review/:id", bookReviewController.book_review_detail_get);
 router.get(
-  "/book-review/:id/update",
+  "/book-review/:author/:title/",
+  bookReviewController.book_review_detail_get
+);
+router.get(
+  "/book-review/:author/:title/update",
   bookReviewController.book_review_update_get
 );
 router.post(
-  "/book-review/:id/update",
+  "/book-review/:author/:title/update",
   bookReviewController.book_review_update_post
 );
 router.get(
-  "/book-review/:id/delete",
+  "/book-review/:author/:title/delete",
   bookReviewController.book_review_delete_get
 );
 router.post(
-  "/book-review/:id/delete",
+  "/book-review/:author/:title/delete",
   bookReviewController.book_review_delete_post
 );
 router.get("/tbr-list", bookController.masterlist_get);

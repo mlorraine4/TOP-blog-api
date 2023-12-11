@@ -14,7 +14,7 @@ const BookReviewSchema = new Schema({
 // Virtual for author's URL
 BookReviewSchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
-  return `/gardenofpages/book-review/${this.book.title}`;
+  return `/gardenofpages/book-review/${this.book.encodedAuthor}/${this.book.encodedTitle}`;
 });
 
 // Export model

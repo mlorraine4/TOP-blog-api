@@ -14,7 +14,6 @@ exports.post_list_get = asyncHandler(async (req, res, next) => {
           _id: "$_id",
           book: { $first: "$book" },
           timestamp: { $first: "$timestamp" },
-          url: { $first: "$url" },
         },
       },
       {
@@ -58,7 +57,12 @@ exports.book_review_list_get = asyncHandler(async (req, res, next) => {
 
 exports.book_review_detail_get = asyncHandler(async (req, res, next) => {
   try {
-    const review = await BookReview.findById(req.params.id)
+    const book = await Book.findOne({
+      encodedTitle: req.params.title,
+      encodedAuthor: req.params.author,
+    }).exec();
+
+    const review = await BookReview.findOne({book: book})
       .populate("book")
       .populate("tags")
       .populate({ path: "comments", options: { sort: { timestamp: -1 } } })
@@ -186,15 +190,9 @@ exports.book_review_form_post = [
           }
         } else {
           // Book does not exist yet. Re-render form with error.
-          return res.render("book-review-form", {
-            user: req.user,
-            title: "Add Review",
-            errors: [
-              {
-                msg: "Book does not exist. Save book before adding a review.",
-              },
-            ],
-          });
+          const err = new Error("You need to add the associated book before submitting a review.");
+          err.status = 400;
+          return next(err);
         }
       } else {
         // User is not logged in.
@@ -211,9 +209,12 @@ exports.book_review_form_post = [
 exports.book_review_update_get = asyncHandler(async (req, res, next) => {
   try {
     if (req.user) {
-      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-        // ID can be a valid Mongoose _id
-        const bookReview = await BookReview.findById(req.params.id)
+        const book = await Book.findOne({
+          encodedTitle: req.params.title,
+          encodedAuthor: req.params.author,
+        }).exec();
+
+        const bookReview = await BookReview.findOne({book: book})
           .populate("book")
           .populate("tags")
           .exec();
@@ -231,12 +232,6 @@ exports.book_review_update_get = asyncHandler(async (req, res, next) => {
           err.status = 404;
           return next(err);
         }
-      } else {
-        // Id is not valid.
-        const err = new Error("Book Review does not exist.");
-        err.status = 400;
-        return next(err);
-      }
     } else {
       // User is not logged in.
       const err = new Error("You must be an authorized user.");
@@ -263,8 +258,14 @@ exports.book_review_update_post = [
       if (req.user) {
         const errors = validationResult(req);
 
-        const bookReview = await BookReview.findById(req.params.id)
+        const book = await Book.findOne({
+          encodedTitle: req.params.title,
+          encodedAuthor: req.params.author,
+        }).exec();
+
+        const bookReview = await BookReview.findOne({ book: book })
           .populate("book")
+          .populate("tags")
           .exec();
 
         if (bookReview !== null) {
@@ -353,15 +354,21 @@ exports.book_review_update_post = [
 exports.book_review_delete_get = asyncHandler(async (req, res, next) => {
   try {
     if (req.user) {
-      const book_review = await BookReview.findById(req.params.id)
+      const book = await Book.findOne({
+        encodedTitle: req.params.title,
+        encodedAuthor: req.params.author,
+      }).exec();
+
+      const bookReview = await BookReview.findOne({ book: book })
         .populate("book")
+        .populate("tags")
         .exec();
 
-      if (book_review !== null) {
+      if (bookReview !== null) {
         // Book review exists.
         return res.render("book-review-delete", {
           user: req.user,
-          book_review: book_review,
+          book_review: bookReview,
         });
       } else {
         // No results.
@@ -383,7 +390,12 @@ exports.book_review_delete_get = asyncHandler(async (req, res, next) => {
 exports.book_review_delete_post = asyncHandler(async (req, res, next) => {
   try {
     if (req.user) {
-      await BookReview.findByIdAndDelete(req.params.id).exec();
+      const book = await Book.findOne({
+        encodedTitle: req.params.title,
+        encodedAuthor: req.params.author,
+      }).exec();
+      
+      await BookReview.findOneAndDelete({book: book}).exec();
       return res.redirect("/gardenofpages/book-reviews");
     } else {
       // User is not logged in.
