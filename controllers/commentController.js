@@ -45,23 +45,15 @@ exports.wrap_up_comment_form_post = [
 ];
 
 exports.wrap_up_comment_delete_post = asyncHandler(async (req, res, next) => {
-  if (req.user) {
-    try {
+  try {
+    if (req.user) {
       const result = await Comment.findByIdAndDelete(req.params.id).exec();
-
-      if (result !== null) {
-        // Comment found and deleted.
-        return res.sendStatus(200);
-      } else {
-        // Result not found.
-        return res.sendStatus(404);
-      }
-    } catch (err) {
+    } else {
+      const err = new Error("You must be an authorized user.");
+      err.status = 401;
       return next(err);
     }
-  } else {
-    const err = new Error("You must be an authorized user.");
-    err.status = 401;
+  } catch (err) {
     return next(err);
   }
 });
@@ -107,24 +99,17 @@ exports.book_review_comment_form_post = [
 
 exports.book_review_comment_delete_post = asyncHandler(
   async (req, res, next) => {
-    if (req.user) {
-      try {
-
+    try {
+      if (req.user) {
         const result = await Comment.findByIdAndDelete(
           req.params.commentid
         ).exec();
-
-        if (result !== null) {
-          return res.sendStatus(200);
-        } else {
-          return res.sendStatus(404);
-        }
-      } catch (err) {
+      } else {
+        const err = new Error("You must be an authorized user.");
+        err.status = 401;
         return next(err);
       }
-    } else {
-      const err = new Error("You must be an authorized user.");
-      err.status = 401;
+    } catch (err) {
       return next(err);
     }
   }

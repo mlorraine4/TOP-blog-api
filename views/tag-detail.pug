@@ -4,8 +4,11 @@ extends layout
 block content
   #content
     div(class='flex-wrap')
-      each review in reviews
-        div(class='post-container')
-          img(src=he.decode(review.book.book_cover_url) class='post-img')
-          a(href=review.url class='post-url') url
-          a(href=review.url class='post-title')  A Review: #{review.book.title} by #{review.book.author}
+      if reviews.length
+        each review in reviews
+          div(class='post-container')
+            img(src=he.decode(review.book.book_cover_url) class='post-img')
+            a(href=review.url class='post-url') url
+            a(href=review.url class='post-title')  A Review: #{review.book.title} by #{review.book.author}
+      else 
+        p There are no posts.

@@ -3,14 +3,12 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 
-// TODO: add confirm password and make sure username isn't taken to sign up post
-
 // GET request for log in form.
 exports.log_in_GET = asyncHandler(async (req, res, next) => {
   if (!req.user) {
-    res.render("login-form");
+    return res.render("login-form");
   } else {
-    res.redirect("/");
+    return res.redirect("/");
   }
 });
 
@@ -32,9 +30,9 @@ exports.log_out_GET = asyncHandler(async (req, res, next) => {
 
 exports.sign_up_get = async (req, res, next) => {
   if (!req.user) {
-    res.render("signup-form");
+    return res.render("signup-form");
   } else {
-    res.redirect("/");
+    return res.redirect("/");
   }
 };
 
@@ -48,7 +46,7 @@ exports.sign_up_post = async (req, res, next) => {
         is_admin: false,
       });
       const result = await user.save();
-      res.redirect("/");
+      return res.redirect("/");
     });
   } catch (err) {
     return next(err);
@@ -56,7 +54,7 @@ exports.sign_up_post = async (req, res, next) => {
 };
 
 exports.calendar_get = asyncHandler(async (req, res, next) => {
-  res.render("upcoming-releases-calendar", {
+  return res.render("upcoming-releases-calendar", {
     user: req.user,
     title: "Upcoming Releases",
   });
@@ -64,20 +62,16 @@ exports.calendar_get = asyncHandler(async (req, res, next) => {
 
 exports.user_dashboard_get = asyncHandler(async (req, res, next) => {
   if (req.user) {
-    res.render("user-dashboard", { title: "Dashboard", user: req.user });
+    return res.render("user-dashboard", { title: "Dashboard", user: req.user });
   } else {
-    res.redirect("/");
+    return res.redirect("/");
   }
 });
 
 exports.user_account_get = asyncHandler(async (req, res, next) => {
   if (req.user) {
-    res.render("account", { title: "Account", user: req.user });
+    return res.render("account", { title: "Account", user: req.user });
   } else {
-    res.redirect("/");
+    return res.redirect("/");
   }
-});
-
-exports.not_found = asyncHandler(async (req, res, next) => {
-  res.render("404");
 });

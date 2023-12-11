@@ -7,7 +7,7 @@ exports.wrapUp_list_get = asyncHandler(async (req, res, next) => {
   try {
     const wrapUps = await MonthlyWrapUp.find().sort({ timestamp: -1 }).exec();
 
-    res.render("wrap-up-list", {
+    return res.render("wrap-up-list", {
       user: req.user,
       wrapUps: wrapUps,
       title: "Monthly Wrap Ups",
@@ -23,7 +23,7 @@ exports.wrapUp_yearly_list_get = asyncHandler(async (req, res, next) => {
       .sort({ timestamp: -1 })
       .exec();
 
-    res.render("wrap-up-list", {
+    return res.render("wrap-up-list", {
       user: req.user,
       wrapUps: wrapUps,
       title: req.params.year,
@@ -67,7 +67,7 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
       // const avgRating = ratings / wrapUp.books.length;
       // const formattedPages = totalPages.toLocaleString("en-US");
 
-      res.render("wrap-up-detail", {
+      return res.render("wrap-up-detail", {
         user: req.user,
         wrapUp: wrapUp,
         books: books,
@@ -76,9 +76,10 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
         // totalPages: formattedPages,
         // avgRating: avgRating,
       });
-      return;
     } else {
-      res.redirect("/gardenofpages/404");
+      const err = new Error("Wrap up does not exist.");
+      err.status = 404;
+      return next(err);
     }
   } catch (err) {
     return next(err);
@@ -87,12 +88,14 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
 
 exports.wrapUp_form_get = asyncHandler(async (req, res, next) => {
   if (req.user) {
-    res.render("wrap-up-form", {
+    return res.render("wrap-up-form", {
       user: req.user,
       title: "Add Monthly Wrap Up",
     });
   } else {
-    res.redirect("/");
+    const err = new Error("You must be an authorized user.");
+    err.status = 401;
+    return next(err);
   }
 });
 
@@ -145,6 +148,7 @@ exports.wrapUp_form_post = [
         });
 
         if (wrapUpDB === null) {
+          // Month provided is not a valid month.
           if (!monthArr.includes(req.body.month)) {
             res.render("wrap-up-form", {
               user: req.user,
@@ -188,6 +192,7 @@ exports.wrapUp_form_post = [
           return;
         }
       } else {
+        // User is not logged in.
         const err = new Error("You must be an authorized user.");
         err.status = 401;
         return next(err);
@@ -199,29 +204,35 @@ exports.wrapUp_form_post = [
 ];
 
 exports.wrapUp_update_get = asyncHandler(async (req, res, next) => {
-  if (req.user) {
     try {
-      const wrapUp = await MonthlyWrapUp.findOne({
-        month: req.params.month,
-        year: req.params.year,
-      }).exec();
+      if (req.user) {
+        const wrapUp = await MonthlyWrapUp.findOne({
+          month: req.params.month,
+          year: req.params.year,
+        }).exec();
 
-      if (wrapUp !== null) {
-        res.render("wrap-up-form", {
-          user: req.user,
-          wrapUp: wrapUp,
-          title: "Edit Monthly Wrap Up",
-        });
-        return;
+        if (wrapUp !== null) {
+          res.render("wrap-up-form", {
+            user: req.user,
+            wrapUp: wrapUp,
+            title: "Edit Monthly Wrap Up",
+          });
+          return;
+        } else {
+          // No results.
+          const err = new Error("Wrap Up does not exist.");
+          err.status = 404;
+          return next(err);
+        }
       } else {
-        res.redirect("/gardenofpages/404");
+        // User is not logged in.
+        const err = new Error("You must be an authorized user.");
+        err.status = 401;
+        return next(err);
       }
     } catch (err) {
       return next(err);
     }
-  } else {
-    res.redirect("/");
-  }
 });
 
 exports.wrapUp_update_post = [
@@ -303,7 +314,9 @@ exports.wrapUp_update_post = [
           }
         } else {
           // No results.
-          res.redirect("/gardenofpages/404");
+          const err = new Error("Wrap up does not exist.");
+          err.status = 404;
+          return next(err);
         }
       } else {
         const err = new Error("You must be an authorized user.");

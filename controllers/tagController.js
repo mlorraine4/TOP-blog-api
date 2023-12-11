@@ -11,16 +11,10 @@ exports.tag_list_get = asyncHandler(async (req, res, next) => {
       .populate("book")
       .exec();
 
-    if (tag !== null) {
-      res.render("tag-detail", {
-        user: req.user,
-        reviews: reviews,
-      });
-      return;
-    } else {
-      // No results.
-      res.redirect("/gardenofpages/404");
-    }
+    return res.render("tag-detail", {
+      user: req.user,
+      reviews: reviews,
+    });
   } catch (err) {
     return next(err);
   }
