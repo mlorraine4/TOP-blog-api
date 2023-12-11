@@ -20,7 +20,7 @@ exports.wrap_up_comment_form_post = [
 
       if (!errors.isEmpty()) {
         // Form data is not valid. Send error(s).
-        return res.status(500).send({ errors: errors.array() });
+        return res.status(400).send({ errors: errors.array() });
       } else {
         // Data is valid. Save comment, add comment to Wrap Up.
         const comment = new Comment({
@@ -36,7 +36,7 @@ exports.wrap_up_comment_form_post = [
 
         const result = await comment.save();
 
-        return res.status(200).send();
+        return res.sendStatus(200);
       }
     } catch (err) {
       return next(err);
@@ -51,14 +51,18 @@ exports.wrap_up_comment_delete_post = asyncHandler(async (req, res, next) => {
 
       if (result !== null) {
         // Comment found and deleted.
-        return res.status(200).send();
+        return res.sendStatus(200);
       } else {
         // Result not found.
-        return res.status(404).send();
+        return res.sendStatus(404);
       }
     } catch (err) {
       return next(err);
     }
+  } else {
+    const err = new Error("You must be an authorized user.");
+    err.status = 401;
+    return next(err);
   }
 });
 
@@ -93,7 +97,7 @@ exports.book_review_comment_form_post = [
         // Save comment.
         const result = await comment.save();
 
-        return res.status(200).send();
+        return res.sendStatus(200);
       }
     } catch (err) {
       return next(err);
@@ -105,19 +109,23 @@ exports.book_review_comment_delete_post = asyncHandler(
   async (req, res, next) => {
     if (req.user) {
       try {
-        console.log(req.params);
+
         const result = await Comment.findByIdAndDelete(
           req.params.commentid
         ).exec();
-        console.log(result);
+
         if (result !== null) {
-          return res.status(200).send();
+          return res.sendStatus(200);
         } else {
-          return res.status(404).send();
+          return res.sendStatus(404);
         }
       } catch (err) {
         return next(err);
       }
+    } else {
+      const err = new Error("You must be an authorized user.");
+      err.status = 401;
+      return next(err);
     }
   }
 );

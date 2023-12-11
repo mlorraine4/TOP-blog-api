@@ -18,6 +18,6 @@ block content
           img(class='post-img' src=post.cover_url)
           a(href=`gardenofpages/monthly-wrap-up/${post.year}/${post.month}` class='post-url') url
           a(href=`gardenofpages/monthly-wrap-up/${post.year}/${post.month}` class='post-date') #{moment.utc(post.timestamp).format("MMM Do")}
-          a(href=`gardenofpages/monthly-wrap-up/${post.year}/${post.month}` class='post-title') #{post.month}
+          a(href=`gardenofpages/monthly-wrap-up/${post.year}/${post.month}` class='post-title') #{post.month} Wrap Up
     else  
       p There are no posts.

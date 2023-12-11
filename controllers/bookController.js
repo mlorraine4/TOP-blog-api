@@ -17,9 +17,9 @@ exports.book_list_get = asyncHandler(async (req, res, next) => {
 
 exports.book_form_get = asyncHandler(async (req, res, next) => {
   if (req.user) {
-    res.render("book-form", { user: req.user, title: "Add Book" });
+    return res.render("book-form", { user: req.user, title: "Add Book" });
   } else {
-    res.redirect("/gardenofpages/log-in");
+    return res.redirect("/gardenofpages/log-in");
   }
 });
 
@@ -48,60 +48,63 @@ exports.book_form_post = [
 
   asyncHandler(async (req, res, next) => {
     try {
-      const errors = validationResult(req);
-      let datesArray = [];
+      if (req.user) {
+        const errors = validationResult(req);
+        let datesArray = [];
 
-      // if (req.user) {
-      let bookRes = await Book.findOne({
-        author: req.body.author,
-        title: req.body.title,
-      }).exec();
-
-      if (bookRes !== null) {
-        // Book already exists.
-        const err = new Error("Book has already been added.");
-        err.status = 409;
-        return next(err);
-      } else {
-        if (req.body.dates_read.includes(",")) {
-          // There are multiple read dates.
-          const datesReqArr = req.body.dates_read.split(",");
-          for (const date of datesReqArr) {
-            datesArray.push(date);
-          }
-        } else {
-          // There is a single date.
-          datesArray.push(req.body.dates_read);
-        }
-
-        const book = new Book({
-          title: req.body.title,
+        let bookRes = await Book.findOne({
           author: req.body.author,
-          series: req.body.series,
-          pages: req.body.pages,
-          series_number: req.body.series_number,
-          book_cover_url: req.body.book_cover,
-          rating: req.body.rating,
-          date_read: datesArray,
-        });
+          title: req.body.title,
+        }).exec();
 
-        if (!errors.isEmpty()) {
-          res.render("book-form", {
-            user: req.user,
-            title: "Add Book",
-            book: book,
-            errors: errors.array(),
-          });
+        if (bookRes !== null) {
+          // Book already exists.
+          const err = new Error("Book has already been added.");
+          err.status = 409;
+          return next(err);
         } else {
-          const result = await book.save();
-          res.redirect(result.url);
+          if (req.body.dates_read.includes(",")) {
+            // There are multiple read dates.
+            const datesReqArr = req.body.dates_read.split(",");
+            for (const date of datesReqArr) {
+              datesArray.push(date);
+            }
+          } else {
+            // There is a single date.
+            datesArray.push(req.body.dates_read);
+          }
+
+          const book = new Book({
+            title: req.body.title,
+            author: req.body.author,
+            series: req.body.series,
+            pages: req.body.pages,
+            series_number: req.body.series_number,
+            book_cover_url: req.body.book_cover,
+            rating: req.body.rating,
+            date_read: datesArray,
+          });
+
+          if (!errors.isEmpty()) {
+            // Form data is not valid. Re-render with errors.
+            res.render("book-form", {
+              user: req.user,
+              title: "Add Book",
+              book: book,
+              errors: errors.array(),
+            });
+          } else {
+            // Data is valid. Save book.
+            const result = await book.save();
+            return res.redirect(result.url);
+          }
         }
+      } else {
+        // User is not logged in.
+        const err = new Error("You must be an authorized user.");
+        err.status = 401;
+        return next(err);
       }
-      // } else {
-      //   const err = new Error("You must be an authorized user.");
-      //   err.status = 401;
-      //   return next(err);
-      // }
     } catch (err) {
       return next(err);
     }
@@ -113,10 +116,13 @@ exports.book_detail_get = asyncHandler(async (req, res, next) => {
     const book = await Book.findById(req.params.id).exec();
 
     if (book !== null) {
-      res.render("book-detail", { user: req.user, book: book });
-      return;
+      // Book exists.
+      return res.render("book-detail", { user: req.user, book: book });
     } else {
-      res.redirect("/gardenofpages/404");
+      // No results.
+      const err = new Error("Book does not exist.");
+      err.status = 404;
+      return next(err);
     }
   } catch (err) {
     return next(err);
@@ -128,14 +134,17 @@ exports.book_update_get = asyncHandler(async (req, res, next) => {
     const book = await Book.findById(req.params.id).exec();
 
     if (book !== null) {
-      res.render("book-form", {
+      // Book exists.
+      return res.render("book-form", {
         user: req.user,
         title: "Edit Book",
         book: book,
       });
-      return;
     } else {
-      res.redirect("/gardenofpages/404");
+      // No results.
+      const err = new Error("Book does not exist.");
+      err.status = 404;
+      return next(err);
     }
   } catch (err) {
     return next(err);
@@ -167,54 +176,65 @@ exports.book_update_post = [
 
   asyncHandler(async (req, res, next) => {
     try {
-      const book = Book.findById(req.params.id).exec();
+      if (req.user) {
+        const book = Book.findById(req.params.id).exec();
 
-      if (book !== null) {
-        let datesArray = [];
-        const errors = validationResult(req);
+        if (book !== null) {
+          // Book exists.
+          let datesArray = [];
+          const errors = validationResult(req);
 
-        if (req.body.dates_read.includes(",")) {
-          // There are multiple read dates.
-          const datesReqArr = req.body.dates_read.split(",");
-          for (const date of datesReqArr) {
-            datesArray.push(date);
+          if (req.body.dates_read.includes(",")) {
+            // There are multiple read dates.
+            const datesReqArr = req.body.dates_read.split(",");
+            for (const date of datesReqArr) {
+              datesArray.push(date);
+            }
+          } else {
+            // There is a single date.
+            datesArray.push(req.body.dates_read);
+          }
+
+          const updatedBook = new Book({
+            title: req.body.title,
+            author: req.body.author,
+            series: req.body.series,
+            pages: req.body.pages,
+            series_number: req.body.series_number,
+            book_cover_url: req.body.book_cover,
+            rating: req.body.rating,
+            date_read: datesArray,
+            _id: req.params.id,
+          });
+
+          if (!errors.isEmpty()) {
+            // Form data is not valid. Re-render with errors.
+            return res.render("book-form", {
+              user: req.user,
+              title: "Add Book",
+              book: updatedBook,
+              errors: errors.array(),
+            });
+          } else {
+            // Data is valid. Update book.
+            const result = await Book.findByIdAndUpdate(
+              req.params.id,
+              updatedBook,
+              {}
+            );
+            return res.redirect(result.url);
           }
         } else {
-          // There is a single date.
-          datesArray.push(req.body.dates_read);
-        }
-
-        const updatedBook = new Book({
-          title: req.body.title,
-          author: req.body.author,
-          series: req.body.series,
-          pages: req.body.pages,
-          series_number: req.body.series_number,
-          book_cover_url: req.body.book_cover,
-          rating: req.body.rating,
-          date_read: datesArray,
-          _id: req.params.id,
-        });
-
-        if (!errors.isEmpty()) {
-          res.render("book-form", {
-            user: req.user,
-            title: "Add Book",
-            book: updatedBook,
-            errors: errors.array(),
-          });
-          return;
-        } else {
-          const result = await Book.findByIdAndUpdate(
-            req.params.id,
-            updatedBook,
-            {}
-          );
-          res.redirect(result.url);
+          // No results.
+          const err = new Error("Book does not exist.");
+          err.status = 404;
+          return next(err);
         }
       } else {
-        // No results.
-        res.redirect("/gardenofpages/404");
+        // User is not logged in.
+        const err = new Error("You must be an authorized user.");
+        err.status = 401;
+        return next(err);
       }
     } catch (err) {
       return next(err);
@@ -223,39 +243,66 @@ exports.book_update_post = [
 ];
 
 exports.book_delete_get = asyncHandler(async (req, res, next) => {
-  const [book, bookReview] = await Promise.all([
-    Book.findById(req.params.id).exec(),
-    BookReview.findOne({ book: req.params.id }).exec(),
-  ]);
+  try {
+    if (req.user) {
+      const [book, bookReview] = await Promise.all([
+        Book.findById(req.params.id).exec(),
+        BookReview.findOne({ book: req.params.id }).exec(),
+      ]);
 
-  if (book !== null) {
-    res.render("book-delete", {
-      user: req.user,
-      book: book,
-      book_review: bookReview,
-    });
-    return;
-  } else {
-    res.redirect("/library");
+      if (book !== null) {
+        // Book exists.
+        res.render("book-delete", {
+          user: req.user,
+          book: book,
+          book_review: bookReview,
+        });
+        return;
+      } else {
+        // No results.
+        const err = new Error("Book does not exist.");
+        err.status = 404;
+        return next(err);
+      }
+    } else {
+      // User is not logged in.
+      const err = new Error("You must be an authorized user.");
+      err.status = 401;
+      return next(err);
+    }
+  } catch (err) {
+    return next(err);
   }
 });
 
 exports.book_delete_post = asyncHandler(async (req, res, next) => {
-  const [book, bookReview] = await Promise.all([
-    Book.findById(req.params.id).exec(),
-    BookReview.findOne({ book: req.params.id }).exec(),
-  ]);
+  try {
+    if (req.user) {
+      const [book, bookReview] = await Promise.all([
+        Book.findById(req.params.id).exec(),
+        BookReview.findOne({ book: req.params.id }).exec(),
+      ]);
 
-  if (bookReview !== null) {
-    res.render("book-review-delete", {
-      user: req.user,
-      book_review: bookReview,
-      book: book,
-    });
-    return;
-  } else {
-    await Book.findByIdAndRemove(req.body.bookid);
-    res.redirect("/library");
+      if (bookReview !== null) {
+        // Book review exists. Send error.
+        const err = new Error(
+          "You must delete the associated review before deleting this book."
+        );
+        err.status = 409;
+        return next(err);
+      } else {
+        // An associated book review does not exist, OK to delete book.
+        await Book.findByIdAndRemove(req.body.bookid);
+        return res.redirect("/library");
+      }
+    } else {
+      // User is not logged in.
+      const err = new Error("You must be an authorized user.");
+      err.status = 401;
+      return next(err);
+    }
+  } catch (err) {
+    return next(err);
   }
 });
 

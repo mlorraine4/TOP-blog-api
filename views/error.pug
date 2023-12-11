@@ -2,7 +2,6 @@ extends layout
 
 block content
   #content
-    div(class='center-margin-top')
-      h1= message
-      h2= error.status
-      pre #{error.stack}
+    h1= message
+    h2= error.status
+    pre #{error.stack}
