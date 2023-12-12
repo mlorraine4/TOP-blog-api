@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
+const Mongoose = require("mongoose");
 const BookReview = require("../models/bookReview");
 const WrapUp = require("../models/monthlyWrapUp");
 const Comment = require("../models/comment");
@@ -55,8 +56,18 @@ exports.wrap_up_comment_form_post = [
 exports.wrap_up_comment_delete_post = asyncHandler(async (req, res, next) => {
   try {
     if (req.user) {
-      const result = await Comment.findByIdAndDelete(req.params.id).exec();
+      if (Mongoose.Types.ObjectId.isValid(req.params.id)) {
+        // Comment id provided is a valid mongoose id. Delete comment.
+        const result = await Comment.findByIdAndDelete(req.params.id).exec();
+        return res.sendStatus(200);
+      } else {
+        // Comment id provided is not a valid mongoose id
+        const err = new Error("Comment does not exist.");
+        err.status = 404;
+        return next(err);
+      }
     } else {
+      // User is not logged in.
       const err = new Error("You must be an authorized user.");
       err.status = 401;
       return next(err);
@@ -125,8 +136,16 @@ exports.book_review_comment_delete_post = asyncHandler(
   async (req, res, next) => {
     try {
       if (req.user) {
-        const result = await Comment.findByIdAndDelete(req.params.id).exec();
-        return;
+        if (Mongoose.Types.ObjectId.isValid(req.params.id)) {
+          // Comment id provided is a valid mongoose id. Delete comment.
+          const result = await Comment.findByIdAndDelete(req.params.id).exec();
+          return res.sendStatus(200);
+        } else {
+          // Comment id provided is not a valid mongoose id
+          const err = new Error("Comment does not exist.");
+          err.status = 404;
+          return next(err);
+        }
       } else {
         const err = new Error("You must be an authorized user.");
         err.status = 401;

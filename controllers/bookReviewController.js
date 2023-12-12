@@ -76,7 +76,7 @@ exports.book_review_detail_get = asyncHandler(async (req, res, next) => {
       });
     } else {
       // No results.
-      const err = new Error("Book does not exist.");
+      const err = new Error("Review does not exist.");
       err.status = 404;
       return next(err);
     }
@@ -176,7 +176,6 @@ exports.book_review_form_post = [
                 bookReview: book_review,
                 errors: errors.array(),
               });
-
             } else {
               // Data is valid. Save book review.
               const result = await book_review.save();

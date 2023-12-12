@@ -76,7 +76,7 @@ router.post(
   "/book-review/:author/:title/delete",
   bookReviewController.book_review_delete_post
 );
-router.get("/tbr-list", bookController.masterlist_get);
+router.get("/tbr-list", bookController.tbr_list_get);
 // Comments
 router.post(
   "/book-review/:author/:title/new-comment",

@@ -9,7 +9,7 @@ exports.book_list_get = asyncHandler(async (req, res, next) => {
       .sort({ author: 1 })
       .collation({ locale: "en", caseLevel: true })
       .exec();
-    res.render("library", { user: req.user, books: books });
+    return res.render("library", { user: req.user, books: books });
   } catch (err) {
     return next(err);
   }
@@ -98,7 +98,7 @@ exports.book_form_post = [
 
           if (!errors.isEmpty()) {
             // Form data is not valid. Re-render with errors.
-            res.render("book-form", {
+            return res.render("book-form", {
               user: req.user,
               title: "Add Book",
               book: book,
@@ -132,7 +132,6 @@ exports.book_detail_get = asyncHandler(async (req, res, next) => {
     }).exec();
 
     if (book !== null) {
-      console.log(book);
       // Book exists.
       return res.render("book-detail", { user: req.user, book: book });
     } else {
@@ -279,22 +278,22 @@ exports.book_update_post = [
 exports.book_delete_get = asyncHandler(async (req, res, next) => {
   try {
     if (req.user) {
-      const [book, bookReview] = await Promise.all([
-        Book.findOne({
-          encodedTitle: req.params.title,
-          encodedAuthor: req.params.author,
-        }).exec(),
-        BookReview.findOne({ book: req.params.id }).exec(),
-      ]);
+      const book = await Book.findOne({
+        encodedTitle: req.params.title,
+        encodedAuthor: req.params.author,
+      }).exec();
 
       if (book !== null) {
         // Book exists.
-        res.render("book-delete", {
+        const bookReview = await BookReview.findOne({
+          book: book,
+        }).exec();
+
+        return res.render("book-delete", {
           user: req.user,
           book: book,
           book_review: bookReview,
         });
-        return;
       } else {
         // No results.
         const err = new Error("Book does not exist.");
@@ -315,25 +314,34 @@ exports.book_delete_get = asyncHandler(async (req, res, next) => {
 exports.book_delete_post = asyncHandler(async (req, res, next) => {
   try {
     if (req.user) {
-      const [book, bookReview] = await Promise.all([
-        Book.findOne({
-          encodedTitle: req.params.title,
-          encodedAuthor: req.params.author,
-        }).exec(),
-        BookReview.findOne({ book: req.params.id }).exec(),
-      ]);
+      const book = await Book.findOne({
+        encodedTitle: req.params.title,
+        encodedAuthor: req.params.author,
+      }).exec();
 
-      if (bookReview !== null) {
-        // Book review exists. Send error.
-        const err = new Error(
-          "You must delete the associated review before deleting this book."
-        );
-        err.status = 409;
-        return next(err);
+      if (book !== null) {
+        // Book exists.
+        const bookReview = await BookReview.findOne({
+          book: book,
+        }).exec();
+
+        if (bookReview !== null) {
+          // Book review exists. Send error.
+          const err = new Error(
+            "You must delete the associated review before deleting this book."
+          );
+          err.status = 409;
+          return next(err);
+        } else {
+          // An associated book review does not exist, OK to delete book.
+          await Book.findByIdAndRemove(req.body.bookid);
+          return res.redirect("/library");
+        }
       } else {
-        // An associated book review does not exist, OK to delete book.
-        await Book.findByIdAndRemove(req.body.bookid);
-        return res.redirect("/library");
+        // No results.
+        const err = new Error("Book does not exist.");
+        err.status = 404;
+        return next(err);
       }
     } else {
       // User is not logged in.
@@ -346,6 +354,6 @@ exports.book_delete_post = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.masterlist_get = asyncHandler(async (req, res, next) => {
+exports.tbr_list_get = asyncHandler(async (req, res, next) => {
   res.render("masterlist", { user: req.user });
 });
