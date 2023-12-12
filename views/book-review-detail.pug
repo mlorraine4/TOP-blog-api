@@ -24,7 +24,7 @@ block content
             form#comment-form(class="hide")
                 button#close-form(type="button") x
                 label(for='name') Name
-                input#name(name='name' type='text'  required value=(undefined===guest ? '' : guest.name))
+                input#name(name='name' type='text' value=(undefined===guest ? '' : guest.name))
                 label(for='text') Comment
                 input#text(name='text'  type='text' required value=(undefined===guest ? '' : guest.text))
                 button(type='submit') Submit
@@ -37,9 +37,9 @@ block content
                         img.delete-comment(src="/images/delete.png")
                     div.comment-header
                         div.comment-name #{comment.name}
-                        div.comment-date #{moment(comment.timestamp).startOf('hour').fromNow()}
+                        div.comment-date #{moment(comment.timestamp).fromNow()}
                     div.comment-text #{comment.text}            
     
-    script(type="application/javascript" src="/javascripts/book-review-comment-form.js")
+    script(type="application/javascript" src="/javascripts/comment-form.js")
     script(type="application/javascript" src="/javascripts/moment.min.js")
 

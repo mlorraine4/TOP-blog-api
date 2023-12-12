@@ -4,28 +4,31 @@ const initCommentForm = (() => {
   const closeBtn = document.getElementById("close-form");
   const commentSection = document.getElementById("comments");
   const errorContainer = document.getElementById("error-container");
+  const commentsHeader = commentSection.querySelector("h2");
 
   openBtn.onclick = toggleForm;
   closeBtn.onclick = toggleForm;
 
   form.onsubmit = (e) => {
     e.preventDefault();
+    const input = form.elements["name"].value;
+
     let data = {
-      name: form.elements["name"].value,
+      name: input === "" ? "Guest" : input,
       text: form.elements["text"].value,
       timestamp: Date.now(),
     };
 
     postData(document.URL + "/new-comment", data).then(async (response) => {
       if (response.ok) {
-        hideError();
-        appendComment(data);
-        form.elements["name"].value = "";
-        form.elements["text"].value = "";
         toggleForm();
+        hideErrors();
+        clearForm();
+        appendComment(data);
+        incrementComments();
       } else {
         const data = await response.json();
-        displayError(data);
+        displayErrors(data);
       }
     });
   };
@@ -64,7 +67,7 @@ const initCommentForm = (() => {
   
     const date = document.createElement("div");
     date.classList.add("comment-date");
-    date.innerHTML = data.timestamp;
+    date.innerHTML = "Just Now";
 
     const text = document.createElement("div");
     text.classList.add("comment-text");
@@ -76,8 +79,8 @@ const initCommentForm = (() => {
     commentSection.insertBefore(container, commentForm.nextSibling);
   }
 
-  function displayError() {
-    errorMsg.opacity = 1;
+  function displayErrors() {
+    errorContainer.opacity = 1;
 
     if (data.errors) {
       data.errors.forEach((error) => {
@@ -92,7 +95,7 @@ const initCommentForm = (() => {
     }
   }
 
-  function hideError() {
+  function hideErrors() {
     errorContainer.opacity = 0;
 
     errorContainer.innerHTML = "";
@@ -103,6 +106,11 @@ const initCommentForm = (() => {
     form.classList.toggle("hide");
   }
 
+  function clearForm() {
+    form.elements["name"].value = "";
+    form.elements["text"].value = "";
+  }
+
   window.addEventListener("click", (e) => {
     if (e.target.classList.contains("delete-comment")) {
       deleteComment(e.target);
@@ -111,7 +119,24 @@ const initCommentForm = (() => {
 
   function deleteComment(target) {
     const comment_id = target.parentElement.id;
-    postData(document.URL + "/comment/" + comment_id + "/delete", {});
-    commentSection.removeChild(target.parentElement);
+    postData(document.URL + "/comment/" + comment_id + "/delete", {}).then(
+      (response) => {
+        if (response.ok) {
+          commentSection.removeChild(target.parentElement);
+          decrementComments();
+        }
+      }
+    );
+  }
+  function incrementComments() {
+    let currentLength = commentsHeader.innerHTML.split(" ")[0];
+    let newLength = Number(currentLength) + 1;
+    commentsHeader.innerHTML = newLength + " Comments";
+  }
+
+  function decrementComments() {
+    let currentLength = commentsHeader.innerHTML.split(" ")[0];
+    let newLength = Number(currentLength) + -1;
+    commentsHeader.innerHTML = newLength + " Comments";
   }
 })();

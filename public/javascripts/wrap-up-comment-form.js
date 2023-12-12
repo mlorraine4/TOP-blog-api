@@ -4,6 +4,7 @@ const initCommentForm = (() => {
   const closeBtn = document.getElementById("close-form");
   const commentSection = document.getElementById("comments");
   const errorContainer = document.getElementById("error-container");
+  const commentsHeader = commentSection.querySelector("h2");
 
   openBtn.onclick = toggleForm;
   closeBtn.onclick = toggleForm;
@@ -20,9 +21,11 @@ const initCommentForm = (() => {
 
     postData(document.URL + "/new-comment", data).then(async (response) => {
       if (response.ok) {
+        toggleForm();
         hideErrors();
         clearForm();
         appendComment(data);
+        incrementComments();
       } else {
         const data = await response.json();
         displayErrors(data);
@@ -64,7 +67,7 @@ const initCommentForm = (() => {
 
     const date = document.createElement("div");
     date.classList.add("comment-date");
-    date.innerHTML = data.date;
+    date.innerHTML = "Just Now";
 
     const text = document.createElement("div");
     text.classList.add("comment-text");
@@ -116,7 +119,25 @@ const initCommentForm = (() => {
 
   function deleteComment(target) {
     const comment_id = target.parentElement.id;
-    postData(document.URL + "/comment/" + comment_id + "/delete", {});
-    commentSection.removeChild(target.parentElement);
+    postData(document.URL + "/comment/" + comment_id + "/delete", {}).then(
+      (response) => {
+        if (response.ok) {
+          commentSection.removeChild(target.parentElement);
+          decrementComments();
+        }
+      }
+    );
+  }
+  
+  function incrementComments() {
+    let currentLength = commentsHeader.innerHTML.split(" ")[0];
+    let newLength = Number(currentLength) + 1;
+    commentsHeader.innerHTML = newLength + " Comments";
+  }
+
+  function decrementComments() {
+     let currentLength = commentsHeader.innerHTML.split(" ")[0];
+     let newLength = Number(currentLength) + - 1;
+     commentsHeader.innerHTML = newLength + " Comments";
   }
 })();
