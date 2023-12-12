@@ -16,8 +16,8 @@ const commentController = require("../controllers/commentController");
 router.get("/log-in", userController.log_in_GET);
 router.post("/log-in", userController.log_in_POST);
 router.get("/log-out", userController.log_out_GET);
-router.get("/sign-up", userController.sign_up_get);
-router.post("/sign-up", userController.sign_up_post);
+// router.get("/sign-up", userController.sign_up_get);
+// router.post("/sign-up", userController.sign_up_post);
 router.get("/upcoming-releases", userController.calendar_get);
 router.get("/dashboard", userController.user_dashboard_get);
 router.get("/account", userController.user_account_get);
@@ -79,11 +79,11 @@ router.post(
 router.get("/tbr-list", bookController.masterlist_get);
 // Comments
 router.post(
-  "/book-review/:id/new-comment",
+  "/book-review/:author/:title/new-comment",
   commentController.book_review_comment_form_post
 );
 router.post(
-  "/book-review/:id/comment/:commentid/delete",
+  "/book-review/:author/:title/comment/:id/delete",
   commentController.book_review_comment_delete_post
 );
 

@@ -28,7 +28,8 @@ block content
                 label(for='text') Comment
                 input#text(name='text'  type='text' required value=(undefined===guest ? '' : guest.text))
                 button(type='submit') Submit
-                div#error-msg Error: There was a problem submitting your comment. 
+                #error-container 
+                    ul
 
             each comment in review.comments 
                 div.comment-container(id=comment._id)

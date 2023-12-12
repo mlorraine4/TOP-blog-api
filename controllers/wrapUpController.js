@@ -159,13 +159,12 @@ exports.wrapUp_form_post = [
           // Month is valid. Check for other errors.
           if (!errors.isEmpty()) {
             // Form data is not valid. Re-render form with data and errors.
-            res.render("wrap-up-form", {
+            return res.render("wrap-up-form", {
               user: req.user,
               title: "Edit Wrap Up",
               wrapUp: wrapUp,
               errors: errors.array(),
             });
-            return;
           } else {
             // Form data is valid. Check if wrap up already exists.
 
@@ -177,7 +176,7 @@ exports.wrapUp_form_post = [
             if (wrapUpDB === null) {
               // Wrap up does not already exist. Save new wrap up.
               const result = await wrapUp.save();
-              res.redirect(result.url);
+              return res.redirect(result.url);
             } else {
               // Wrap up already exists. Return error.
               res.render("wrap-up-form", {

@@ -3,7 +3,7 @@ const initCommentForm = (() => {
   const openBtn = document.getElementById("open-form");
   const closeBtn = document.getElementById("close-form");
   const commentSection = document.getElementById("comments");
-  const errorMsg = document.getElementById("error-msg");
+  const errorContainer = document.getElementById("error-container");
 
   openBtn.onclick = toggleForm;
   closeBtn.onclick = toggleForm;
@@ -16,7 +16,7 @@ const initCommentForm = (() => {
       timestamp: Date.now(),
     };
 
-    postData(document.URL + "/new-comment", data).then((response) => {
+    postData(document.URL + "/new-comment", data).then(async (response) => {
       if (response.ok) {
         hideError();
         appendComment(data);
@@ -24,7 +24,8 @@ const initCommentForm = (() => {
         form.elements["text"].value = "";
         toggleForm();
       } else {
-        displayError();
+        const data = await response.json();
+        displayError(data);
       }
     });
   };
@@ -77,10 +78,25 @@ const initCommentForm = (() => {
 
   function displayError() {
     errorMsg.opacity = 1;
+
+    if (data.errors) {
+      data.errors.forEach((error) => {
+        const li = document.createElement("li");
+        li.innerHTML = error.msg;
+        errorContainer.querySelector("ul").append(li);
+      });
+    } else {
+      const li = document.createElement("li");
+      li.innerHTML = "There was an error saving your comment";
+      errorContainer.querySelector("ul").append(li);
+    }
   }
 
   function hideError() {
-    errorMsg.opacity = 0;
+    errorContainer.opacity = 0;
+
+    errorContainer.innerHTML = "";
+    errorContainer.appendChild(document.createElement("ul"));
   }
 
   function toggleForm() {

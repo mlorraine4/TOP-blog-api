@@ -3,6 +3,7 @@ const { body, validationResult } = require("express-validator");
 const BookReview = require("../models/bookReview");
 const WrapUp = require("../models/monthlyWrapUp");
 const Comment = require("../models/comment");
+const Book = require("../models/book");
 
 exports.wrap_up_comment_form_post = [
   body("name", "Name field needs to be shorter than 20 characters")
@@ -33,10 +34,17 @@ exports.wrap_up_comment_form_post = [
           { month: req.params.month, year: req.params.year },
           { $push: { comments: comment } }
         ).exec();
-
-        const result = await comment.save();
-
-        return res.sendStatus(200);
+        
+        if (wrapUp !== null) {
+          // Wrap up exists. Save comment.
+          const result = await comment.save();
+          return res.sendStatus(200);
+        } else {
+          // Wrap Up does not exist. Send error.
+          return res.status(404).send({errors: [
+            { msg: "Can't save comment. Wrap Up does not exist." }
+          ]})
+        }
       }
     } catch (err) {
       return next(err);
@@ -70,6 +78,8 @@ exports.book_review_comment_form_post = [
     .escape(),
   asyncHandler(async (req, res, next) => {
     try {
+      const errors = validationResult(req);
+
       if (!errors.isEmpty()) {
         // Form data is not valid. Send error(s).
         return res.status(500).send({ errors: errors.array() });
@@ -81,15 +91,29 @@ exports.book_review_comment_form_post = [
           timestamp: req.body.timestamp,
         });
 
-        // Add comment to book review.
-        const bookReview = await BookReview.findByIdAndUpdate(req.params.id, {
-          $push: { comments: comment },
+        const book = await Book.findOne({
+          encodedAuthor: req.params.author,
+          encodedTitle: req.params.title,
         }).exec();
 
-        // Save comment.
-        const result = await comment.save();
+        // Add comment to book review.
+        const bookReview = await BookReview.findOneAndUpdate(
+          { book: book },
+          {
+            $push: { comments: comment },
+          }
+        ).exec();
 
-        return res.sendStatus(200);
+        if (bookReview !== null) {
+          // Book review exists. Save comment.
+          const result = await comment.save();
+          return res.sendStatus(200);
+        } else {
+          // Book review does not exist. Send error.
+          return res
+            .status(404)
+            .send({ errors: [{ msg: "Can't save comment. Book review does not exist." }] });
+        }
       }
     } catch (err) {
       return next(err);
@@ -101,9 +125,8 @@ exports.book_review_comment_delete_post = asyncHandler(
   async (req, res, next) => {
     try {
       if (req.user) {
-        const result = await Comment.findByIdAndDelete(
-          req.params.commentid
-        ).exec();
+        const result = await Comment.findByIdAndDelete(req.params.id).exec();
+        return;
       } else {
         const err = new Error("You must be an authorized user.");
         err.status = 401;

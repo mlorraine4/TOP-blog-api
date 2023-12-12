@@ -94,6 +94,9 @@ const initCommentForm = (() => {
 
   function hideErrors() {
     errorContainer.opacity = 0;
+
+    errorContainer.innerHTML = "";
+    errorContainer.appendChild(document.createElement("ul"));
   }
 
   function toggleForm() {
