@@ -4,7 +4,12 @@ block content
     
     #content
         h1 #{title}
-        form#book-review-form(action='' method='POST')
+        #success-container(class="hide")
+            button x
+            p Update successful!
+            p 
+                a(href="") Updated Book Review
+        form#book-review-form
             p Book
             input#title(name='title' type='text' placeholder='title' value=(undefined===bookReview ? '' : bookReview.book.title))
             input#author(name='author' type='text' placeholder='author' value=(undefined===bookReview ? '' : bookReview.book.author))
@@ -18,17 +23,14 @@ block content
                             li #{tag.name}
                                 button(class='delete-button') X
                 input(type="text" id="input-tag" placeholder="author, title, genre, etc")
-            input#tag_input(type="text" hidden name='tag_input')
-            input#review_body(type="text" hidden name='review_body' value=(undefined===bookReview ? '' : bookReview.body))
-        button(onclick="saveReview()" class='form-submit-button') save
+            input#review-hidden(type="text" hidden name='review-hidden' value=(undefined===bookReview ? '' : he.decode(bookReview.body)))
+            button.form-submit-button save
+            #error-container
+                ul
         if errors
             each error in errors
                 li!= error.msg
     
-    if bookReview!==undefined
-        script.
-            const review = "#{bookReview.body}"
-    script(type="application/javascript" src="/javascripts/review-helper.js")
-    script(type="application/javascript" src="/he/he.js")
     script(type="application/javascript" src="/tinymce/tinymce.min.js")
-    script(type="application/javascript" src="/javascripts/my-tinymce-config.js")
+    script(type="application/javascript" src="/javascripts/book-review-form.js" defer)
+

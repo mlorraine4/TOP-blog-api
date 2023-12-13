@@ -39,6 +39,7 @@ button:hover {
 
 input {
   margin: 10px;
+  padding: 10px;
 }
 
 h1 {
@@ -183,7 +184,7 @@ form input {
   position: relative;
   border: 1px solid #ccc;
   border-radius: 4px;
-  padding: 5px;
+  padding: 20px;
   box-shadow: 2px 2px 5px #00000033;
   width: 50%;
   background-color: white;
@@ -488,4 +489,32 @@ form input {
 #error-msg, #error-container {
   opacity: 0;
   font-weight: bold;
+}
+
+#success-container {
+  position: absolute;
+  background-color: #330066;
+  width: 400px;
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0; 
+  text-align: center;
+  z-index: 3;
+}
+
+#success-container button {
+  color: white;
+  background-color: #330066;
+  position: absolute;
+  right: 20px;
+}
+
+#success-container a {
+  font-weight: bold;
+}
+
+#success-container a:hover {
+  color: #a474d8;
 }

@@ -207,7 +207,7 @@ exports.book_review_form_post = [
 
 exports.book_review_update_get = asyncHandler(async (req, res, next) => {
   try {
-    if (req.user) {
+    // if (req.user) {
         const book = await Book.findOne({
           encodedTitle: req.params.title,
           encodedAuthor: req.params.author,
@@ -231,30 +231,37 @@ exports.book_review_update_get = asyncHandler(async (req, res, next) => {
           err.status = 404;
           return next(err);
         }
-    } else {
-      // User is not logged in.
-      const err = new Error("You must be an authorized user.");
-      err.status = 401;
-      return next(err);
-    }
+    // } else {
+    //   // User is not logged in.
+    //   const err = new Error("You must be an authorized user.");
+    //   err.status = 401;
+    //   return next(err);
+    // }
   } catch (err) {
     return next(err);
   }
 });
 
 exports.book_review_update_post = [
-  body("review_body", "Review must not be empty.")
+  body("title", "Title must not be empty.")
     .trim()
     .isLength({ min: 1 })
     .escape(),
-  body("tag_input", "Tags must not be empty.")
+  body("author", "Author must not be empty.")
     .trim()
     .isLength({ min: 1 })
     .escape(),
-
+  body("review", "Review must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("tags", "Tags must not be empty.").trim().isLength({ min: 1 }).escape(),
+// TODO: RE-DO TAG FUNCTIONS!
   asyncHandler(async (req, res, next) => {
     try {
-      if (req.user) {
+      console.log(req.body);
+
+      // if (req.user) {
         const errors = validationResult(req);
 
         const book = await Book.findOne({
@@ -264,16 +271,12 @@ exports.book_review_update_post = [
 
         const bookReview = await BookReview.findOne({ book: book })
           .populate("book")
-          .populate("tags")
           .exec();
 
         if (bookReview !== null) {
+          // Book review exists. Save all tags.
           let tagsDBArr = [];
-
-          if (req.body.tag_input.includes(",")) {
-            // There are multiple tags.
-            const tagsReqArr = req.body.tag_input.split(",");
-            for (const tag of tagsReqArr) {
+            for (const tag of req.body.tags) {
               const tagRes = await Tags.findOne({ name: tag }).exec();
               if (tagRes !== null) {
                 // Tag exists, add to array.
@@ -287,32 +290,13 @@ exports.book_review_update_post = [
                 tagsDBArr.push(tagData);
               }
             }
-          } else {
-            // There is a single tag.
-            const result = await Tags.findOne({
-              name: req.body.tag_input,
-            }).exec();
-            if (result !== null) {
-              // Tag does not exist, save to db.
-              const newTag = new Tags({
-                name: req.body.tag_input,
-              });
-
-              const tagRes = await newTag.save();
-              tagsDBArr.push(tagRes);
-            } else {
-              // Tag exists, save to array.
-              tagsDBArr.push(result);
-            }
-          }
 
           const newBookReview = new BookReview({
-            title: req.body.title,
-            body: req.body.review_body,
+            body: req.body.review,
             book: bookReview.book,
             tags: tagsDBArr,
             timestamp: bookReview.timestamp,
-            _id: req.params.id,
+            _id: bookReview._id,
           });
 
           if (!errors.isEmpty()) {
@@ -326,11 +310,11 @@ exports.book_review_update_post = [
           } else {
             // Form data is valid. Update book review.
             const updatedBookReview = await BookReview.findByIdAndUpdate(
-              req.params.id,
+              bookReview._id,
               newBookReview,
               {}
             );
-            return res.redirect(updatedBookReview.url);
+            return res.status(200).send({url: bookReview.url});
           }
         } else {
           // No results.
@@ -338,12 +322,12 @@ exports.book_review_update_post = [
           err.status = 404;
           return next(err);
         }
-      } else {
-        // User is not logged in.
-        const err = new Error("You must be an authorized user.");
-        err.status = 401;
-        return next(err);
-      }
+      // } else {
+      //   // User is not logged in.
+      //   const err = new Error("You must be an authorized user.");
+      //   err.status = 401;
+      //   return next(err);
+      // }
     } catch (err) {
       return next(err);
     }

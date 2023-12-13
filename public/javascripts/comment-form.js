@@ -79,7 +79,7 @@ const initCommentForm = (() => {
     commentSection.insertBefore(container, commentForm.nextSibling);
   }
 
-  function displayErrors() {
+  function displayErrors(data) {
     errorContainer.opacity = 1;
 
     if (data.errors) {
