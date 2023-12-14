@@ -80,7 +80,7 @@ const initCommentForm = (() => {
   }
 
   function displayErrors(data) {
-    errorContainer.opacity = 1;
+    errorContainer.style.opacity = 1;
 
     if (data.errors) {
       data.errors.forEach((error) => {
@@ -96,7 +96,7 @@ const initCommentForm = (() => {
   }
 
   function hideErrors() {
-    errorContainer.opacity = 0;
+    errorContainer.style.opacity = 0;
 
     errorContainer.innerHTML = "";
     errorContainer.appendChild(document.createElement("ul"));

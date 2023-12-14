@@ -489,6 +489,7 @@ form input {
 #error-msg, #error-container {
   opacity: 0;
   font-weight: bold;
+  color: white;
 }
 
 #success-container {

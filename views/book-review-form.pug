@@ -24,12 +24,9 @@ block content
                                 button(class='delete-button') X
                 input(type="text" id="input-tag" placeholder="author, title, genre, etc")
             input#review-hidden(type="text" hidden name='review-hidden' value=(undefined===bookReview ? '' : he.decode(bookReview.body)))
-            button.form-submit-button save
+            button.form-submit-button(type="submit") save
             #error-container
                 ul
-        if errors
-            each error in errors
-                li!= error.msg
     
     script(type="application/javascript" src="/tinymce/tinymce.min.js")
     script(type="application/javascript" src="/javascripts/book-review-form.js" defer)

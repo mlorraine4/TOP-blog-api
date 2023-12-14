@@ -229,7 +229,7 @@ exports.book_update_post = [
             book_cover_url: req.body.book_cover,
             rating: req.body.rating,
             date_read: datesArray,
-            _id: req.params.id,
+            _id: book._id,
             encodedTitle: req.body.title
               .toLowerCase()
               .replace(/[^\w\s-]+/g, "")
@@ -251,7 +251,7 @@ exports.book_update_post = [
           } else {
             // Data is valid. Update book.
             const result = await Book.findByIdAndUpdate(
-              req.params.id,
+              book._id,              
               updatedBook,
               {}
             );
@@ -334,7 +334,7 @@ exports.book_delete_post = asyncHandler(async (req, res, next) => {
           return next(err);
         } else {
           // An associated book review does not exist, OK to delete book.
-          await Book.findByIdAndRemove(req.body.bookid);
+          await Book.findByIdAndRemove(book._id);
           return res.redirect("/library");
         }
       } else {

@@ -26,6 +26,7 @@ const initReview = (() => {
   form.onsubmit = (e) => {
 
     e.preventDefault();
+    hideErrors();
 
     let data = {
       title: form.elements["title"].value,
@@ -41,7 +42,6 @@ const initReview = (() => {
       } else {
         // Success
         const data = await response.json();
-        hideErrors();
         displaySuccess(data);
       }
     });
@@ -76,9 +76,9 @@ const initReview = (() => {
   }
 
   function displayErrors(data) {
-    errorContainer.opacity = 1;
+    errorContainer.style.opacity = 1;
 
-    if (data.errors) {
+    if (!typeof(data.errors) === "object") {
       data.errors.forEach((error) => {
         const li = document.createElement("li");
         li.innerHTML = error.msg;
@@ -86,13 +86,13 @@ const initReview = (() => {
       });
     } else {
       const li = document.createElement("li");
-      li.innerHTML = "There was an error saving your comment";
+      li.innerHTML = "There was an internal error saving your review.";
       errorContainer.querySelector("ul").append(li);
     }
   }
 
   function hideErrors() {
-    errorContainer.opacity = 0;
+    errorContainer.style.opacity = 0;
     errorContainer.innerHTML = "";
     errorContainer.appendChild(document.createElement("ul"));
   }
