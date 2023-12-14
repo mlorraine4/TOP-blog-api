@@ -48,7 +48,7 @@ exports.wrap_up_comment_form_post = [
         }
       }
     } catch (err) {
-      return next(err);
+      return res.status(500).send({errors: [{msg: "There was an internal error saving your comment."}]});
     }
   }),
 ];
@@ -62,18 +62,20 @@ exports.wrap_up_comment_delete_post = asyncHandler(async (req, res, next) => {
         return res.sendStatus(200);
       } else {
         // Comment id provided is not a valid mongoose id
-        const err = new Error("Comment does not exist.");
-        err.status = 404;
-        return next(err);
+        return res.status(404).send({
+          errors: [{ msg: "Comment does not exist." }],
+        });
       }
     } else {
       // User is not logged in.
-      const err = new Error("You must be an authorized user.");
-      err.status = 401;
-      return next(err);
+      return res.status(401).send({
+        errors: [{ msg: "You must be an authorized user." }],
+      });
     }
   } catch (err) {
-    return next(err);
+    return res.status(500).send({
+      errors: [{ msg: "There was an internal error saving your comment." }],
+    });
   }
 });
 
@@ -127,7 +129,11 @@ exports.book_review_comment_form_post = [
         }
       }
     } catch (err) {
-      return next(err);
+      return res
+        .status(500)
+        .send({
+          errors: [{ msg: "There was an internal error saving your comment." }],
+        });
     }
   }),
 ];
@@ -142,17 +148,19 @@ exports.book_review_comment_delete_post = asyncHandler(
           return res.sendStatus(200);
         } else {
           // Comment id provided is not a valid mongoose id
-          const err = new Error("Comment does not exist.");
-          err.status = 404;
-          return next(err);
+          return res.status(404).send({
+            errors: [{ msg: "Comment does not exist." }],
+          });
         }
       } else {
-        const err = new Error("You must be an authorized user.");
-        err.status = 401;
-        return next(err);
+        return res.status(401).send({
+          errors: [{ msg: "You must be an authorized user." }],
+        });
       }
     } catch (err) {
-      return next(err);
+      return res.status(500).send({
+        errors: [{ msg: "There was an internal error saving your comment." }],
+      });
     }
   }
 );
