@@ -10,22 +10,22 @@ html
         img(src="/images/book-review-header.jpg" class='header-img')
       div(class='nav-bar')
         a(href="/" class="navLink") Home 
-        a(href="/gardenofpages/book-reviews" class="navLink") Book Reviews
+        a(href="/book-reviews" class="navLink") Book Reviews
         div(class="dropDownContainer")
           button#drop-btn Monthly Wrap Ups
           div(id="myDropdown" class="dropdown-content")
-            a(href="/gardenofpages/monthly-wrap-ups" class='wrap-up-link') All
-            a(href="/gardenofpages/monthly-wrap-up/2024" class='wrap-up-link') 2024
-            a(href="/gardenofpages/monthly-wrap-up/2023" class='wrap-up-link') 2023
-            a(href="/gardenofpages/monthly-wrap-up/2022" class='wrap-up-link') 2022
-            a(href="/gardenofpages/monthly-wrap-up/2021" class='wrap-up-link') 2021
-        a(href="/gardenofpages/tbr-list" class="navLink" class='wrap-up-link') TBR Masterlist
-        a(href="/gardenofpages/upcoming-releases" class="navLink") Upcoming Releases
+            a(href="/monthly-wrap-ups" class='wrap-up-link') All
+            a(href="/monthly-wrap-up/2024" class='wrap-up-link') 2024
+            a(href="/monthly-wrap-up/2023" class='wrap-up-link') 2023
+            a(href="/monthly-wrap-up/2022" class='wrap-up-link') 2022
+            a(href="/monthly-wrap-up/2021" class='wrap-up-link') 2021
+        a(href="/tbr-list" class="navLink") TBR Masterlist
+        a(href="/upcoming-releases" class="navLink") Upcoming Releases
         if user 
-          a(href="/gardenofpages/dashboard" class="navLink") Dashboard
-          a(href="/gardenofpages/log-out" class="navLink") Log Out
+          a(href="/dashboard" class="navLink") Dashboard
+          a(href="/log-out" class="navLink") Log Out
         else
-          a(href="/gardenofpages/log-in" class="navLink") Log In
+          a(href="/log-in" class="navLink") Log In
     div(class="center-margin-top")
       block content 
 

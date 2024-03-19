@@ -15,7 +15,7 @@ exports.log_in_GET = asyncHandler(async (req, res, next) => {
 // POST request for log in form submission.
 exports.log_in_POST = passport.authenticate("local", {
   successRedirect: "/",
-  failureRedirect: "/gardenofpages/log-in",
+  failureRedirect: "/log-in",
 });
 
 // GET request for user log out (no POST, log out is handled by express middleware)

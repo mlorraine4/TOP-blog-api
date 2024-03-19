@@ -10,8 +10,8 @@ const BookSchema = new Schema({
   pages: { type: Number, required: true, max: 5000 },
   rating: { type: Number, required: true, max: 5 },
   date_read: [{ type: Date }],
-  encodedTitle: { type: String, required: true},
-  encodedAuthor: {type: String, required: true}
+  encodedTitle: { type: String, required: true },
+  encodedAuthor: { type: String, required: true },
 });
 
 BookSchema.virtual("url").get(function () {
@@ -23,7 +23,7 @@ BookSchema.virtual("url").get(function () {
   //   .toLowerCase()
   //   .replace(/[^\w\s-]+/g, "")
   //   .replace(/\s+/g, "-");
-  return `/gardenofpages/book/${this.encodedAuthor}/${this.encodedTitle}`;
+  return `/book/${this.encodedAuthor}/${this.encodedTitle}`;
 });
 
 // Export model

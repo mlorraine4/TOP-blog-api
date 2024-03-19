@@ -11,7 +11,7 @@ const PostSchema = new Schema({
 // Virtual for author's URL
 PostSchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
-  return `/gardenofpages/${this._id}`;
+  return `/${this._id}`;
 });
 
 // Export model

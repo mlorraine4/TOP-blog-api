@@ -4,7 +4,7 @@ block content
   #content
     if user && user.is_admin
       p 
-        a(href="/gardenofpages/library") My Library 
+        a(href="/library") My Library 
     div(class='wrap-up-detail-title') #{he.decode(book.title)} by #{he.decode(book.author)}
     if book.series && book.series.length !== 0
       div(class='wrap-up-detail-sub-title') #{he.decode(book.series)} ##{book.series_number}

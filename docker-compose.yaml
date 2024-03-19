@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  gardenofpages:
+    restart: always
+    build: .
+    networks:
+      - websites
+networks:
+  websites:
+    name: websites
+    external: true

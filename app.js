@@ -12,7 +12,6 @@ const compression = require("compression");
 const helmet = require("helmet");
 require("dotenv").config();
 
-var indexRouter = require("./routes/index");
 const siteRouter = require("./routes/gardenofpages");
 
 var app = express();
@@ -121,8 +120,7 @@ app.locals.he = require("he");
 // moment node module
 app.locals.moment = require("moment");
 
-app.use("/", indexRouter);
-app.use("/gardenofpages", siteRouter);
+app.use("/", siteRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
