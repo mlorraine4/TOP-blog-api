@@ -114,28 +114,12 @@ exports.wrapUp_form_post = [
     try {
       if (req.user) {
         const errors = validationResult(req);
-
-        const monthArr = [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ];
-
         const dateString = req.body.month + "1, " + req.body.year;
         const date = new Date(dateString);
         const month = date.getMonth();
         const year = date.getFullYear();
         const myDate = new Date(year, month + 1, 0);
-        
+
         const wrapUp = new MonthlyWrapUp({
           year: req.body.year,
           month: req.body.month,
@@ -144,52 +128,66 @@ exports.wrapUp_form_post = [
           timestamp: myDate,
         });
 
-        if (!monthArr.includes(req.body.month)) {
-          // Month provided is not a valid month.
+        if (!errors.isEmpty()) {
+          // Form data is not valid. Re-render form with data and errors.
           return res.render("wrap-up-form", {
             user: req.user,
             title: "Edit Wrap Up",
             wrapUp: wrapUp,
-            errors: [
-              ...errors.array(),
-              { msg: `${req.body.month} is not a correct month format.` },
-            ],
+            errors: errors.array(),
           });
         } else {
-          // Month is valid. Check for other errors.
-          if (!errors.isEmpty()) {
-            // Form data is not valid. Re-render form with data and errors.
+          // Form data is valid. Check if month is valid.
+          const monthArr = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+          ];
+
+          if (!monthArr.includes(req.body.month)) {
+            // Month provided is not a valid month.
             return res.render("wrap-up-form", {
               user: req.user,
               title: "Edit Wrap Up",
               wrapUp: wrapUp,
-              errors: errors.array(),
+              errors: [
+                ...errors.array(),
+                { msg: `${req.body.month} is not a correct month format.` },
+              ],
             });
           } else {
-            // Form data is valid. Check if wrap up already exists.
-
+            // All form data is valid.
             const wrapUpDB = await MonthlyWrapUp.findOne({
-              month: req.body.month,
-              year: req.body.year,
-            }).exec();
+               month: req.body.month,
+               year: req.body.year,
+             }).exec();
 
-            if (wrapUpDB === null) {
-              // Wrap up does not already exist. Save new wrap up.
-              const result = await wrapUp.save();
-              return res.redirect(result.url);
-            } else {
-              // Wrap up already exists. Return error.
-              res.render("wrap-up-form", {
-                user: req.user,
-                title: "Edit Wrap Up",
-                wrapUp: wrapUp,
-                errors: [
-                  {
-                    msg: `${req.body.month} ${req.body.year} wrap up already exists.`,
-                  },
-                ],
-              });
-            }
+             if (wrapUpDB === null) {
+               // Wrap up does not already exist. Save new wrap up.
+               const result = await wrapUp.save();
+               return res.redirect(result.url);
+             } else {
+               // Wrap up already exists. Return error.
+               return res.render("wrap-up-form", {
+                 user: req.user,
+                 title: "Edit Wrap Up",
+                 wrapUp: wrapUp,
+                 errors: [
+                   {
+                     msg: `${req.body.month} ${req.body.year} wrap up already exists.`,
+                   },
+                 ],
+               });
+             }
           }
         }
       } else {
@@ -249,12 +247,12 @@ exports.wrapUp_update_post = [
       if (req.user) {
         const errors = validationResult(req);
 
-        const wrapUpDB = await MonthlyWrapUp.findOne({
+        const existingWrapUp = await MonthlyWrapUp.findOne({
           month: req.params.month,
           year: req.params.year,
         }).exec();
 
-        if (wrapUpDB !== null) {
+        if (existingWrapUp !== null) {
           const monthArr = [
             "January",
             "February",
@@ -304,7 +302,7 @@ exports.wrapUp_update_post = [
           } else {
             // Data is valid. Update monthly wrap up.
             const result = await MonthlyWrapUp.findByIdAndUpdate(
-              wrapUpDB.id,
+              existingWrapUp.id,
               updatedWrapUp,
               {}
             );

@@ -86,14 +86,14 @@ exports.book_review_detail_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.book_review_form_get = asyncHandler(async (req, res, next) => {
-  // if (req.user) {
+  if (req.user) {
   return res.render("book-review-form", { user: req.user });
-  // } else {
-  //   // User is not logged in.
-  //   const err = new Error("You must be an authorized user.");
-  //   err.status = 401;
-  //   return next(err);
-  // }
+  } else {
+    // User is not logged in.
+    const err = new Error("You must be an authorized user.");
+    err.status = 401;
+    return next(err);
+  }
 });
 
 exports.book_review_form_post = [
@@ -116,7 +116,7 @@ exports.book_review_form_post = [
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-        // There are errors.
+        // Form data has errors.
         return res.status(400).send({ errors: errors.array() });
       } else {
         // Form data is valid.
@@ -141,7 +141,7 @@ exports.book_review_form_post = [
               const tagData = new Tags({
                 name: tag,
               });
-              const result = await tagData.save();
+              await tagData.save();
               tagsDBArr.push(tagData);
             }
           }
@@ -155,7 +155,7 @@ exports.book_review_form_post = [
           });
 
           // Save book review.
-          const result = await book_review.save();
+          await book_review.save();
           return res.status(200).send({ url: book_review.url });
         } else if (book === null) {
           // Book does not exist yet. Send error.
@@ -191,7 +191,7 @@ exports.book_review_form_post = [
 
 exports.book_review_update_get = asyncHandler(async (req, res, next) => {
   try {
-    // if (req.user) {
+    if (req.user) {
     const book = await Book.findOne({
       encodedTitle: req.params.title,
       encodedAuthor: req.params.author,
@@ -215,12 +215,12 @@ exports.book_review_update_get = asyncHandler(async (req, res, next) => {
       err.status = 404;
       return next(err);
     }
-    // } else {
-    //   // User is not logged in.
-    //   const err = new Error("You must be an authorized user.");
-    //   err.status = 401;
-    //   return next(err);
-    // }
+    } else {
+      // User is not logged in.
+      const err = new Error("You must be an authorized user.");
+      err.status = 401;
+      return next(err);
+    }
   } catch (err) {
     return next(err);
   }
