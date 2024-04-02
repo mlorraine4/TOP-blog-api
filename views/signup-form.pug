@@ -5,7 +5,7 @@ block content
 
         h1 Sign Up
         
-        form#sign-up-form(action='' method='POST')
+        form(action='' method='POST' class="w-[400px]")
             label(for='username') Username
             input(name='username' type='text'  required value=(undefined===user ? '' : user.username))
             label(for='display_name') Display Name
@@ -14,7 +14,7 @@ block content
             input(name='password' type='password' required)
             label(for='confirm_password') Confirm Password
             input(name='confirm_password' type='password'  required)
-            button(type='submit' class="form-submit-button") Sign Up
+            button(type='submit') Sign Up
         if errors
             each error in errors
                 li!= error.msg

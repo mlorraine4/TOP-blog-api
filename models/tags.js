@@ -3,7 +3,13 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const TagsSchema = new Schema({
-  name: { type: String, required: true, maxLength: 40, minLength: 1 },
+  name: {
+    type: String,
+    required: true,
+    maxLength: 40,
+    minLength: 1,
+    text: true,
+  },
 });
 
 // Virtual for genreinstance's URL

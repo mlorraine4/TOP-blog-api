@@ -1,0 +1,246 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --dark-purple: #20162b;
+  --green: #0a7412;
+  --dark-green: #072c0c;
+  --light-purple: #a474d8;
+  --black: #1b1212;
+  --faded-black: rgba(13, 13, 13, 0.5);
+  --orange: #fc6a0e;
+  --magenta: #751c4d;
+  --faded: #9e6082;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--faded);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--magenta);
+  border-radius: 10px;
+}
+
+@font-face {
+  font-family: "Truculenta";
+  src: local("Truculenta"), url("../fonts/Truculenta.ttf") format("truetype");
+}
+
+body {
+  font: 14px "Truculenta";
+  margin: 0;
+  position: relative;
+  color: white;
+}
+
+a {
+  text-decoration: none;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+}
+
+button {
+  border-radius: 8px;
+  border: none;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+input {
+  margin: 10px;
+  padding: 10px;
+}
+
+h1 {
+  text-align: center;
+}
+
+label {
+  margin: 10px;
+}
+
+form input:focus {
+  outline: solid var(--orange);
+}
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
+/* KEEP THESE! */
+
+.dropDownContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  border: 2px solid black;
+  position: absolute;
+  top: 52px;
+  background-color: #f1f1f1;
+  width: 100%;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+/* COMMENT */
+.comment-container {
+  margin: 10px;
+  padding: 10px;
+  border-bottom: 1px solid var(--orange);
+  position: relative;
+  text-align: left;
+}
+
+.comment-header {
+  display: flex;
+  align-items: bottom;
+  padding-bottom: 10px;
+}
+
+.comment-name {
+  font-weight: bold;
+}
+
+.comment-date {
+  font-size: 0.5em;
+  font-weight: 100;
+  padding: 5px;
+}
+
+.comment-text {
+  font-size: 1.2em;
+}
+
+.delete-comment,
+#close-form {
+  position: absolute;
+  right: 20px;
+  padding: 5px;
+  top: 10px;
+}
+
+.delete-comment {
+  height: 15px;
+  width: 15px;
+}
+
+.delete-comment:hover {
+  cursor: pointer;
+}
+/* i think i need these */
+
+/* book review form */
+.tags-input {
+  display: inline-block;
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
+  box-shadow: 2px 2px 5px #00000033;
+  width: 50%;
+  background-color: white;
+}
+
+.tags-input ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tags-input li {
+  display: inline-block;
+  background-color: var(--light-purple);
+  color: white;
+  border-radius: 20px;
+  padding: 5px 10px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.tags-input input[type="text"] {
+  outline: none;
+  padding: 5px;
+  font-size: 14px;
+  border: 2px solid var(--light-purple);
+  border-radius: 8px;
+}
+
+.tags-input input[type="text"]:focus {
+  outline: none;
+}
+
+.tags-input .delete-button {
+  background-color: transparent;
+  color: #999;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+/* TBD */
+
+/* forms */
+.no-opacity {
+  opacity: 0;
+}
+
+#close-form {
+  background-color: inherit;
+  color: white;
+}
+
+#error-msg,
+#error-container {
+  opacity: 0;
+  font-weight: bold;
+  color: white;
+}
+
+#success-container {
+  position: absolute;
+  background-color: #330066;
+  width: 400px;
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 3;
+}
+
+#success-container button {
+  color: white;
+  background-color: #330066;
+  position: absolute;
+  right: 20px;
+}
+
+#success-container a {
+  font-weight: bold;
+}
+
+#success-container a:hover {
+  color: #a474d8;
+}

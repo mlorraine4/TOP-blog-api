@@ -2,40 +2,42 @@ extends layout
 
 block content
 
-    #content(class="book-review-container")
-        h1 A Review of #{review.book.title} by #{review.book.author}
-        img(src=he.decode(review.book.book_cover_url), class="book-cover-img")
+    div(class="flex flex-col bg-white text-black mx-auto py-10 w-[60%] min-w-[500px] max-w-[1000px] p-4 min-h-[calc(100vh-330px)]")
+        div(class="text-4xl m-10 text-center") A Review of #{review.book.title} by #{review.book.author}
+        div
+            div
+                img(src=he.decode(review.book.book_cover_url), class="shadow-lg float-left w-[200px] m-5")
         
-        p!=he.decode(review.body)
+            div(class="m-5 text-2xl")!=he.decode(review.body)
         
-        div(class='tags')
+        div(class='flex justify-between w-[70%] p-5 m-auto italic border-y-2 border-accent')
             each tag in review.tags
-                a(href=tag.url) ##{tag.name}
+                a(href=tag.url class="font-bold") ##{tag.name}
                 
         if user && user.is_admin
             p 
-                a(href=`${review.url}/update` class='edit-url') Edit
+                a(href=`${review.url}/update`) Edit
             p
-                a(href=`${review.url}/delete` class='edit-url') Delete
+                a(href=`${review.url}/delete`) Delete
 
-        div#comments
-            h2 #{review.comments.length} Comments
-            button#open-form Comment
-            form#comment-form(class="hide")
+        div#comments(class="w-[80%] m-auto relative text-center")
+            div(class="text-lg m-5") #{review.comments.length} Comments
+            button#open-form(class="bg-ptwo p-2 w-min hover:bg-faded text-white m-5") Comment
+            form#comment-form(class="hide absolute w-[400px] bg-pone z-20 mx-auto left-0 right-0 bottom-0 p-5")
                 button#close-form(type="button") x
-                label(for='name') Name
+                label(for='name' class="text-white") Name
                 input#name(name='name' type='text' value=(undefined===guest ? '' : guest.name))
-                label(for='text') Comment
+                label(for='text' class="text-white") Comment
                 input#text(name='text'  type='text' required value=(undefined===guest ? '' : guest.text))
-                button(type='submit') Submit
-                #error-container 
+                button(type='submit' class="bg-ptwo p-2 w-min hover:bg-faded text-white") Submit
+                #error-container(class="opacity-0 font-bold text-white h-5")
                     ul
 
             each comment in review.comments 
                 div.comment-container(id=comment._id)
                     if user && user.is_admin
-                        img.delete-comment(src="/images/delete.png")
-                    div.comment-header
+                        img.delete-comment(src="/images/delete.png" class="absolute right-5 p-2 top-2")
+                    div.comment-header(class="comment-header flex align-bottom pb-2")
                         div.comment-name #{comment.name}
                         div.comment-date #{moment(comment.timestamp).fromNow()}
                     div.comment-text #{comment.text}            

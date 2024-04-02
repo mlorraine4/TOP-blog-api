@@ -1,10 +1,9 @@
 extends layout
 
 block content
-  #content
-    h1 My Books
-    each book in books
-      //- div(class='library-item')
-        //- img(src=he.decode(book.book_cover_url) class='library-img')
-      p
-        a(href=book.url) #{he.decode(book.title)} by #{he.decode(book.author)}
+  div(class="text-4xl text-center p-5") My Books
+  each book in books
+    //- div(class='library-item')
+      //- img(src=he.decode(book.book_cover_url) class='library-img')
+    p
+      a(href=book.url) #{he.decode(book.title)} by #{he.decode(book.author)}

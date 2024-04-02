@@ -3,12 +3,12 @@ extends layout
 
 block content
   #content
-    div(class='flex-wrap')
+    div(class='flex flex-wrap')
       if reviews.length
         each review in reviews
-          div(class='post-container')
+          div(class=' hover:text-accent w-[300px] h-[450px] relative m-4 overflow-hidden whitespace-nowrap text-ellipsis flex flex-col justify-center')
             img(src=he.decode(review.book.book_cover_url) class='post-img')
-            a(href=review.url class='post-url') url
-            a(href=review.url class='post-title')  A Review: #{review.book.title} by #{review.book.author}
+            a(href=review.url class='w-full h-full absolute top-0 left-0 opacity-0') url
+            a(href=review.url class='text-xl overflow-hidden whitespace-nowrap text-ellipsis')  A Review: #{review.book.title} by #{review.book.author}
       else 
         p There are no posts.

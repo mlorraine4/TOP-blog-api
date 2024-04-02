@@ -16,14 +16,14 @@ exports.book_list_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.book_form_get = asyncHandler(async (req, res, next) => {
-  if (req.user) {
-    return res.render("book-form", { user: req.user, title: "Add Book" });
-  } else {
-    // User is not logged in.
-    const err = new Error("You must be an authorized user.");
-    err.status = 401;
-    return next(err);
-  }
+  // if (req.user) {
+  return res.render("book-form", { user: req.user, title: "Add Book" });
+  // } else {
+  //   // User is not logged in.
+  //   const err = new Error("You must be an authorized user.");
+  //   err.status = 401;
+  //   return next(err);
+  // }
 });
 
 exports.book_form_post = [
@@ -251,7 +251,7 @@ exports.book_update_post = [
           } else {
             // Data is valid. Update book.
             const result = await Book.findByIdAndUpdate(
-              book._id,              
+              book._id,
               updatedBook,
               {}
             );

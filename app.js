@@ -63,20 +63,20 @@ passport.deserializeUser(async (id, done) => {
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        "img-src": [
-          "'self'",
-          "https://firebasestorage.googleapis.com",
-          "https://calendar.google.com",
-        ],
-        frameSrc: ["'self'", "*.google.com/"],
-      },
-    },
-  })
-);
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: {
+//       directives: {
+//         "img-src": [
+//           "'self'",
+//           "https://firebasestorage.googleapis.com",
+//           "https://calendar.google.com",
+//         ],
+//         frameSrc: ["'self'", "*.google.com/"],
+//       },
+//     },
+//   })
+// );
 app.use(compression()); // Compress all routes
 
 // Set up rate limiter: maximum of twenty requests per minute

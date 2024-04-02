@@ -14,6 +14,8 @@ const BookSchema = new Schema({
   encodedAuthor: { type: String, required: true },
 });
 
+BookSchema.index({ title: "text", author: "text", series: "text" });
+
 BookSchema.virtual("url").get(function () {
   // const encodedTitle = this.title
   //   .toLowerCase()

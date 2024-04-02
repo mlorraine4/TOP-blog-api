@@ -2,10 +2,10 @@ extends layout
 
 block content
   #content
-    div(class='wrap-up-detail-title') Books Read in #{month} #{year}
-    div(class='flex-wrap')
+    div(class='text-2xl font-bold text-center p-5') Books Read in #{month} #{year}
+    div(class='flex flex-wrap')
       each book in books
-        div(class='flex-col-center wrap-up-detail-book-container')
+        div(class='flex flex-col justify-center w-[250px]')
           img(class='wrap-up-detail-book-cover-img' src=he.decode(book.book_cover_url))
           p #{book.title}
           p By: #{book.author}
@@ -15,9 +15,9 @@ block content
 
     if user && user.is_admin
       p
-        a(href=`${wrapUp.url}/update` class='edit-url') Edit
+        a(href=`${wrapUp.url}/update`) Edit
       p
-        a(href=`${wrapUp.url}/delete` class='edit-url') Delete
+        a(href=`${wrapUp.url}/delete`) Delete
     
     div#comments
       h2 #{wrapUp.comments.length} Comments

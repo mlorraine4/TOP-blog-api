@@ -1,12 +1,11 @@
 extends layout
 
 block content
-  #content
-    h1 Book Reviews
-    div(class='flex-wrap')
-      each review in reviews
-        div(class='post-container')
-          img(src=he.decode(review.book.book_cover_url) class='post-img')
-          a(href=review.url class='post-url') url
-          a(href=review.url class='post-date') #{moment(review.timestamp).utc().format("MMM Do")}
-          a(href=review.url class='post-title')  A Review: #{review.book.title} by #{review.book.author}
+  div(class="text-4xl text-center p-5") Book Reviews
+  div(class='flex flex-wrap justify-evenly w-2/3 max-w-[1000px] m-auto pt-20 pb-20')
+    each review in reviews
+      div(class='hover:text-accent w-[300px] h-[450px] relative m-4 overflow-hidden whitespace-nowrap text-ellipsis flex flex-col justify-center')
+        img(class='shadow-lg h-[400px] w-[300px]' src=he.decode(review.book.book_cover_url))
+        a(href=`/book-review/${review.book.encodedAuthor}/${review.book.encodedTitle}` class='w-full h-full absolute top-0 left-0 opacity-0')
+        a(href=`/book-review/${review.book.encodedAuthor}/${review.book.encodedTitle}` class='text-xl overflow-hidden whitespace-nowrap text-ellipsis') A Review: #{review.book.title} by #{review.book.author}
+        a(href=`/book-review/${review.book.encodedAuthor}/${review.book.encodedTitle}`) #{moment(review.timestamp).utc().format("MMM Do")}

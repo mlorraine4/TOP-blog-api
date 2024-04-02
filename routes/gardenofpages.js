@@ -28,8 +28,14 @@ router.get("/new-monthly-wrap-up", wrapUpController.wrapUp_form_get);
 router.post("/new-monthly-wrap-up", wrapUpController.wrapUp_form_post);
 router.get("/monthly-wrap-up/:year", wrapUpController.wrapUp_yearly_list_get);
 router.get("/monthly-wrap-up/:year/:month", wrapUpController.wrapUp_detail_get);
-router.get("/monthly-wrap-up/:year/:month/update", wrapUpController.wrapUp_update_get);
-router.post("/monthly-wrap-up/:year/:month/update", wrapUpController.wrapUp_update_post);
+router.get(
+  "/monthly-wrap-up/:year/:month/update",
+  wrapUpController.wrapUp_update_get
+);
+router.post(
+  "/monthly-wrap-up/:year/:month/update",
+  wrapUpController.wrapUp_update_post
+);
 // Comments
 router.post(
   "/monthly-wrap-up/:year/:month/new-comment",
@@ -77,6 +83,7 @@ router.post(
   bookReviewController.book_review_delete_post
 );
 router.get("/tbr-list", bookController.tbr_list_get);
+
 // Comments
 router.post(
   "/book-review/:author/:title/new-comment",
@@ -89,5 +96,9 @@ router.post(
 
 /// TAGS
 router.get("/tags/:name", tagController.tag_list_get);
+
+/// SEARCH
+router.post("/search", tagController.search_post);
+router.get("/s", tagController.search_get);
 
 module.exports = router;

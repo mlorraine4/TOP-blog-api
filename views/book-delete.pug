@@ -1,20 +1,18 @@
 extends layout
 
 block content
-    div#content
+    div(class="text-4xl text-center p-5") Book
 
-        h1 Book
+    if book_review
 
-        if book_review
+        p #[strong Delete the following review before attempting to delete this book.]
 
-            p #[strong Delete the following review before attempting to delete this book.]
+        a(href=book_review.url class="p-2 my-3 mx-auto") A Review of #{book.title} by #{book.author}
 
-            a.edit-url(href=book_review.url) A Review of #{book.title} by #{book.author}
+    else
+        p Do you really want to delete 
+            span #[strong #{book.title} by #{book.author}?]
 
-        else
-            p Do you really want to delete 
-                span #[strong #{book.title} by #{book.author}?]
-
-            form(method='POST' action='')
-                input#bookid(type='hidden',name='bookid', required='true', value=book._id )
-                button.submit-button(type='submit') Delete
+        form(method='POST' action='')
+            input#bookid(type='hidden',name='bookid', required='true', value=book._id )
+            button(type='submit' class="p-5 bg-ptwo hover:bg-faded text-white text-xl m-5") Delete

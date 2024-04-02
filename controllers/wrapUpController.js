@@ -89,16 +89,16 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.wrapUp_form_get = asyncHandler(async (req, res, next) => {
-  if (req.user) {
-    return res.render("wrap-up-form", {
-      user: req.user,
-      title: "Add Monthly Wrap Up",
-    });
-  } else {
-    const err = new Error("You must be an authorized user.");
-    err.status = 401;
-    return next(err);
-  }
+  // if (req.user) {
+  return res.render("wrap-up-form", {
+    user: req.user,
+    title: "Add Monthly Wrap Up",
+  });
+  // } else {
+  //   const err = new Error("You must be an authorized user.");
+  //   err.status = 401;
+  //   return next(err);
+  // }
 });
 
 exports.wrapUp_form_post = [
@@ -167,27 +167,27 @@ exports.wrapUp_form_post = [
           } else {
             // All form data is valid.
             const wrapUpDB = await MonthlyWrapUp.findOne({
-               month: req.body.month,
-               year: req.body.year,
-             }).exec();
+              month: req.body.month,
+              year: req.body.year,
+            }).exec();
 
-             if (wrapUpDB === null) {
-               // Wrap up does not already exist. Save new wrap up.
-               const result = await wrapUp.save();
-               return res.redirect(result.url);
-             } else {
-               // Wrap up already exists. Return error.
-               return res.render("wrap-up-form", {
-                 user: req.user,
-                 title: "Edit Wrap Up",
-                 wrapUp: wrapUp,
-                 errors: [
-                   {
-                     msg: `${req.body.month} ${req.body.year} wrap up already exists.`,
-                   },
-                 ],
-               });
-             }
+            if (wrapUpDB === null) {
+              // Wrap up does not already exist. Save new wrap up.
+              const result = await wrapUp.save();
+              return res.redirect(result.url);
+            } else {
+              // Wrap up already exists. Return error.
+              return res.render("wrap-up-form", {
+                user: req.user,
+                title: "Edit Wrap Up",
+                wrapUp: wrapUp,
+                errors: [
+                  {
+                    msg: `${req.body.month} ${req.body.year} wrap up already exists.`,
+                  },
+                ],
+              });
+            }
           }
         }
       } else {

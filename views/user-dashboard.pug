@@ -1,17 +1,16 @@
 extends layout
 
 block content
-    #content
-        p Welcome, #{user.display_name}!
+    p Welcome, #{user.display_name}!
 
-        if user.is_admin
-            p
-                a(href='/account') Your Account
-            p
-                a(href="/new-book-review") Add Review
-            p
-                a(href="/new-book") Add Book
-            p
-                a(href="/new-monthly-wrap-up") Add Monthly Wrap Up
-            p
-                a(href="/library") My Library
+    if user.is_admin
+        p
+            a(href='/account') Your Account
+        p
+            a(href="/new-book-review") Add Review
+        p
+            a(href="/new-book") Add Book
+        p
+            a(href="/new-monthly-wrap-up") Add Monthly Wrap Up
+        p
+            a(href="/library") My Library
