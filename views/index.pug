@@ -6,18 +6,23 @@ block content
     p 
       a(href="/library") Library 
 
-  div(class='flex flex-wrap justify-evenly w-2/3 max-w-[1000px] m-auto pt-20 pb-20 bg-pone')
-    each post in posts
-      div(class=' hover:text-accent w-[300px] h-[450px] relative m-4 overflow-hidden whitespace-nowrap text-ellipsis flex flex-col justify-center')
-        if post.book
-          img(class='shadow-lg h-[400px] w-[300px]' src=he.decode(post.book.book_cover_url))
-          a(href=`/book-review/${post.book.encodedAuthor}/${post.book.encodedTitle}` class='w-full h-full absolute top-0 left-0 opacity-0')
-          a(href=`/book-review/${post.book.encodedAuthor}/${post.book.encodedTitle}` class='text-xl overflow-hidden whitespace-nowrap text-ellipsis') A Review: #{post.book.title} by #{post.book.author}
-          a(href=`/book-review/${post.book.encodedAuthor}/${post.book.encodedTitle}`) #{moment(post.timestamp).utc().format("MMM Do")}
-        else
-          img(class='shadow-lg h-[400px] w-[300px]' src="/images/feb_fairy.png")
-          a(href=`/monthly-wrap-up/${post.year}/${post.month}` class='w-full h-full absolute top-0 left-0 opacity-0')
-          a(href=`/monthly-wrap-up/${post.year}/${post.month}` class='text-xl overflow-hidden whitespace-nowrap text-ellipsis') #{post.month} Wrap Up
-          a(href=`/monthly-wrap-up/${post.year}/${post.month}`) #{moment(post.timestamp).format("MMM Do")}
-    else  
-      p There are no posts.
+  div#container(class='w-full m-auto pt-20 pb-20 bg-pone h-[calc(100vh-230px)] max-h-[760px] overflow-y-scroll')
+    div#post-list(class="w-2/3 max-w-[1000px] m-auto flex flex-wrap justify-evenly")
+      
+      //- each post in posts
+      //-   div(class=' hover:text-accent w-[300px] h-[450px] relative m-4 overflow-hidden whitespace-nowrap text-ellipsis flex flex-col justify-center')
+      //-     if post.book
+      //-       img(class='shadow-lg h-[400px] w-[300px]' src=he.decode(post.book.book_cover_url))
+      //-       a(href=`/book-review/${post.book.encodedAuthor}/${post.book.encodedTitle}` class='w-full h-full absolute top-0 left-0 opacity-0')
+      //-       a(href=`/book-review/${post.book.encodedAuthor}/${post.book.encodedTitle}` class='text-xl overflow-hidden whitespace-nowrap text-ellipsis') A Review: #{post.book.title} by #{post.book.author}
+      //-       a(href=`/book-review/${post.book.encodedAuthor}/${post.book.encodedTitle}`) #{moment(post.timestamp).utc().format("MMM Do")}
+      //-     else
+      //-       img(class='shadow-lg h-[400px] w-[300px]' src="/images/feb_fairy.png")
+      //-       a(href=`/monthly-wrap-up/${post.year}/${post.month}` class='w-full h-full absolute top-0 left-0 opacity-0')
+      //-       a(href=`/monthly-wrap-up/${post.year}/${post.month}` class='text-xl overflow-hidden whitespace-nowrap text-ellipsis') #{post.month} Wrap Up
+      //-       a(href=`/monthly-wrap-up/${post.year}/${post.month}`) #{moment(post.timestamp).format("MMM Do")}
+      //- else  
+      //-   p There are no posts.
+  script(src="/he/he.js")
+  script(src="/moment/moment.js")
+  script(type="application/javascript" src="/javascripts/infinite-scroll.js")

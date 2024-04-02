@@ -118,6 +118,10 @@ app.use("/he", express.static(path.join(__dirname, "node_modules", "he")));
 app.locals.he = require("he");
 
 // moment node module
+app.use(
+  "/moment",
+  express.static(path.join(__dirname, "node_modules", "moment"))
+);
 app.locals.moment = require("moment");
 
 app.use("/", siteRouter);
