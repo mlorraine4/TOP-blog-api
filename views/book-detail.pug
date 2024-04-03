@@ -6,14 +6,16 @@ block content
       a(href="/library") My Library 
   div(class='text-2xl font-bold text-center p-5') #{he.decode(book.title)} by #{he.decode(book.author)}
   if book.series && book.series.length !== 0
-    div(class='text-xl font-bold text-center p-5') #{he.decode(book.series)} ##{book.series_number}
-  div(class='flex flex-wrap')
-    div(class='flex flex-col justify-center w-[250px]')
-      img(class='h-[225px] w-[150px] shadow-lg' src=he.decode(book.book_cover_url))
-      p #{book.rating}/5 stars
+    div(class='text-xl text-center p-5 italic') #{he.decode(book.series)} ##{book.series_number}
+  div(class='flex flex-wrap justify-center')
+    div(class='flex flex-col w-[250px]')
+      img(class='h-[225px] w-[150px] shadow-lg m-auto' src=he.decode(book.book_cover_url))
+      div(class="text-center text-lg p-2") #{book.rating}/5 stars
+      if book.date_read[0]
+        div(class="text-center text-leg p-2") Read: #{moment(book.date_read[0]).utc().format("MMM Do, YYYY")}
 
   if user && user.is_admin
     p 
-      a(href=`${book.url}/update` class='border-rounded') Edit
+      a(href=`${book.url}/update` class='border-rounded p-2 bg-ptwo hover:bg-faded text-white text-lg m-5') Edit
     p
-      a(href=`${book.url}/delete` class='border-rounded') Delete
+      a(href=`${book.url}/delete` class='border-rounded p-2 bg-ptwo hover:bg-faded text-white text-lg m-5') Delete

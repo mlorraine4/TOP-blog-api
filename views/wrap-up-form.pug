@@ -11,7 +11,7 @@ block content
         input#summary(class="w-2/3 text-pone" name='summary' type='text' value=(undefined===wrapUp ? '' : wrapUp.summary))
         label(for='cover_url') Cover Image Url
         input#cover_url(class="w-2/3 text-pone" name='cover_url' type='text' value=(undefined===wrapUp ? '' : he.decode(wrapUp.cover_url)))               
-        button(type='submit' class='form-submit-button p-5 bg-ptwo hover:bg-faded text-white text-xl m-5') Save
+        button(type='submit' class='p-5 bg-ptwo hover:bg-faded text-white text-lg m-5') Save
     if errors
         each error in errors
             li!= error.msg

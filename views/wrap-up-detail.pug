@@ -7,7 +7,7 @@ block content
       each book in books
         div(class='flex flex-col justify-center w-[250px]')
           img(class='wrap-up-detail-book-cover-img' src=he.decode(book.book_cover_url))
-          p #{book.title}
+          a(href=book.url) #{book.title}
           p By: #{book.author}
           p #{book.rating}/5 stars
       else 

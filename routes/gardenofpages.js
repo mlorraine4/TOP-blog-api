@@ -58,7 +58,7 @@ router.post("/book/:author/:title/delete", bookController.book_delete_post);
 
 /// BOOK REVIEW
 // Home page get.
-router.get("/", bookReviewController.post_list_get);
+router.get("/", bookReviewController.home_get);
 router.post("/posts", bookReviewController.post_list);
 router.get("/book-reviews", bookReviewController.book_review_list_get);
 router.get("/new-book-review", bookReviewController.book_review_form_get);

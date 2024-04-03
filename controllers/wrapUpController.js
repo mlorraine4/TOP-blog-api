@@ -52,6 +52,9 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
       const startDate = new Date(year, month, 1);
       const endDate = new Date(year, month + 1, 0);
 
+      console.log(startDate);
+      console.log(endDate);
+
       const books = await Book.find({
         date_read: {
           $gte: startDate,
@@ -118,7 +121,7 @@ exports.wrapUp_form_post = [
         const date = new Date(dateString);
         const month = date.getMonth();
         const year = date.getFullYear();
-        const myDate = new Date(year, month + 1, 0);
+        const myDate = new Date(year, month + 1, 1);
 
         const wrapUp = new MonthlyWrapUp({
           year: req.body.year,

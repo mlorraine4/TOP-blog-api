@@ -57,7 +57,7 @@ exports.post_list = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.post_list_get = asyncHandler(async (req, res, next) => {
+exports.home_get = asyncHandler(async (req, res, next) => {
   try {
     // const aggregate = BookReview.aggregate([
     //   {

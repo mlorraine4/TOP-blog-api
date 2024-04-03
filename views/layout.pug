@@ -8,9 +8,9 @@ html
     div(class="fixed top-0 z-10")
       div(class="w-[100vw] bg-white")
         img(src="/images/book-review-header.jpg" class='block h-[150px] w-auto m-auto')
-      form(action="/search" method="POST" class="absolute top-0 right-10 w-[250px]")
-        input#search(name="search" placeholder="Search" class="w-full text-black rounded-full")
-        button submit
+      form(action="/search" method="POST" class="absolute top-1 right-1 w-[250px] flex flex-row")
+        img(src="/images/search.png" class="w-[20px] absolute right-[20px]")
+        input#search(name="search" class="w-full text-black rounded-full pl-[40px]")
       div(class='w-full h-[80px] flex justify-around items-center bg-pone border-b border-accent text-xl')
         a(href="/" class="hover:text-accent") Home 
         a(href="/book-reviews" class="hover:text-accent") Book Reviews
@@ -29,7 +29,7 @@ html
           a(href="/log-out" class="hover:text-accent") Log Out
         else
           a(href="/log-in" class="hover:text-accent") Log In
-    div(class="mt-[230px] bg-pone h-[calc(100vh-230px)]")
+    div(class="mt-[230px] bg-pone min-h-[calc(100vh-230px)]")
       block content 
 
   script(type="application/javascript" src="/javascripts/drop-down.js")
