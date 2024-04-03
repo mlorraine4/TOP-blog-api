@@ -13,8 +13,9 @@ const MonthlyWrapUpSchema = new Schema({
 
 // Virtual for genreinstance's URL
 MonthlyWrapUpSchema.virtual("url").get(function () {
+  const month = this.month.toLowerCase();
   // We don't use an arrow function as we'll need the this object
-  return `/monthly-wrap-up/${this.year}/${this.month}`;
+  return `/monthly-wrap-up/${this.year}/${month}`;
 });
 
 // Export model

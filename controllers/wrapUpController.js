@@ -36,8 +36,12 @@ exports.wrapUp_yearly_list_get = asyncHandler(async (req, res, next) => {
 
 exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
   try {
+    const month_format =
+      req.params.month.substring(0, 1).toUpperCase() +
+      req.params.month.substring(1);
+
     const wrapUp = await MonthlyWrapUp.findOne({
-      month: req.params.month,
+      month: month_format,
       year: req.params.year,
     })
       .populate({ path: "comments", options: { sort: { timestamp: -1 } } })
@@ -51,9 +55,6 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
       const year = date.getFullYear();
       const startDate = new Date(year, month, 1);
       const endDate = new Date(year, month + 1, 0);
-
-      console.log(startDate);
-      console.log(endDate);
 
       const books = await Book.find({
         date_read: {
@@ -76,7 +77,7 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
         user: req.user,
         wrapUp: wrapUp,
         books: books,
-        month: req.params.month,
+        month: month_format,
         year: req.params.year,
         // totalPages: formattedPages,
         // avgRating: avgRating,
@@ -92,16 +93,16 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.wrapUp_form_get = asyncHandler(async (req, res, next) => {
-  // if (req.user) {
-  return res.render("wrap-up-form", {
-    user: req.user,
-    title: "Add Monthly Wrap Up",
-  });
-  // } else {
-  //   const err = new Error("You must be an authorized user.");
-  //   err.status = 401;
-  //   return next(err);
-  // }
+  if (req.user) {
+    return res.render("wrap-up-form", {
+      user: req.user,
+      title: "Add Monthly Wrap Up",
+    });
+  } else {
+    const err = new Error("You must be an authorized user.");
+    err.status = 401;
+    return next(err);
+  }
 });
 
 exports.wrapUp_form_post = [
