@@ -20,6 +20,7 @@
     "express-rate-limit": "^7.1.4",
     "express-session": "^1.17.3",
     "express-validator": "^7.0.1",
+    "firebase": "^10.10.0",
     "he": "^1.2.0",
     "helmet": "^7.1.0",
     "http-errors": "~1.6.3",
@@ -29,7 +30,7 @@
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "pug": "^3.0.2",
-    "tinymce": "^6.7.0"
+    "tinymce": "^7.0.0"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.1"

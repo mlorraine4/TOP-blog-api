@@ -2,6 +2,8 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const Book = require("../models/book");
 const BookReview = require("../models/bookReview");
+const firebaseStorage = require("firebase/storage");
+const firebaseApp = require("../firebase");
 
 exports.book_list_get = asyncHandler(async (req, res, next) => {
   try {
@@ -40,10 +42,6 @@ exports.book_form_post = [
     .trim()
     .isLength({ min: 1, max: 5000 })
     .escape(),
-  body("book_cover", "Book cover url must not be empty")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
   body("rating", "Rating must not be empty.")
     .isLength({ min: 1, max: 5 })
     .escape(),
@@ -51,72 +49,91 @@ exports.book_form_post = [
 
   asyncHandler(async (req, res, next) => {
     try {
-      if (req.user) {
-        const errors = validationResult(req);
-        let datesArray = [];
+      // if (req.user) {
+      const errors = validationResult(req);
+      // let datesArray = [];
 
-        let bookRes = await Book.findOne({
-          author: req.body.author,
-          title: req.body.title,
-        }).exec();
+      let bookRes = await Book.findOne({
+        author: req.body.author,
+        title: req.body.title,
+      }).exec();
 
-        if (bookRes !== null) {
-          // Book already exists.
-          const err = new Error("Book has already been added.");
-          err.status = 409;
-          return next(err);
-        } else {
-          if (req.body.dates_read.includes(",")) {
-            // There are multiple read dates.
-            const datesReqArr = req.body.dates_read.split(",");
-            for (const date of datesReqArr) {
-              datesArray.push(date);
-            }
-          } else {
-            // There is a single date.
-            datesArray.push(req.body.dates_read);
-          }
-
-          const book = new Book({
-            title: req.body.title,
-            author: req.body.author,
-            series: req.body.series,
-            pages: req.body.pages,
-            series_number: req.body.series_number,
-            book_cover_url: req.body.book_cover,
-            rating: req.body.rating,
-            date_read: datesArray,
-            encodedTitle: req.body.title
-              .toLowerCase()
-              .replace(/[^\w\s-]+/g, "")
-              .replace(/\s+/g, "-"),
-            encodedAuthor: req.body.author
-              .toLowerCase()
-              .replace(/[^\w\s-]+/g, "")
-              .replace(/\s+/g, "-"),
-          });
-
-          if (!errors.isEmpty()) {
-            // Form data is not valid. Re-render with errors.
-            return res.render("book-form", {
-              user: req.user,
-              title: "Add Book",
-              book: book,
-              errors: errors.array(),
-            });
-          } else {
-            // Data is valid. Save book.
-            const result = await book.save();
-            return res.redirect(result.url);
-          }
-        }
-      } else {
-        // User is not logged in.
-        const err = new Error("You must be an authorized user.");
-        err.status = 401;
+      if (bookRes !== null) {
+        // Book already exists.
+        const err = new Error("Book has already been added.");
+        err.status = 409;
         return next(err);
+      } else {
+        // // Save dates read as array.
+        // if (req.body.dates_read.includes(",")) {
+        //   // There are multiple read dates.
+        //   const datesReqArr = req.body.dates_read.split(",");
+        //   for (const date of datesReqArr) {
+        //     datesArray.push(date);
+        //   }
+        // } else {
+        //   // There is a single date.
+        //   datesArray.push(req.body.dates_read);
+        // }
+
+        const book = new Book({
+          title: req.body.title,
+          author: req.body.author,
+          series: req.body.series,
+          pages: req.body.pages,
+          series_number: req.body.series_number,
+          // book_cover_url: url,
+          rating: req.body.rating,
+          date_read: [req.body.dates_read],
+          encodedTitle: req.body.encoded_title,
+          encodedAuthor: req.body.encoded_author,
+        });
+
+        if (!errors.isEmpty()) {
+          // Form data is not valid. Re-render with errors.
+          return res.render("book-form", {
+            user: req.user,
+            title: "Add Book",
+            book: book,
+            errors: errors.array(),
+          });
+        } else {
+          // Data is valid. Save book cover image and book.
+
+          // Create storage reference
+          const storage = firebaseStorage.getStorage();
+          const storageRef = firebaseStorage.ref(
+            storage,
+            `book-covers/${req.body.encoded_author}/${req.body.encoded_title}`
+          );
+
+          // Save image
+          const upload = await firebaseStorage.uploadString(
+            storageRef,
+            req.body.image,
+            "data_url"
+          );
+
+          // Get image url
+          const url = await firebaseStorage.getDownloadURL(storageRef);
+
+          // Save url to book
+          book.book_cover_url = url;
+
+          const result = await book.save();
+          console.log(result);
+          // return res.redirect(result.url);
+          return res.sendStatus(200);
+        }
       }
+      // } else {
+      //   // User is not logged in.
+      // const err = new Error("You must be an authorized user.");
+      // err.status = 401;
+      // return next(err);
+      // }
     } catch (err) {
+      console.log(err);
       return next(err);
     }
   }),

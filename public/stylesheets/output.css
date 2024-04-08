@@ -1281,3 +1281,7 @@ form input:focus {
   --tw-text-opacity: 1;
   color: rgb(252 106 14 / var(--tw-text-opacity));
 }
+
+.disabled\:opacity-50:disabled {
+  opacity: 0.5;
+}
