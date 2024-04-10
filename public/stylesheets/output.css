@@ -1097,6 +1097,19 @@ form input:focus {
   outline: solid var(--orange);
 }
 
+#message li {
+  list-style-type: disc;
+}
+
+#message button {
+  position: absolute;
+  right: 12px;
+  top: 5px;
+  font-weight: bold;
+  color: var(--orange);
+  font-size: large;
+}
+
 .hide {
   display: none;
 }
@@ -1106,6 +1119,21 @@ form input:focus {
 }
 
 /* KEEP THESE! */
+
+.pop-up {
+  position: fixed;
+  bottom: 145px;
+  width: 450px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 10;
+  border: 2px solid var(--orange);
+  background-color: white;
+  color: black;
+  font-weight: 400;
+  padding: 30px;
+}
 
 .dropDownContainer {
   position: relative;
@@ -1280,6 +1308,11 @@ form input:focus {
 .hover\:text-accent:hover {
   --tw-text-opacity: 1;
   color: rgb(252 106 14 / var(--tw-text-opacity));
+}
+
+.disabled\:bg-ptwo:disabled {
+  --tw-bg-opacity: 1;
+  background-color: rgb(117 28 77 / var(--tw-bg-opacity));
 }
 
 .disabled\:opacity-50:disabled {

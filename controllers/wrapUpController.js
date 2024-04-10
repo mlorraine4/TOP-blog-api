@@ -237,6 +237,7 @@ exports.wrapUp_update_get = asyncHandler(async (req, res, next) => {
   }
 });
 
+// TODO: write custom sanitizer for month instead of checking array separately
 exports.wrapUp_update_post = [
   body("cover_url", "Photo url is required.")
     .trim()

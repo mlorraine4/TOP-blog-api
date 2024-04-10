@@ -16,12 +16,12 @@ block content
         input#rating(class="w-1/3 text-pone" name='rating' type='number' min="1" max="5" step="0.5" value=(undefined===book ? '' : book.rating))
         label(for='pages') Number of Pages
         input#pages(class="w-1/3 text-pone" name='pages' type='number' value=(undefined===book ? '' : book.pages))
-        input#dates_read(name='dates_read' type='text' hidden value=(undefined===book ? '' : book.date_read))
+        //- input#dates_read(name='dates_read' type='text' hidden value=(undefined===book ? '' : book.date_read))
         div(class='input-container text-center flex flex-col justify-center')
             label(for='date_read') Date read
             input#date_read(class="text-pone" name='date_read' type='date' value=(undefined===book ? '' : moment.utc(book.date_read[0]).format("yyyy-MM-DD") ))
         label(for='file') Book Cover
-        input#file(name="file" type="file" class="w-min")
+        input#file(name="file" type="file" accept="image/png, image/jpeg" class="w-min")
         //- if book!==undefined
         //-     each date in book.date_read
         //-         if book.date_read.indexOf(date) === 0
@@ -30,12 +30,12 @@ block content
         //-                 label(for='date_read') Date read
         //-                 input#date_read(name='date_read' type='date' value=(undefined===book ? '' : moment.utc(date).format("yyyy-MM-DD") ))
         //-                 button(class='delete-button' type='button' onclick="{(e) => e.target.parentNode.remove()}") X
-        button#submit-form(type="button" class='p-5 bg-ptwo hover:bg-faded text-white text-xl m-5 disabled:opacity-50' disabled) Save
-    div#message
+        button#submit-form(type="button" class='p-5 bg-ptwo hover:bg-faded text-white text-xl m-5 disabled:opacity-50 disabled:bg-ptwo' disabled) Save
+    div#message(class="text-xl bold")
 
     if errors
         each error in errors
             li!= error.msg
                 
-    script(type="application/javascript" src="/javascripts/book-form.js")
+    script(type="application/javascript" src="/javascripts/book-form.js" defer)
     
