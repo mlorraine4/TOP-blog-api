@@ -18,14 +18,14 @@ exports.book_list_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.book_form_get = asyncHandler(async (req, res, next) => {
-  // if (req.user) {
-  return res.render("book-form", { user: req.user, title: "Add Book" });
-  // } else {
-  //   // User is not logged in.
-  //   const err = new Error("You must be an authorized user.");
-  //   err.status = 401;
-  //   return next(err);
-  // }
+  if (req.user) {
+    return res.render("book-form", { user: req.user, title: "Add Book" });
+  } else {
+    // User is not logged in.
+    const err = new Error("You must be an authorized user.");
+    err.status = 401;
+    return next(err);
+  }
 });
 
 // TODO: custom sanitizor for image data (data url)
@@ -38,11 +38,11 @@ exports.book_form_post = [
     .trim()
     .isLength({ min: 1 })
     .escape(),
-  body("encoded_title", "An error occurred with title.")
+  body("encoded_title", "An error occurred.")
     .trim()
     .isLength({ min: 1 })
     .escape(),
-  body("encoded_author", "An error occurred with author.")
+  body("encoded_author", "An error occurred.")
     .trim()
     .isLength({ min: 1 })
     .escape(),
@@ -58,81 +58,82 @@ exports.book_form_post = [
 
   asyncHandler(async (req, res, next) => {
     try {
-      // if (req.user) {
-      const errors = validationResult(req);
-      // let datesArray = [];
+      if (req.user) {
+        const errors = validationResult(req);
+        // let datesArray = [];
 
-      let bookRes = await Book.findOne({
-        author: req.body.author,
-        title: req.body.title,
-      }).exec();
+        let bookRes = await Book.findOne({
+          author: req.body.author,
+          title: req.body.title,
+        }).exec();
 
-      if (bookRes !== null) {
-        // Book already exists.
-        return res.status(409).send([
-          {
-            msg: `${req.body.title} by ${req.body.author} already exists`,
-          },
-        ]);
-      } else {
-        // // Save dates read as array.
-        // if (req.body.dates_read.includes(",")) {
-        //   // There are multiple read dates.
-        //   const datesReqArr = req.body.dates_read.split(",");
-        //   for (const date of datesReqArr) {
-        //     datesArray.push(date);
-        //   }
-        // } else {
-        //   // There is a single date.
-        //   datesArray.push(req.body.dates_read);
-        // }
-
-        if (!errors.isEmpty()) {
-          // Form data is not valid. Send errors.
-          return res.status(500).send(errors.array());
+        if (bookRes !== null) {
+          // Book already exists.
+          return res.status(409).send([
+            {
+              msg: `${req.body.title} by ${req.body.author} already exists`,
+            },
+          ]);
         } else {
-          // Data is valid. Save image to storage and add book to database.
+          // // Save dates read as array.
+          // if (req.body.dates_read.includes(",")) {
+          //   // There are multiple read dates.
+          //   const datesReqArr = req.body.dates_read.split(",");
+          //   for (const date of datesReqArr) {
+          //     datesArray.push(date);
+          //   }
+          // } else {
+          //   // There is a single date.
+          //   datesArray.push(req.body.dates_read);
+          // }
 
-          // Create storage reference
-          const storage = firebaseStorage.getStorage();
-          const storageRef = firebaseStorage.ref(
-            storage,
-            `book-covers/${req.body.encoded_author}/${req.body.encoded_title}`
-          );
+          if (!errors.isEmpty()) {
+            // Form data is not valid. Send errors.
+            return res.status(500).send(errors.array());
+          } else {
+            // Data is valid. Save image to storage and add book to database.
 
-          // Save image
-          const upload = await firebaseStorage.uploadString(
-            storageRef,
-            req.body.image,
-            "data_url"
-          );
+            // Create storage reference
+            const storage = firebaseStorage.getStorage();
+            const storageRef = firebaseStorage.ref(
+              storage,
+              `book-covers/${req.body.encoded_author}/${req.body.encoded_title}`
+            );
 
-          // Get image url
-          const url = await firebaseStorage.getDownloadURL(storageRef);
+            // Save image
+            const upload = await firebaseStorage.uploadString(
+              storageRef,
+              req.body.image,
+              "data_url"
+            );
 
-          const book = new Book({
-            title: req.body.title,
-            author: req.body.author,
-            series: req.body.series,
-            pages: req.body.pages,
-            series_number: req.body.series_number,
-            rating: req.body.rating,
-            book_cover_url: url,
-            date_read: [req.body.date_read],
-            encodedTitle: req.body.encoded_title,
-            encodedAuthor: req.body.encoded_author,
-          });
+            // Get image url
+            const url = await firebaseStorage.getDownloadURL(storageRef);
 
-          const result = await book.save();
-          // console.log(result);
-          return res.status(200).send({ url: result.url });
+            const book = new Book({
+              title: req.body.title,
+              author: req.body.author,
+              series: req.body.series,
+              pages: req.body.pages,
+              series_number: req.body.series_number,
+              rating: req.body.rating,
+              book_cover_url: url,
+              date_read: [req.body.date_read],
+              encodedTitle: req.body.encoded_title,
+              encodedAuthor: req.body.encoded_author,
+            });
+
+            const result = await book.save();
+            // console.log(result);
+            return res.status(200).send({ url: result.url });
+          }
         }
+      } else {
+        // User is not logged in.
+        return res
+          .status(401)
+          .send([{ msg: "You must be an authorized user" }]);
       }
-      // } else {
-      //   // User is not logged in.
-      //             return res.status(500).send(errors.array());
-      // return res.status(401).send([{msg: "You must be an authorized user"}]);
-      // }
     } catch (err) {
       console.log(err);
       return res.status(500).send([{ msg: "An internal error occurred" }]);
@@ -186,8 +187,6 @@ exports.book_update_get = asyncHandler(async (req, res, next) => {
   }
 });
 
-// TODO: update server responses to status/message
-// TODO: match update to post req
 exports.book_update_post = [
   body("title", "Title must not be empty.")
     .trim()
@@ -197,23 +196,29 @@ exports.book_update_post = [
     .trim()
     .isLength({ min: 1 })
     .escape(),
+  body("encoded_title", "An error occurred.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("encoded_author", "An error occurred.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
   body("series").escape(),
   body("pages", "Pages must not be empty.")
     .trim()
     .isLength({ min: 1, max: 5000 })
     .escape(),
-  body("book_cover", "Book cover url must not be empty")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
   body("rating", "Rating must not be empty.")
     .isLength({ min: 1, max: 5 })
     .escape(),
-  body("dates_read").escape(),
+  body("date_read").escape(),
 
   asyncHandler(async (req, res, next) => {
     try {
       if (req.user) {
+        const errors = validationResult(req);
+
         // const book = Book.findById(req.params.id).exec();
         const book = await Book.findOne({
           encodedTitle: req.params.title,
@@ -222,71 +227,81 @@ exports.book_update_post = [
 
         if (book !== null) {
           // Book exists.
-          let datesArray = [];
-          const errors = validationResult(req);
+          // let datesArray = [];
 
-          if (req.body.dates_read.includes(",")) {
-            // There are multiple read dates.
-            const datesReqArr = req.body.dates_read.split(",");
-            for (const date of datesReqArr) {
-              datesArray.push(date);
-            }
-          } else {
-            // There is a single date.
-            datesArray.push(req.body.dates_read);
-          }
-
-          const updatedBook = new Book({
-            title: req.body.title,
-            author: req.body.author,
-            series: req.body.series,
-            pages: req.body.pages,
-            series_number: req.body.series_number,
-            book_cover_url: req.body.book_cover,
-            rating: req.body.rating,
-            date_read: datesArray,
-            _id: book._id,
-            encodedTitle: req.body.title
-              .toLowerCase()
-              .replace(/[^\w\s-]+/g, "")
-              .replace(/\s+/g, "-"),
-            encodedAuthor: req.body.author
-              .toLowerCase()
-              .replace(/[^\w\s-]+/g, "")
-              .replace(/\s+/g, "-"),
-          });
+          // if (req.body.dates_read.includes(",")) {
+          //   // There are multiple read dates.
+          //   const datesReqArr = req.body.dates_read.split(",");
+          //   for (const date of datesReqArr) {
+          //     datesArray.push(date);
+          //   }
+          // } else {
+          //   // There is a single date.
+          //   datesArray.push(req.body.dates_read);
+          // }
 
           if (!errors.isEmpty()) {
             // Form data is not valid. Re-render with errors.
-            return res.render("book-form", {
-              user: req.user,
-              title: "Add Book",
-              book: updatedBook,
-              errors: errors.array(),
-            });
+            return res.status(500).send(errors.array());
           } else {
             // Data is valid. Update book.
+
+            // Create storage reference
+            const storage = firebaseStorage.getStorage();
+            const storageRef = firebaseStorage.ref(
+              storage,
+              `book-covers/${req.body.encoded_author}/${req.body.encoded_title}`
+            );
+
+            // Save image
+            const upload = await firebaseStorage.uploadString(
+              storageRef,
+              req.body.image,
+              "data_url"
+            );
+
+            // Get image url
+            const url = await firebaseStorage.getDownloadURL(storageRef);
+
+            const updatedBook = new Book({
+              _id: book._id,
+              title: req.body.title,
+              author: req.body.author,
+              series: req.body.series,
+              pages: req.body.pages,
+              series_number: req.body.series_number,
+              rating: req.body.rating,
+              book_cover_url: url,
+              date_read: [req.body.date_read],
+              encodedTitle: req.body.encoded_title,
+              encodedAuthor: req.body.encoded_author,
+            });
+
             const result = await Book.findByIdAndUpdate(
               book._id,
               updatedBook,
               {}
             );
-            return res.redirect(result.url);
+
+            return res.status(200).send({ url: result.url });
           }
         } else {
           // No results.
-          const err = new Error("Book does not exist.");
-          err.status = 404;
-          return next(err);
+          return res.status(404).send([
+            {
+              msg: `${req.body.title} by ${req.body.author} does not exist`,
+            },
+          ]);
         }
       } else {
         // User is not logged in.
-        const err = new Error("You must be an authorized user.");
-        err.status = 401;
-        return next(err);
+        return res
+          .status(401)
+          .send([{ msg: "You must be an authorized user" }]);
       }
     } catch (err) {
-      return next(err);
+      console.log(err);
+      return res.status(500).send([{ msg: "An internal error occurred" }]);
     }
   }),
 ];
