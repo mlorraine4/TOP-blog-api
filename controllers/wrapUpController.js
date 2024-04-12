@@ -209,8 +209,12 @@ exports.wrapUp_form_post = [
 exports.wrapUp_update_get = asyncHandler(async (req, res, next) => {
   try {
     if (req.user) {
+      const month_format =
+        req.params.month.substring(0, 1).toUpperCase() +
+        req.params.month.substring(1);
+
       const wrapUp = await MonthlyWrapUp.findOne({
-        month: req.params.month,
+        month: month_format,
         year: req.params.year,
       }).exec();
 
