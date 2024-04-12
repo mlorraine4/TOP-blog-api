@@ -11,6 +11,7 @@ exports.book_list_get = asyncHandler(async (req, res, next) => {
       .sort({ title: 1 })
       .collation({ locale: "en", caseLevel: true })
       .exec();
+    console.log(books[1]);
     return res.render("library", { user: req.user, books: books });
   } catch (err) {
     return next(err);
@@ -35,14 +36,6 @@ exports.book_form_post = [
     .isLength({ min: 1 })
     .escape(),
   body("author", "Author must not be empty.")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
-  body("encoded_title", "An error occurred.")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
-  body("encoded_author", "An error occurred.")
     .trim()
     .isLength({ min: 1 })
     .escape(),

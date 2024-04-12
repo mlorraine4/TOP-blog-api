@@ -12,7 +12,6 @@ const TagsSchema = new Schema({
   },
 });
 
-// Virtual for genreinstance's URL
 TagsSchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
   return `/tags/${this.name}`;

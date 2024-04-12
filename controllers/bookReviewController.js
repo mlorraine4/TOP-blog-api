@@ -3,7 +3,9 @@ const { body, validationResult } = require("express-validator");
 const BookReview = require("../models/bookReview");
 const Book = require("../models/book");
 const Tags = require("../models/tags");
+const MonthlyWrapUp = require("../models/monthlyWrapUp");
 
+// TODO: not sure if this is the best way to handle aggregation of all posts
 exports.post_list = asyncHandler(async (req, res, next) => {
   try {
     const aggregate = await BookReview.aggregate([
@@ -34,7 +36,14 @@ exports.post_list = asyncHandler(async (req, res, next) => {
         $unionWith: {
           coll: "monthlywrapups",
           pipeline: [
-            { $project: { month: 1, cover_url: 1, timestamp: 1, year: 1 } },
+            {
+              $project: {
+                month: 1,
+                cover_url: 1,
+                timestamp: 1,
+                year: 1,
+              },
+            },
             // {
             //   $match: {
             //     _id: {
@@ -51,44 +60,33 @@ exports.post_list = asyncHandler(async (req, res, next) => {
       .limit(6)
       .exec();
 
-    return res.status(200).send({ posts: aggregate });
+    // Hydrate aggregate results to get access to model virtuals
+    const documents = aggregate.map((doc) => {
+      if (doc.month !== undefined) {
+        return MonthlyWrapUp.hydrate(doc);
+      } else {
+        const review = {};
+        const result = Book.hydrate(doc.book);
+
+        review.review_url = result.review_url;
+        review.book_cover_url = doc.book.book_cover_url;
+        review.title = doc.book.title;
+        review.author = doc.book.author;
+        review.timestamp = doc.timestamp;
+        review._id = doc._id;
+        return review;
+      }
+    });
+
+    return res.status(200).send({ posts: documents });
   } catch (err) {
+    console.log(err);
     res.sendStatus(500);
   }
 });
 
 exports.home_get = asyncHandler(async (req, res, next) => {
   try {
-    // const aggregate = BookReview.aggregate([
-    //   {
-    //     $group: {
-    //       _id: "$_id",
-    //       book: { $first: "$book" },
-    //       timestamp: { $first: "$timestamp" },
-    //     },
-    //   },
-    //   {
-    //     $lookup: {
-    //       from: "books",
-    //       localField: "book",
-    //       foreignField: "_id",
-    //       as: "book",
-    //     },
-    //   },
-    //   {
-    //     $unwind: "$book",
-    //   },
-    // ]);
-
-    // const result = await aggregate
-    //   .unionWith({
-    //     coll: "monthlywrapups",
-    //     pipeline: [{ $project: { _id: 0 } }],
-    //   })
-    //   .sort({ timestamp: -1 })
-    //   .limit(3)
-    //   .exec();
-
     return res.render("index", { user: req.user });
   } catch (err) {
     return next(err);
