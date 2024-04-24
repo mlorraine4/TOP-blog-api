@@ -83,7 +83,6 @@ router.post(
   "/book-review/:author/:title/delete",
   bookReviewController.book_review_delete_post
 );
-router.get("/tbr-list", bookController.tbr_list_get);
 
 // Comments
 router.post(
@@ -96,7 +95,7 @@ router.post(
 );
 
 /// TAGS
-router.get("/tags/:name", tagController.tag_list_get);
+router.get("/tags/:name", tagController.tag_detail_get);
 
 /// SEARCH
 router.post("/search", tagController.search_post);

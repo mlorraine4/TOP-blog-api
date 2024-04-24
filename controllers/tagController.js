@@ -3,7 +3,7 @@ const Tags = require("../models/tags");
 const BookReview = require("../models/bookReview");
 const Book = require("../models/book");
 
-exports.tag_list_get = asyncHandler(async (req, res, next) => {
+exports.tag_detail_get = asyncHandler(async (req, res, next) => {
   try {
     const tag = await Tags.findOne({ name: req.params.name });
     const reviews = await BookReview.find({
@@ -11,8 +11,14 @@ exports.tag_list_get = asyncHandler(async (req, res, next) => {
     })
       .populate("book")
       .exec();
+    let title = "No Results - Garden of Pages";
+
+    if (tag !== null) {
+      title = `${tag.name} - Garden of Pages`;
+    }
 
     return res.render("tag-detail", {
+      title: title,
       user: req.user,
       reviews: reviews,
     });
@@ -49,7 +55,17 @@ exports.search_get = asyncHandler(async (req, res, next) => {
     })
       .populate("book")
       .exec();
-    res.render("search", { reviews: reviews });
+
+    let title = "No Results - Garden of Pages";
+
+    if (reviews.length !== 0) {
+      title = `${req.query.q} - Garden of Pages`;
+    }
+
+    res.render("search", {
+      title: title,
+      reviews: reviews,
+    });
   } catch (err) {
     return next(err);
   }

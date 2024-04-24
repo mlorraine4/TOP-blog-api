@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 // GET request for log in form.
 exports.log_in_GET = asyncHandler(async (req, res, next) => {
   if (!req.user) {
-    return res.render("login-form");
+    return res.render("login-form", { title: "Log In - Garden of Pages" });
   } else {
     return res.redirect("/");
   }
@@ -30,7 +30,7 @@ exports.log_out_GET = asyncHandler(async (req, res, next) => {
 
 exports.sign_up_get = async (req, res, next) => {
   if (!req.user) {
-    return res.render("signup-form");
+    return res.render("signup-form", { title: "Sign Up - Garden of Pages" });
   } else {
     return res.redirect("/");
   }
@@ -56,13 +56,16 @@ exports.sign_up_post = async (req, res, next) => {
 exports.calendar_get = asyncHandler(async (req, res, next) => {
   return res.render("upcoming-releases-calendar", {
     user: req.user,
-    title: "Upcoming Releases",
+    title: "Upcoming Releases - Garden of Pages",
   });
 });
 
 exports.user_dashboard_get = asyncHandler(async (req, res, next) => {
   if (req.user) {
-    return res.render("user-dashboard", { title: "Dashboard", user: req.user });
+    return res.render("user-dashboard", {
+      title: "Dashboard - Garden of Pages",
+      user: req.user,
+    });
   } else {
     return res.redirect("/");
   }
@@ -70,7 +73,10 @@ exports.user_dashboard_get = asyncHandler(async (req, res, next) => {
 
 exports.user_account_get = asyncHandler(async (req, res, next) => {
   if (req.user) {
-    return res.render("account", { title: "Account", user: req.user });
+    return res.render("account", {
+      title: "Account - Garden of Pages",
+      user: req.user,
+    });
   } else {
     return res.redirect("/");
   }

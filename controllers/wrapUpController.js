@@ -11,7 +11,7 @@ exports.wrapUp_list_get = asyncHandler(async (req, res, next) => {
     return res.render("wrap-up-list", {
       user: req.user,
       wrapUps: wrapUps,
-      title: "Monthly Wrap Ups",
+      title: "Monthly Wrap Ups - Garden of Pages",
     });
   } catch (err) {
     return next(err);
@@ -27,7 +27,8 @@ exports.wrapUp_yearly_list_get = asyncHandler(async (req, res, next) => {
     return res.render("wrap-up-list", {
       user: req.user,
       wrapUps: wrapUps,
-      title: req.params.year,
+      year: req.params.year,
+      title: `${req.params.year} Wrap Ups - Garden of Pages`,
     });
   } catch (err) {
     return next(err);
@@ -74,6 +75,7 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
       // const formattedPages = totalPages.toLocaleString("en-US");
 
       return res.render("wrap-up-detail", {
+        title: `${wrapUp.month} ${wrapUp.year} - Garden of Pages`,
         user: req.user,
         wrapUp: wrapUp,
         books: books,
@@ -96,7 +98,7 @@ exports.wrapUp_form_get = asyncHandler(async (req, res, next) => {
   if (req.user) {
     return res.render("wrap-up-form", {
       user: req.user,
-      title: "Add Monthly Wrap Up",
+      title: "Add Monthly Wrap Up - Garden of Pages",
     });
   } else {
     const err = new Error("You must be an authorized user.");
@@ -136,7 +138,7 @@ exports.wrapUp_form_post = [
           // Form data is not valid. Re-render form with data and errors.
           return res.render("wrap-up-form", {
             user: req.user,
-            title: "Edit Wrap Up",
+            title: "Add Wrap Up - Garden of Pages",
             wrapUp: wrapUp,
             errors: errors.array(),
           });
@@ -161,7 +163,7 @@ exports.wrapUp_form_post = [
             // Month provided is not a valid month.
             return res.render("wrap-up-form", {
               user: req.user,
-              title: "Edit Wrap Up",
+              title: "Add Wrap Up - Garden of Pages",
               wrapUp: wrapUp,
               errors: [
                 ...errors.array(),
@@ -183,7 +185,7 @@ exports.wrapUp_form_post = [
               // Wrap up already exists. Return error.
               return res.render("wrap-up-form", {
                 user: req.user,
-                title: "Edit Wrap Up",
+                title: "Add Wrap Up - Garden of Pages",
                 wrapUp: wrapUp,
                 errors: [
                   {
@@ -222,7 +224,7 @@ exports.wrapUp_update_get = asyncHandler(async (req, res, next) => {
         return res.render("wrap-up-form", {
           user: req.user,
           wrapUp: wrapUp,
-          title: "Edit Monthly Wrap Up",
+          title: "Update Monthly Wrap Up - Garden of Pages",
         });
       } else {
         // No results.
@@ -294,7 +296,7 @@ exports.wrapUp_update_post = [
           if (!monthArr.includes(req.body.month)) {
             return res.render("wrap-up-form", {
               user: req.user,
-              title: "Edit Wrap Up",
+              title: "Update Wrap Up - Garden of Pages",
               wrapUp: updatedWrapUp,
               errors: [
                 ...errors.array(),
@@ -304,7 +306,7 @@ exports.wrapUp_update_post = [
           } else if (!errors.isEmpty()) {
             return res.render("wrap-up-form", {
               user: req.user,
-              title: "Edit Wrap Up",
+              title: "Update Wrap Up - Garden of Pages",
               wrapUp: updatedWrapUp,
               errors: errors.array(),
             });

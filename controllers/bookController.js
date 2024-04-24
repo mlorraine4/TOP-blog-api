@@ -12,7 +12,11 @@ exports.book_list_get = asyncHandler(async (req, res, next) => {
       .collation({ locale: "en", caseLevel: true })
       .exec();
     console.log(books[1]);
-    return res.render("library", { user: req.user, books: books });
+    return res.render("library", {
+      title: "Garden of Pages",
+      user: req.user,
+      books: books,
+    });
   } catch (err) {
     return next(err);
   }
@@ -20,7 +24,11 @@ exports.book_list_get = asyncHandler(async (req, res, next) => {
 
 exports.book_form_get = asyncHandler(async (req, res, next) => {
   if (req.user) {
-    return res.render("book-form", { user: req.user, title: "Add Book" });
+    return res.render("book-form", {
+      title: "Add Book - Garden of Pages",
+      user: req.user,
+      title: "Add Book",
+    });
   } else {
     // User is not logged in.
     const err = new Error("You must be an authorized user.");
@@ -143,7 +151,11 @@ exports.book_detail_get = asyncHandler(async (req, res, next) => {
 
     if (book !== null) {
       // Book exists.
-      return res.render("book-detail", { user: req.user, book: book });
+      return res.render("book-detail", {
+        title: `${book.title} - Garden of Pages`,
+        user: req.user,
+        book: book,
+      });
     } else {
       // No results.
       const err = new Error("Book does not exist.");
@@ -165,6 +177,7 @@ exports.book_update_get = asyncHandler(async (req, res, next) => {
     if (book !== null) {
       // Book exists.
       return res.render("book-form", {
+        title: "Update Book - Garden of Pages",
         user: req.user,
         title: "Edit Book",
         book: book,
@@ -314,6 +327,7 @@ exports.book_delete_get = asyncHandler(async (req, res, next) => {
         }).exec();
 
         return res.render("book-delete", {
+          title: "Delete Book - Garden of Pages",
           user: req.user,
           book: book,
           book_review: bookReview,
@@ -376,8 +390,4 @@ exports.book_delete_post = asyncHandler(async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
-});
-
-exports.tbr_list_get = asyncHandler(async (req, res, next) => {
-  res.render("masterlist", { user: req.user });
 });

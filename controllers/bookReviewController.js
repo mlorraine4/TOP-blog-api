@@ -87,7 +87,10 @@ exports.post_list = asyncHandler(async (req, res, next) => {
 
 exports.home_get = asyncHandler(async (req, res, next) => {
   try {
-    return res.render("index", { user: req.user });
+    return res.render("index", {
+      title: "Garden of Pages",
+      user: req.user,
+    });
   } catch (err) {
     return next(err);
   }
@@ -97,6 +100,7 @@ exports.book_review_list_get = asyncHandler(async (req, res, next) => {
   try {
     const bookReviews = await BookReview.find().populate("book").exec();
     return res.render("book-review-list", {
+      title: "Book Reviews - Garden of Pages",
       user: req.user,
       reviews: bookReviews,
     });
@@ -121,6 +125,7 @@ exports.book_review_detail_get = asyncHandler(async (req, res, next) => {
     if (review !== null) {
       // Review exists.
       return res.render("book-review-detail", {
+        title: `Review: ${book.title} - Garden of Pages`,
         review: review,
         user: req.user,
       });
@@ -255,6 +260,7 @@ exports.book_review_update_get = asyncHandler(async (req, res, next) => {
       if (bookReview !== null) {
         // Book review exists.
         return res.render("book-review-form", {
+          title: "Update Review - Garden of Pages",
           user: req.user,
           title: "Edit Book Review",
           bookReview: bookReview,
@@ -376,6 +382,7 @@ exports.book_review_delete_get = asyncHandler(async (req, res, next) => {
       if (bookReview !== null) {
         // Book review exists.
         return res.render("book-review-delete", {
+          title: "Delete Review - Garden of Pages",
           user: req.user,
           book_review: bookReview,
         });
