@@ -13,12 +13,11 @@ block content
         div(class='flex justify-between w-[70%] p-5 m-auto italic border-y-2 border-accent')
             each tag in review.tags
                 a(href=tag.url class="font-bold") ##{tag.name}
-                
+
         if user && user.is_admin
-            p 
-                a(href=`${review.url}/update`) Edit
-            p
-                a(href=`${review.url}/delete`) Delete
+            div(class="flex")      
+                a(href=`${review.book.review_url}/update` class="rounded-lg bg-ptwo hover:bg-faded text-white text-xl m-5 p-2") Edit
+                a(href=`${review.book.review_url}/delete` class="rounded-lg bg-ptwo hover:bg-faded text-white text-xl m-5 p-2") Delete
 
         div#comments(class="w-[80%] m-auto relative text-center")
             div(class="text-lg m-5") #{review.comments.length} Comments

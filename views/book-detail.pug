@@ -15,7 +15,6 @@ block content
         div(class="text-center text-leg p-2") Read: #{moment(book.date_read[0]).utc().format("MMM Do, YYYY")}
 
   if user && user.is_admin
-    p 
-      a(href=`${book.url}/update` class='border-rounded p-2 bg-ptwo hover:bg-faded text-white text-lg m-5') Edit
-    p
-      a(href=`${book.url}/delete` class='border-rounded p-2 bg-ptwo hover:bg-faded text-white text-lg m-5') Delete
+    div(class="flex")
+      a(href=`${book.url}/update` class='rounded p-2 bg-ptwo hover:bg-faded text-white text-lg m-5') Edit
+      a(href=`${book.url}/delete` class='rounded p-2 bg-ptwo hover:bg-faded text-white text-lg m-5') Delete

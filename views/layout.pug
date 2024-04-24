@@ -28,13 +28,13 @@ html
           a(href="/log-out" class="hover:text-accent") Log Out
         else
           a(href="/log-in" class="hover:text-accent") Log In
-    //- if user
-    img#dash-btn(src="/images/plus.png" class="w-8 h-8 fixed bottom-[15px] right-[30px] hover:w-9 hover:h-9 transition-all")
-    div#dashboard-pop-up(class="fixed right-[46px] bottom-[60px] bg-white text-xl hide")
-      a(href="/new-book" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') Add Book
-      a(href="/new-book-review" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') Add Review
-      a(href="/new-monthly-wrap-up" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') Add Wrap Up
-      a(href="/library" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') View Library
+    if user
+      img#dash-btn(src="/images/plus.png" class="w-8 h-8 fixed bottom-[15px] right-[30px] hover:w-9 hover:h-9 transition-all")
+      div#dashboard-pop-up(class="fixed right-[46px] bottom-[60px] bg-white text-xl hide")
+        a(href="/new-book" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') Add Book
+        a(href="/new-book-review" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') Add Review
+        a(href="/new-monthly-wrap-up" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') Add Wrap Up
+        a(href="/library" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') View Library
     div(class="mt-[230px] bg-pone min-h-[calc(100vh-230px)]")
       block content 
 

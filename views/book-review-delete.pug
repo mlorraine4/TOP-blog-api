@@ -1,8 +1,8 @@
 extends layout
 
 block content
-    div(class="text-4xl text-center p-5") A Review of #{book_review.book.title} by #{book_review.book.author}
-    p Do you really want to delete this Review?
+    div(class="text-4xl text-center p-5") Review of #{book_review.book.title} by #{book_review.book.author}
+    p Do you really want to delete review of #{book_review.book.title} by #{book_review.book.author}?
     form(method='POST' action='')
         input#bookreviewid(type='hidden',name='bookreviewid', required='true', value=book_review._id )
         button(type='submit' class="p-5 bg-ptwo hover:bg-faded text-white text-xl m-5") Delete

@@ -14,10 +14,9 @@ block content
         p There are no books for this month.
 
     if user && user.is_admin
-      p
-        a(href=`${wrapUp.url}/update`) Edit
-      p
-        a(href=`${wrapUp.url}/delete`) Delete
+      div(class="flex")      
+        a(href=`${wrapUp.url}/update` class="rounded-lg bg-ptwo hover:bg-faded text-white text-xl m-5 p-2") Edit
+        a(href=`${wrapUp.url}/delete` class="rounded-lg bg-ptwo hover:bg-faded text-white text-xl m-5 p-2") Delete
     
     div#comments(class="w-[400px] m-auto text-center mt-10")
       div(class="text-2xl") #{wrapUp.comments.length} Comments
