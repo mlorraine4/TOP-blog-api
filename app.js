@@ -10,11 +10,15 @@ const bcrypt = require("bcryptjs");
 const User = require("./models/user");
 const compression = require("compression");
 const helmet = require("helmet");
+const favicon = require("serve-favicon");
 require("dotenv").config();
 
 const siteRouter = require("./routes/gardenofpages");
 
 var app = express();
+
+// favicon
+app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
 
 // Set up mongoose connection
 const mongoose = require("mongoose");

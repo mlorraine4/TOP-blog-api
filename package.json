@@ -30,6 +30,7 @@
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "pug": "^3.0.2",
+    "serve-favicon": "^2.5.0",
     "tinymce": "^7.0.0"
   },
   "devDependencies": {
