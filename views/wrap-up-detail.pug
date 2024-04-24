@@ -2,12 +2,12 @@ extends layout
 
 block content
   #content
-    div(class='text-2xl font-bold text-center p-5') Books Read in #{month} #{year}
-    div(class='flex flex-wrap')
+    div(class='text-3xl font-bold text-center p-5') Books Read in #{month} #{year}
+    div(class='flex flex-wrap justify-center w-5/6 m-auto')
       each book in books
-        div(class='flex flex-col justify-center w-[250px]')
-          img(class='wrap-up-detail-book-cover-img' src=he.decode(book.book_cover_url))
-          a(href=book.url) #{book.title}
+        div(class='flex flex-col m-5 text-center')
+          img(class='w-[200px] h-[300px]' src=he.decode(book.book_cover_url))
+          a(href=book.url class="text-lg") #{book.title}
           p By: #{book.author}
           p #{book.rating}/5 stars
       else 
@@ -19,19 +19,18 @@ block content
       p
         a(href=`${wrapUp.url}/delete`) Delete
     
-    div#comments
-      h2 #{wrapUp.comments.length} Comments
-      button#open-form Comment
-      form#comment-form(class="hide")
-        button#close-form(type="button") x
+    div#comments(class="w-[400px] m-auto text-center mt-10")
+      div(class="text-2xl") #{wrapUp.comments.length} Comments
+      button#open-form(class="p-2 bg-ptwo hover:bg-faded text-white text-lg m-5") Comment
+      form#comment-form(class="hide pop-up")
+        button#close-form(type="button" class="text-orange font-bold") X
         label(for='name') Name
-        input#name(name='name' type='text')
+        input#name(name='name' type='text' class="bg-neutral-100 w-4/6")
         label(for='text') Comment
-        input#text(name='text'  type='text' required)
-        button(type='submit') Submit
+        textarea#text(name='text'  type='text' class="bg-neutral-100 w-5/6 p-5 max-h-[100px]" required)
+        button(type='submit' class="p-2 bg-ptwo hover:bg-faded text-white text-lg m-5") Submit
         #error-container 
           ul
-
       each comment in wrapUp.comments 
         div.comment-container(id=comment._id)
           if user && user.is_admin

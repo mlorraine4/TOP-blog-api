@@ -680,6 +680,10 @@ video {
   margin-bottom: 1.25rem;
 }
 
+.mt-10 {
+  margin-top: 2.5rem;
+}
+
 .mt-\[230px\] {
   margin-top: 230px;
 }
@@ -712,6 +716,10 @@ video {
   height: 225px;
 }
 
+.h-\[300px\] {
+  height: 300px;
+}
+
 .h-\[400px\] {
   height: 400px;
 }
@@ -736,6 +744,10 @@ video {
   max-height: 760px;
 }
 
+.max-h-\[100px\] {
+  max-height: 100px;
+}
+
 .min-h-\[calc\(100vh-230px\)\] {
   min-height: calc(100vh - 230px);
 }
@@ -749,6 +761,10 @@ video {
 }
 
 .w-2\/3 {
+  width: 66.666667%;
+}
+
+.w-4\/6 {
   width: 66.666667%;
 }
 
@@ -904,6 +920,11 @@ video {
   border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 
+.bg-neutral-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 229 229 / var(--tw-bg-opacity));
+}
+
 .bg-pone {
   --tw-bg-opacity: 1;
   background-color: rgb(33 19 34 / var(--tw-bg-opacity));
@@ -917,6 +938,11 @@ video {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-neutral-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 245 245 / var(--tw-bg-opacity));
 }
 
 .p-10 {
@@ -958,6 +984,10 @@ video {
   padding-bottom: 5rem;
 }
 
+.pl-4 {
+  padding-left: 1rem;
+}
+
 .pr-\[40px\] {
   padding-right: 40px;
 }
@@ -974,18 +1004,6 @@ video {
   padding-top: 60px;
 }
 
-.pl-2 {
-  padding-left: 0.5rem;
-}
-
-.pl-1 {
-  padding-left: 0.25rem;
-}
-
-.pl-4 {
-  padding-left: 1rem;
-}
-
 .text-center {
   text-align: center;
 }
@@ -997,6 +1015,11 @@ video {
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
 }
 
 .text-4xl {
@@ -1040,6 +1063,11 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.text-orange {
+  --tw-text-opacity: 1;
+  color: rgb(252 106 14 / var(--tw-text-opacity));
 }
 
 .opacity-0 {
@@ -1135,7 +1163,8 @@ label {
   margin: 10px;
 }
 
-form input:focus {
+form input:focus,
+form textarea:focus {
   outline: solid var(--orange);
 }
 
@@ -1295,11 +1324,6 @@ form input:focus {
 
 .no-opacity {
   opacity: 0;
-}
-
-#close-form {
-  background-color: inherit;
-  color: white;
 }
 
 #error-msg,

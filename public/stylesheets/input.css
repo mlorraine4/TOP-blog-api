@@ -75,7 +75,8 @@ label {
   margin: 10px;
 }
 
-form input:focus {
+form input:focus,
+form textarea:focus {
   outline: solid var(--orange);
 }
 
@@ -230,11 +231,6 @@ form input:focus {
 /* forms */
 .no-opacity {
   opacity: 0;
-}
-
-#close-form {
-  background-color: inherit;
-  color: white;
 }
 
 #error-msg,

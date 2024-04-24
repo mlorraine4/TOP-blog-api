@@ -64,7 +64,7 @@ const initCommentForm = (() => {
     const name = document.createElement("div");
     name.classList.add("comment-name");
     name.innerHTML = data.name;
-  
+
     const date = document.createElement("div");
     date.classList.add("comment-date");
     date.innerHTML = "Just Now";
