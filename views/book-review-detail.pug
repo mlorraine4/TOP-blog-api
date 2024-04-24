@@ -23,7 +23,7 @@ block content
             div(class="text-lg m-5") #{review.comments.length} Comments
             button#open-form(class="bg-ptwo p-2 w-min hover:bg-faded text-white m-5") Comment
             form#comment-form(class="hide absolute w-[400px] bg-pone z-20 mx-auto left-0 right-0 bottom-0 p-5")
-                button#close-form(type="button") x
+                button#close-form(type="button" class="text-white text-lg") x
                 label(for='name' class="text-white") Name
                 input#name(name='name' type='text' value=(undefined===guest ? '' : guest.name))
                 label(for='text' class="text-white") Comment
