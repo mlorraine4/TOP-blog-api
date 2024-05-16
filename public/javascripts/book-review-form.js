@@ -13,40 +13,31 @@ const initReview = (() => {
   });
 
   const form = document.querySelector("#book-review-form");
-  const successContainer = document.getElementById("success-container");
-  const errorContainer = document.getElementById("error-container");
-  const closeBtn = successContainer.querySelector("button");
-  
-  closeBtn.onclick = () => {
-    form.style.opacity = 1;
-    form.style.pointerEvents = "auto";
-    successContainer.classList.toggle("hide");
-  }
- 
-  form.onsubmit = (e) => {
+  const messageDiv = document.getElementById("message");
 
+  form.onsubmit = async (e) => {
     e.preventDefault();
-    hideErrors();
 
-    let data = {
-      title: form.elements["title"].value,
-      author: form.elements["author"].value,
-      review: tinymce.activeEditor.getContent(),
-      tags: getTags(),
-    };
+    try {
+      let data = {
+        title: form.elements["title"].value,
+        author: form.elements["author"].value,
+        review: tinymce.activeEditor.getContent(),
+        tags: getTags(),
+      };
 
-    postData(document.URL, data).then(async (response) => {
-      if (!response.ok) {
-        const data = await response.json();
-        displayErrors(data);
+      const response = await postData(document.URL, data);
+      const result = await response.json();
+      if (response.ok) {
+        displayMessage("success", result);
+        clearForm();
       } else {
-        // Success
-        const data = await response.json();
-        displaySuccess(data);
+        displayMessage("error", result);
       }
-    });
-
-  }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   async function postData(url = "", data = {}) {
     // Default options are marked with *
@@ -66,6 +57,46 @@ const initReview = (() => {
     return response;
   }
 
+  function displayMessage(type, result) {
+    form.style.pointerEvents = "none";
+    form.style.opacity = 0.5;
+
+    if (type === "success") {
+      messageDiv.innerHTML = "";
+      let p = document.createElement("p");
+      p.innerHTML = "Review successfully saved. ";
+
+      let a = document.createElement("a");
+      a.href = result.url;
+      a.innerHTML = "View review.";
+      p.append(a);
+
+      const button = document.createElement("button");
+      button.innerHTML = "x";
+      button.onclick = closeMessage;
+
+      messageDiv.append(p, button);
+      messageDiv.classList.add("pop-up");
+    } else {
+      messageDiv.innerHTML = "";
+      let ul = document.createElement("ul");
+      let p = (document.createElement("p").innerHTML = "Error(s) saving book:");
+      for (const error of result) {
+        let li = document.createElement("li");
+        li.innerHTML = error.msg;
+        ul.append(li);
+      }
+
+      const button = document.createElement("button");
+      button.innerHTML = "x";
+      button.onclick = closeMessage;
+
+      messageDiv.append(button, p, ul);
+
+      messageDiv.classList.add("pop-up");
+    }
+  }
+
   function getTags() {
     const tags = document.querySelectorAll("li");
     let tagValues = [];
@@ -78,7 +109,7 @@ const initReview = (() => {
   function displayErrors(data) {
     errorContainer.style.opacity = 1;
 
-    if (!typeof(data.errors) === "object") {
+    if (!typeof data.errors === "object") {
       data.errors.forEach((error) => {
         const li = document.createElement("li");
         li.innerHTML = error.msg;
@@ -103,9 +134,26 @@ const initReview = (() => {
     form.style.pointerEvents = "none";
     successContainer.querySelector("a").setAttribute("href", data.url);
     successContainer.classList.toggle("hide");
-    window.scrollTo({top: 0, behavior: "smooth"});
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function clearForm() {
+    form.elements["date_read"].value = "";
+    form.elements["title"].value = "";
+    form.elements["author"].value = "";
+    form.elements["series"].value = "";
+    form.elements["series_number"].value = "";
+    form.elements["pages"].value = "";
+    form.elements["rating"].value = "";
+    fileInput.value = "";
+  }
+
+  function closeMessage() {
+    messageDiv.classList.remove("pop-up");
+    messageDiv.innerHTML = "";
+    form.style.pointerEvents = "auto";
+    form.style.opacity = 1;
+  }
 })();
 
 const initTags = (() => {

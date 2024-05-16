@@ -15,7 +15,7 @@ block content
                 a(href=tag.url class="font-bold") ##{tag.name}
 
         if user && user.is_admin
-            div(class="flex")      
+            div(class="flex justify-center")      
                 a(href=`${review.book.review_url}/update` class="rounded-lg bg-ptwo hover:bg-faded text-white text-xl m-5 p-2") Edit
                 a(href=`${review.book.review_url}/delete` class="rounded-lg bg-ptwo hover:bg-faded text-white text-xl m-5 p-2") Delete
 

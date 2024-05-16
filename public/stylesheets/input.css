@@ -53,12 +53,17 @@ form {
   margin: auto;
 }
 
+form input {
+  color: black;
+}
+
 button {
   border-radius: 8px;
   border: none;
 }
 
-button:hover {
+button:hover,
+a:hover {
   cursor: pointer;
 }
 
@@ -91,6 +96,10 @@ form textarea:focus {
   font-weight: bold;
   color: var(--orange);
   font-size: large;
+}
+
+#message a {
+  font-weight: bold;
 }
 
 .hide {
@@ -187,7 +196,6 @@ form textarea:focus {
   border-radius: 4px;
   padding: 20px;
   box-shadow: 2px 2px 5px #00000033;
-  width: 50%;
   background-color: white;
 }
 

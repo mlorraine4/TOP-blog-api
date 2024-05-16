@@ -23,18 +23,18 @@ exports.book_list_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.book_form_get = asyncHandler(async (req, res, next) => {
-  if (req.user) {
-    return res.render("book-form", {
-      title: "Add Book - Garden of Pages",
-      user: req.user,
-      title: "Add Book",
-    });
-  } else {
-    // User is not logged in.
-    const err = new Error("You must be an authorized user.");
-    err.status = 401;
-    return next(err);
-  }
+  // if (req.user) {
+  return res.render("book-form", {
+    title: "Add Book - Garden of Pages",
+    user: req.user,
+    title: "Add Book",
+  });
+  // } else {
+  //   // User is not logged in.
+  //   const err = new Error("You must be an authorized user.");
+  //   err.status = 401;
+  //   return next(err);
+  // }
 });
 
 // TODO: custom sanitizor for image data (data url)
@@ -149,6 +149,7 @@ exports.book_detail_get = asyncHandler(async (req, res, next) => {
       encodedAuthor: req.params.author,
     }).exec();
 
+    console.log(book.review_url);
     if (book !== null) {
       // Book exists.
       return res.render("book-detail", {

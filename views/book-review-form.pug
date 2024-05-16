@@ -2,20 +2,15 @@ extends layout
 
 block content
 
-    div(class="text-4xl text-center p-5") #{title}
-    #success-container(class="hide")
-        button x
-        p Update successful!
-        p 
-            a(href="") Updated Book Review
-    form#book-review-form
-        p Book
-        input#title(name='title' type='text' placeholder='title' value=(undefined===bookReview ? '' : bookReview.book.title))
-        input#author(name='author' type='text' placeholder='author' value=(undefined===bookReview ? '' : bookReview.book.author))
-        p Review
+    form#book-review-form(class="text-2xl p-10 w-full min-w-[400px] max-w-[960px]")
+        div(class="text-5xl mb-5") Add Review
+        label Book
+        input#title(name='title' class="w-2/3" type='text' placeholder='title' value=(undefined===bookReview ? '' : bookReview.book.title))
+        input#author(name='author' class="w-2/3" type='text' placeholder='author' value=(undefined===bookReview ? '' : bookReview.book.author))
+        label Review
         textarea(id="my-expressjs-tinymce-app")
-        p Tags
-        div(class="tags-input")
+        label Tags
+        div(class="tags-input w-2/3")
             ul(id="tags")
                 if bookReview!==undefined
                     each tag in bookReview.tags
@@ -23,9 +18,8 @@ block content
                             button(class='delete-button') X
             input(type="text" id="input-tag" placeholder="author, title, genre, etc")
         input#review-hidden(type="text" hidden name='review-hidden' value=(undefined===bookReview ? '' : he.decode(bookReview.body)))
-        button.form-submit-button(type="submit") save
-        #error-container
-            ul
+        button.form-submit-button(type="submit" class='p-5 bg-ptwo hover:bg-faded text-white text-xl m-5 disabled:opacity-50 disabled:bg-ptwo') save
+    #message(class="text-xl bold")
     
     script(type="application/javascript" src="/tinymce/tinymce.min.js")
     script(type="application/javascript" src="/javascripts/book-review-form.js" defer)

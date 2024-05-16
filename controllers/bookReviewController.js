@@ -141,14 +141,14 @@ exports.book_review_detail_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.book_review_form_get = asyncHandler(async (req, res, next) => {
-  if (req.user) {
-    return res.render("book-review-form", { user: req.user });
-  } else {
-    // User is not logged in.
-    const err = new Error("You must be an authorized user.");
-    err.status = 401;
-    return next(err);
-  }
+  // if (req.user) {
+  return res.render("book-review-form", { user: req.user });
+  // } else {
+  //   // User is not logged in.
+  //   const err = new Error("You must be an authorized user.");
+  //   err.status = 401;
+  //   return next(err);
+  // }
 });
 
 exports.book_review_form_post = [
@@ -172,7 +172,7 @@ exports.book_review_form_post = [
 
         if (!errors.isEmpty()) {
           // Form data has errors.
-          return res.status(400).send({ errors: errors.array() });
+          return res.status(400).send(errors.array());
         } else {
           // Form data is valid.
           const book = await Book.findOne({
@@ -211,35 +211,32 @@ exports.book_review_form_post = [
 
             // Save book review.
             await book_review.save();
-            return res.status(200).send({ url: book_review.url });
+            return res.status(200).send({ url: book.review_url });
           } else if (book === null) {
             // Book does not exist yet. Send error.
-            return res.status(400).send({
-              errors: [
-                {
-                  msg: `You need to add book: ${req.body.title} by ${req.body.author} before saving review.`,
-                },
-              ],
-            });
+            return res.status(400).send([
+              {
+                msg: `You need to add book: ${req.body.title} by ${req.body.author} before saving review.`,
+              },
+            ]);
           } else {
             // There is already a review.
-            return res.status(409).send({
-              errors: [
-                {
-                  msg: `A review for ${req.body.title} by ${req.body.author} already exists.`,
-                },
-              ],
-            });
+            return res.status(409).send([
+              {
+                msg: `A review for ${req.body.title} by ${req.body.author} already exists.`,
+              },
+            ]);
           }
         }
       } else {
         // User is not logged in.
         return res
           .status(401)
-          .send({ errors: [{ msg: "You must be an authorized user." }] });
+          .send([{ msg: "You must be an authorized user." }]);
       }
     } catch (err) {
-      return res.status(500).send({ errors: err });
+      console.log(err);
+      return res.status(500).send([{ msg: "An internal error occurred" }]);
     }
   }),
 ];
@@ -303,7 +300,7 @@ exports.book_review_update_post = [
 
         if (!errors.isEmpty()) {
           // Form data is not valid.
-          return res.status(400).send({ errors: errors.array() });
+          return res.status(400).send(errors.array());
         } else {
           // Form data is valid. Update book review.
           const book = await Book.findOne({
@@ -333,6 +330,7 @@ exports.book_review_update_post = [
               }
             }
 
+            // keeps original timestamp of book review
             const newBookReview = new BookReview({
               body: req.body.review,
               book: bookReview.book,
@@ -346,22 +344,23 @@ exports.book_review_update_post = [
               newBookReview,
               {}
             );
-            return res.status(200).send({ url: bookReview.url });
+            return res.status(200).send({ url: book.review_url });
           } else {
             // No results.
-            return res.status(404).send({
-              errors: [{ msg: "Book review does not exist." }],
-            });
+            return res
+              .status(404)
+              .send([{ msg: "Book review does not exist." }]);
           }
         }
       } else {
         // User is not logged in.
         return res
           .status(401)
-          .send({ errors: [{ msg: "You must be an authorized user." }] });
+          .send([{ msg: "You must be an authorized user." }]);
       }
     } catch (err) {
-      return res.status(500).send({ errors: err });
+      console.log(err);
+      return res.status(500).send([{ msg: "An internal error occurred" }]);
     }
   }),
 ];
@@ -412,7 +411,7 @@ exports.book_review_delete_post = asyncHandler(async (req, res, next) => {
       }).exec();
 
       await BookReview.findOneAndDelete({ book: book }).exec();
-      return res.redirect("/gardenofpages/book-reviews");
+      return res.redirect("/book-reviews");
     } else {
       // User is not logged in.
       const err = new Error("You must be an authorized user.");

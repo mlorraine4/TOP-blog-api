@@ -5,12 +5,12 @@ block content
 
     if book_review
 
-        p #[strong Delete the following review before attempting to delete this book.]
+        div(class="text-2xl text center p-5") #[strong Delete the following review before attempting to delete this book.]
 
         a(href=book_review.url class="p-2 my-3 mx-auto") A Review of #{book.title} by #{book.author}
 
     else
-        p Do you really want to delete 
+        div(class="text-2xl text center p-5") Do you really want to delete 
             span #[strong #{book.title} by #{book.author}?]
 
         form(method='POST' action='')
