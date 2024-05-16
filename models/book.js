@@ -28,5 +28,9 @@ BookSchema.virtual("review_url").get(function () {
   return `/book-review/${this.encodedAuthor}/${this.encodedTitle}`;
 });
 
+BookSchema.virtual("review_form_url").get(function () {
+  return `/new-book-review/${this.encodedAuthor}/${this.encodedTitle}`;
+});
+
 // Export model
 module.exports = mongoose.model("Book", BookSchema);

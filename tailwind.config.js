@@ -14,6 +14,7 @@ module.exports = {
         faded: "#9e6082",
         pthree: "#8e677b",
         orange: "#fc6a0e",
+        "orange-faded": "#FDA56E",
       },
     },
   },

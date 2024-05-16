@@ -1,10 +1,6 @@
 var express = require("express");
 var router = express.Router();
 
-// TODO: add form required for all inputs
-// TODO: draw new header, imgs for months
-// TODO: remove proxy in json package, only for development
-
 const wrapUpController = require("../controllers/wrapUpController");
 const userController = require("../controllers/userController");
 const bookController = require("../controllers/bookController");
@@ -61,6 +57,14 @@ router.post("/book/:author/:title/delete", bookController.book_delete_post);
 router.get("/", bookReviewController.home_get);
 router.post("/posts", bookReviewController.post_list);
 router.get("/book-reviews", bookReviewController.book_review_list_get);
+router.get(
+  "/new-book-review/:author/:title",
+  bookReviewController.book_specified_review_form_get
+);
+router.post(
+  "/new-book-review/:author/:title",
+  bookReviewController.book_review_form_post
+);
 router.get("/new-book-review", bookReviewController.book_review_form_get);
 router.post("/new-book-review", bookReviewController.book_review_form_post);
 router.get(

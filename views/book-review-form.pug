@@ -3,10 +3,10 @@ extends layout
 block content
 
     form#book-review-form(class="text-2xl p-10 w-full min-w-[400px] max-w-[960px]")
-        div(class="text-5xl mb-5") Add Review
+        div(class="text-5xl mb-5") #{header}
         label Book
-        input#title(name='title' class="w-2/3" type='text' placeholder='title' value=(undefined===bookReview ? '' : bookReview.book.title))
-        input#author(name='author' class="w-2/3" type='text' placeholder='author' value=(undefined===bookReview ? '' : bookReview.book.author))
+        input#title(name='title' class="w-2/3" type='text' placeholder='title' value=(undefined===book ? '' : book.title))
+        input#author(name='author' class="w-2/3" type='text' placeholder='author' value=(undefined===book ? '' : book.author))
         label Review
         textarea(id="my-expressjs-tinymce-app")
         label Tags

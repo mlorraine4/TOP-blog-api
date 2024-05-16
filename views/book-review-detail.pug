@@ -7,7 +7,9 @@ block content
         div
             div
                 img(src=he.decode(review.book.book_cover_url), class="shadow-lg float-left w-[200px] m-5")
-        
+            div(class="flex items-center m-5")
+                div(class="text-2xl text-center") #{review.book.rating}
+                img(src="/images/star.png" class="h-[1.5rem] m-1")
             div(class="m-5 text-2xl")!=he.decode(review.body)
         
         div(class='flex justify-between w-[70%] p-5 m-auto italic border-y-2 border-accent')

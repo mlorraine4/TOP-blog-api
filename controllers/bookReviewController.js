@@ -141,15 +141,47 @@ exports.book_review_detail_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.book_review_form_get = asyncHandler(async (req, res, next) => {
-  // if (req.user) {
-  return res.render("book-review-form", { user: req.user });
-  // } else {
-  //   // User is not logged in.
-  //   const err = new Error("You must be an authorized user.");
-  //   err.status = 401;
-  //   return next(err);
-  // }
+  if (req.user) {
+    return res.render("book-review-form", {
+      title: "Add Book Review - Garden of Pages",
+      header: "Add Review",
+      user: req.user,
+    });
+  } else {
+    // User is not logged in.
+    const err = new Error("You must be an authorized user.");
+    err.status = 401;
+    return next(err);
+  }
 });
+
+exports.book_specified_review_form_get = asyncHandler(
+  async (req, res, next) => {
+    if (req.user) {
+      try {
+        const book = await Book.findOne({
+          encodedTitle: req.params.title,
+          encodedAuthor: req.params.author,
+        }).exec();
+
+        return res.render("book-review-form", {
+          title: "Add Book Review - Garden of Pages",
+          header: "Add Review",
+          user: req.user,
+          book: book,
+        });
+      } catch (err) {
+        console.log(err);
+        return next(err);
+      }
+    } else {
+      // User is not logged in.
+      const err = new Error("You must be an authorized user.");
+      err.status = 401;
+      return next(err);
+    }
+  }
+);
 
 exports.book_review_form_post = [
   body("title", "Title must not be empty.")
@@ -250,7 +282,6 @@ exports.book_review_update_get = asyncHandler(async (req, res, next) => {
       }).exec();
 
       const bookReview = await BookReview.findOne({ book: book })
-        .populate("book")
         .populate("tags")
         .exec();
 
@@ -258,9 +289,11 @@ exports.book_review_update_get = asyncHandler(async (req, res, next) => {
         // Book review exists.
         return res.render("book-review-form", {
           title: "Update Review - Garden of Pages",
+          header: "Update Review",
           user: req.user,
           title: "Edit Book Review",
           bookReview: bookReview,
+          book: book,
         });
       } else {
         // No results.

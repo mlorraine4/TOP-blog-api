@@ -23,18 +23,18 @@ exports.book_list_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.book_form_get = asyncHandler(async (req, res, next) => {
-  // if (req.user) {
-  return res.render("book-form", {
-    title: "Add Book - Garden of Pages",
-    user: req.user,
-    title: "Add Book",
-  });
-  // } else {
-  //   // User is not logged in.
-  //   const err = new Error("You must be an authorized user.");
-  //   err.status = 401;
-  //   return next(err);
-  // }
+  if (req.user) {
+    return res.render("book-form", {
+      title: "Add Book - Garden of Pages",
+      user: req.user,
+      header: "Add Book",
+    });
+  } else {
+    // User is not logged in.
+    const err = new Error("You must be an authorized user.");
+    err.status = 401;
+    return next(err);
+  }
 });
 
 // TODO: custom sanitizor for image data (data url)
@@ -149,13 +149,17 @@ exports.book_detail_get = asyncHandler(async (req, res, next) => {
       encodedAuthor: req.params.author,
     }).exec();
 
-    console.log(book.review_url);
+    const review = await BookReview.findOne({ book: book }).exec();
+
+    console.log(review);
+
     if (book !== null) {
       // Book exists.
       return res.render("book-detail", {
         title: `${book.title} - Garden of Pages`,
         user: req.user,
         book: book,
+        review: review,
       });
     } else {
       // No results.
@@ -180,7 +184,7 @@ exports.book_update_get = asyncHandler(async (req, res, next) => {
       return res.render("book-form", {
         title: "Update Book - Garden of Pages",
         user: req.user,
-        title: "Edit Book",
+        header: "Update Book",
         book: book,
       });
     } else {
