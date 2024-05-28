@@ -18,18 +18,19 @@ block content
         a(href=`${wrapUp.url}/update` class="rounded-lg bg-ptwo hover:bg-faded text-white text-xl m-5 p-2") Edit
         a(href=`${wrapUp.url}/delete` class="rounded-lg bg-ptwo hover:bg-faded text-white text-xl m-5 p-2") Delete
     
-    div#comments(class="w-[400px] m-auto text-center mt-10")
-      div(class="text-2xl") #{wrapUp.comments.length} Comments
+    div#comments(class="w-[400px] m-auto text-center mt-10 p-10")
+      div#comments-header(class="text-2xl") #{wrapUp.comments.length} Comment(s)
       button#open-form(class="p-2 bg-ptwo hover:bg-faded text-white text-lg m-5") Comment
       form#comment-form(class="hide pop-up")
         button#close-form(type="button" class="text-orange text-lg") X
-        label(for='name') Name
-        input#name(name='name' type='text' class="bg-neutral-100 w-4/6")
-        label(for='text') Comment
+        label(for='name' class="text-xl") Name
+        input#name(name='name' type='text' class="bg-neutral-100 w-4/6" value=(undefined===guest ? '' : guest.name))
+        label(for='text' class="text-xl") Comment
         textarea#text(name='text'  type='text' class="bg-neutral-100 w-5/6 p-5 max-h-[100px]" required)
         button(type='submit' class="p-2 bg-ptwo hover:bg-faded text-white text-lg m-5") Submit
         #error-container 
           ul
+
       each comment in wrapUp.comments 
         div.comment-container(id=comment._id)
           if user && user.is_admin
@@ -37,7 +38,7 @@ block content
           div.comment-header
             div.comment-name #{comment.name}
             div.comment-date #{moment(comment.timestamp).fromNow()}
-          div.comment-text #{comment.text}
+          div.comment-text #{he.decode(comment.text)}
   
   script(type="application/javascript" src="/javascripts/comment-form.js")
 

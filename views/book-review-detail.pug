@@ -2,7 +2,7 @@ extends layout
 
 block content
 
-    div(class="flex flex-col bg-white text-black mx-auto py-10 w-[60%] min-w-[500px] max-w-[1000px] p-4 min-h-[calc(100vh-330px)]")
+    div(class="flex flex-col bg-white text-black mx-auto my-20 py-10 w-[60%] min-w-[500px] max-w-[1000px] p-4 min-h-[calc(100vh-330px)]")
         div(class="text-4xl m-10 text-center") A Review of #{review.book.title} by #{review.book.author}
         div
             div
@@ -22,16 +22,16 @@ block content
                 a(href=`${review.book.review_url}/delete` class="rounded-lg bg-ptwo hover:bg-faded text-white text-xl m-5 p-2") Delete
 
         div#comments(class="w-[80%] m-auto relative text-center")
-            div(class="text-lg m-5") #{review.comments.length} Comments
+            div#comments-header(class="text-lg m-5") #{review.comments.length} Comment(s)
             button#open-form(class="bg-ptwo p-2 w-min hover:bg-faded text-white m-5") Comment
-            form#comment-form(class="hide absolute w-[400px] bg-pone z-20 mx-auto left-0 right-0 bottom-0 p-5")
-                button#close-form(type="button" class="text-white text-lg") x
-                label(for='name' class="text-white") Name
-                input#name(name='name' type='text' value=(undefined===guest ? '' : guest.name))
-                label(for='text' class="text-white") Comment
-                input#text(name='text'  type='text' required value=(undefined===guest ? '' : guest.text))
-                button(type='submit' class="bg-ptwo p-2 w-min hover:bg-faded text-white") Submit
-                #error-container(class="opacity-0 font-bold text-white h-5")
+            form#comment-form(class="hide pop-up")
+                button#close-form(type="button" class="text-orange text-lg") x
+                label(for='name' class="text-xl") Name
+                input#name(name='name' type='text' class="bg-neutral-100 w-4/6" value=(undefined===guest ? '' : guest.name))
+                label(for='text' class="text-xl") Comment
+                textarea#text(name='text'  type='text' class="bg-neutral-100 w-5/6 p-5 max-h-[100px]" required value=(undefined===guest ? '' : guest.text))
+                button(type='submit' class="bg-ptwo p-2 w-min hover:bg-faded text-white text-lg m-5") Submit
+                #error-container
                     ul
 
             each comment in review.comments 

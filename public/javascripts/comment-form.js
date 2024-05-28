@@ -4,10 +4,14 @@ const initCommentForm = (() => {
   const closeBtn = document.getElementById("close-form");
   const commentSection = document.getElementById("comments");
   const errorContainer = document.getElementById("error-container");
-  const commentsHeader = commentSection.querySelector("h2");
+  const commentsHeader = document.getElementById("comments-header");
 
   openBtn.onclick = toggleForm;
-  closeBtn.onclick = toggleForm;
+  closeBtn.onclick = () => {
+    toggleForm();
+    clearForm();
+    hideErrors();
+  };
 
   form.onsubmit = (e) => {
     e.preventDefault();
@@ -131,12 +135,12 @@ const initCommentForm = (() => {
   function incrementComments() {
     let currentLength = commentsHeader.innerHTML.split(" ")[0];
     let newLength = Number(currentLength) + 1;
-    commentsHeader.innerHTML = newLength + " Comments";
+    commentsHeader.innerHTML = newLength + " Comment(s)";
   }
 
   function decrementComments() {
     let currentLength = commentsHeader.innerHTML.split(" ")[0];
     let newLength = Number(currentLength) + -1;
-    commentsHeader.innerHTML = newLength + " Comments";
+    commentsHeader.innerHTML = newLength + " Comment(s)";
   }
 })();

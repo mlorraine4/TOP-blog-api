@@ -186,6 +186,16 @@ form textarea:focus {
 .delete-comment:hover {
   cursor: pointer;
 }
+
+#error-container {
+  color: black;
+  font-weight: bold;
+}
+
+#error-container li {
+  list-style: disc;
+}
+
 /* i think i need these */
 
 /* book review form */
@@ -207,7 +217,7 @@ form textarea:focus {
 
 .tags-input li {
   display: inline-block;
-  background-color: var(--light-purple);
+  background-color: var(--orange);
   color: white;
   border-radius: 20px;
   padding: 5px 10px;
@@ -219,7 +229,7 @@ form textarea:focus {
   outline: none;
   padding: 5px;
   font-size: 14px;
-  border: 2px solid var(--light-purple);
+  border: 2px solid var(--orange);
   border-radius: 8px;
 }
 
@@ -239,13 +249,6 @@ form textarea:focus {
 /* forms */
 .no-opacity {
   opacity: 0;
-}
-
-#error-msg,
-#error-container {
-  opacity: 0;
-  font-weight: bold;
-  color: white;
 }
 
 #success-container {

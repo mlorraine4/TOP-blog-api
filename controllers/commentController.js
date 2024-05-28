@@ -19,6 +19,9 @@ exports.wrap_up_comment_form_post = [
   asyncHandler(async (req, res, next) => {
     try {
       const errors = validationResult(req);
+      const month_format =
+        req.params.month.substring(0, 1).toUpperCase() +
+        req.params.month.substring(1);
 
       if (!errors.isEmpty()) {
         // Form data is not valid. Send error(s).
@@ -32,23 +35,25 @@ exports.wrap_up_comment_form_post = [
         });
 
         const wrapUp = await WrapUp.findOneAndUpdate(
-          { month: req.params.month, year: req.params.year },
+          { month: month_format, year: req.params.year },
           { $push: { comments: comment } }
         ).exec();
-        
+
         if (wrapUp !== null) {
           // Wrap up exists. Save comment.
           const result = await comment.save();
           return res.sendStatus(200);
         } else {
           // Wrap Up does not exist. Send error.
-          return res.status(404).send({errors: [
-            { msg: "Can't save comment. Wrap Up does not exist." }
-          ]})
+          return res.status(404).send({
+            errors: [{ msg: "Can't save comment. Wrap Up does not exist." }],
+          });
         }
       }
     } catch (err) {
-      return res.status(500).send({errors: [{msg: "There was an internal error saving your comment."}]});
+      return res.status(500).send({
+        errors: [{ msg: "There was an internal error saving your comment." }],
+      });
     }
   }),
 ];
@@ -123,17 +128,17 @@ exports.book_review_comment_form_post = [
           return res.sendStatus(200);
         } else {
           // Book review does not exist. Send error.
-          return res
-            .status(404)
-            .send({ errors: [{ msg: "Can't save comment. Book review does not exist." }] });
+          return res.status(404).send({
+            errors: [
+              { msg: "Can't save comment. Book review does not exist." },
+            ],
+          });
         }
       }
     } catch (err) {
-      return res
-        .status(500)
-        .send({
-          errors: [{ msg: "There was an internal error saving your comment." }],
-        });
+      return res.status(500).send({
+        errors: [{ msg: "There was an internal error saving your comment." }],
+      });
     }
   }),
 ];
