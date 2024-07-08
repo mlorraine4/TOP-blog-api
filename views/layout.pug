@@ -11,7 +11,7 @@ html
       form(action="/search" method="POST" class="absolute top-1 right-5 w-[250px] flex flex-row")
         img(src="/images/search.png" class="w-[20px] absolute right-[20px]")
         input#search(name="search" class="w-full text-black rounded-full pl-4 pr-[40px]")
-      div(class='w-full h-[80px] flex justify-around items-center bg-pone border-b border-accent text-xl')
+      div(class='w-full h-[80px] flex justify-around items-center bg-bg border-b border-accent text-xl')
         a(href="/" class="hover:text-accent") Home 
         a(href="/book-reviews" class="hover:text-accent") Book Reviews
         div(class="dropDownContainer")
@@ -35,7 +35,7 @@ html
         a(href="/new-book-review" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') Add Review
         a(href="/new-monthly-wrap-up" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') Add Wrap Up
         a(href="/library" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') View Library
-    div(class="mt-[230px] bg-pone min-h-[calc(100vh-230px)] p-20")
+    div(class="mt-[230px] bg-bg min-h-[calc(100vh-230px)] p-20")
       block content 
 
   script(type="application/javascript" src="/javascripts/drop-down.js" defer)

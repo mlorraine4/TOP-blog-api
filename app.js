@@ -63,9 +63,10 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// view engine setup
-app.set("views", path.join(__dirname, "views"));
+// view engine setup, updated to handle subdirectories in view folder
 app.set("view engine", "pug");
+app.set("views", "./views");
+app.use(express.static(path.join(__dirname, "./public")));
 
 // app.use(
 //   helmet({

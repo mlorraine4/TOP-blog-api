@@ -1,15 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./views/*.pug"],
+  content: ["./views/**/*.pug"],
   theme: {
     extend: {
       colors: {
-        accent: "#fc6a0e",
+        accent: "#dda73c",
         "light-purple": "#a474d8",
         cornflower: "#6495ED",
         "light-cornflower": "#d1dffa",
         "dark-gray": "#111922",
-        pone: "#211322",
+        bg: "#111110",
         ptwo: "#751c4d",
         faded: "#9e6082",
         pthree: "#8e677b",

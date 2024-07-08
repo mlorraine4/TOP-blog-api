@@ -1,0 +1,53 @@
+extends ../layout 
+
+block content 
+    div(class="mx-40")
+        //- div(class="font-bold text-3xl m-10") #{month} #{year}
+        div(class="flex justify-between py-10")
+            div(class="mx-20")
+                div(class="italic text-5xl my-20 text-left font-thin") “You can’t run from your demons forever—sometimes you have to walk into them head-on.”  
+            div(class="w-2/5")
+                each book in books
+                        if book.title == "Murder Road"
+                            img(class="w-full" src=book.book_cover_url alt="Murder Road Book Cover")
+                div(class="flex justify-center mt-5")
+                            img(class="w-16 h-16 m-2" src="/images/star.png")
+                            img(class="w-16 h-16 m-2" src="/images/star.png")
+                            img(class="w-16 h-16 m-2" src="/images/star.png")
+
+        div(class="flex justify-center pb-20 flex-wrap")
+            each book in books
+                if book.title !== "Murder Road"
+                    div(class="m-5") 
+                        img(class='w-[200px] h-[300px] m-5' src=he.decode(book.book_cover_url))
+                        - var n = 0;
+                        div(class="flex justify-center")
+                            while n < book.rating
+                                img(class="w-12 h-12 m-2" src="/images/star.png" id=n++)
+
+        div(class="pb-20")                 
+            div(class="font-bold text-4xl text-center m-10") Genres 
+            img(alt="genre graph")
+
+        div(class="pb-20")
+            div(class="font-bold text-4xl text-center m-10") Reading Stats
+            div(class="flex justify-center")
+                div(class="mx-10 flex flex-col justify-end")
+                    div(class="text-6xl") 5 
+                    div(class="") books
+                div(class="mx-10 flex flex-col justify-end")
+                    div(class="text-6xl") 1,956 
+                    div pages read
+                div(class="mx-10 flex flex-col justify-end")
+                    div(class="flex")
+                            img(class="w-12 mr-2" src="/images/star.png")
+                            img(class="w-12 mr-2" src="/images/star.png")
+                            img(class="w-12" src="/images/star.png")
+                    div(class="") average rating
+        div(class="pb-20")
+            div(class="font-bold text-4xl text-center m-10") New Authors
+            div(class="flex justify-center")
+                div(class="m-5 text-xl") Simone St James
+                div(class="m-5 text-xl") Sophie Kim
+                div(class="m-5 text-xl") June Hurr
+                div(class="m-5 text-xl") Kristen Ciccarelli

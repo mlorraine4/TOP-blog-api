@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
-    "serverstart": "SET DEBUG=blog-api:* & npm run devstart",
+    "serverstart": "SET NODE_ENV=development SET DEBUG=blog-api:* & npm run devstart",
     "tailwindcss": "npx tailwindcss -i ./public/stylesheets/input.css -o ./public/stylesheets/output.css --watch"
   },
   "dependencies": {

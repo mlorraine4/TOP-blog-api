@@ -646,6 +646,10 @@ video {
   margin: 2.5rem;
 }
 
+.m-2 {
+  margin: 0.5rem;
+}
+
 .m-4 {
   margin: 1rem;
 }
@@ -656,6 +660,21 @@ video {
 
 .m-auto {
   margin: auto;
+}
+
+.mx-10 {
+  margin-left: 2.5rem;
+  margin-right: 2.5rem;
+}
+
+.mx-20 {
+  margin-left: 5rem;
+  margin-right: 5rem;
+}
+
+.mx-40 {
+  margin-left: 10rem;
+  margin-right: 10rem;
 }
 
 .mx-auto {
@@ -677,8 +696,16 @@ video {
   margin-bottom: 1.25rem;
 }
 
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
 .mt-10 {
   margin-top: 2.5rem;
+}
+
+.mt-5 {
+  margin-top: 1.25rem;
 }
 
 .mt-\[230px\] {
@@ -695,6 +722,14 @@ video {
 
 .hidden {
   display: none;
+}
+
+.h-12 {
+  height: 3rem;
+}
+
+.h-16 {
+  height: 4rem;
 }
 
 .h-8 {
@@ -757,8 +792,20 @@ video {
   width: 33.333333%;
 }
 
+.w-12 {
+  width: 3rem;
+}
+
+.w-16 {
+  width: 4rem;
+}
+
 .w-2\/3 {
   width: 66.666667%;
+}
+
+.w-2\/5 {
+  width: 40%;
 }
 
 .w-4\/6 {
@@ -858,6 +905,10 @@ video {
   align-items: center;
 }
 
+.justify-end {
+  justify-content: flex-end;
+}
+
 .justify-center {
   justify-content: center;
 }
@@ -917,12 +968,17 @@ video {
 
 .border-accent {
   --tw-border-opacity: 1;
-  border-color: rgb(252 106 14 / var(--tw-border-opacity));
+  border-color: rgb(221 167 60 / var(--tw-border-opacity));
 }
 
 .border-black {
   --tw-border-opacity: 1;
   border-color: rgb(0 0 0 / var(--tw-border-opacity));
+}
+
+.bg-bg {
+  --tw-bg-opacity: 1;
+  background-color: rgb(17 17 16 / var(--tw-bg-opacity));
 }
 
 .bg-neutral-100 {
@@ -933,11 +989,6 @@ video {
 .bg-orange {
   --tw-bg-opacity: 1;
   background-color: rgb(252 106 14 / var(--tw-bg-opacity));
-}
-
-.bg-pone {
-  --tw-bg-opacity: 1;
-  background-color: rgb(33 19 34 / var(--tw-bg-opacity));
 }
 
 .bg-ptwo {
@@ -1013,6 +1064,10 @@ video {
   padding-top: 60px;
 }
 
+.text-left {
+  text-align: left;
+}
+
 .text-center {
   text-align: center;
 }
@@ -1041,6 +1096,11 @@ video {
   line-height: 1;
 }
 
+.text-6xl {
+  font-size: 3.75rem;
+  line-height: 1;
+}
+
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
@@ -1055,6 +1115,10 @@ video {
   font-weight: 700;
 }
 
+.font-thin {
+  font-weight: 100;
+}
+
 .italic {
   font-style: italic;
 }
@@ -1067,11 +1131,6 @@ video {
 .text-orange {
   --tw-text-opacity: 1;
   color: rgb(252 106 14 / var(--tw-text-opacity));
-}
-
-.text-pone {
-  --tw-text-opacity: 1;
-  color: rgb(33 19 34 / var(--tw-text-opacity));
 }
 
 .text-white {
@@ -1405,7 +1464,7 @@ form textarea:focus {
 
 .hover\:text-accent:hover {
   --tw-text-opacity: 1;
-  color: rgb(252 106 14 / var(--tw-text-opacity));
+  color: rgb(221 167 60 / var(--tw-text-opacity));
 }
 
 .disabled\:bg-ptwo:disabled {
