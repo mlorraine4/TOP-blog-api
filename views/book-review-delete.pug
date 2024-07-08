@@ -5,4 +5,4 @@ block content
     div(class="text-2xl text-center p-5") Do you really want to delete review of #{book_review.book.title} by #{book_review.book.author}?
     form(method='POST' action='')
         input#bookreviewid(type='hidden',name='bookreviewid', required='true', value=book_review._id )
-        button(type='submit' class="p-5 bg-ptwo hover:bg-faded text-white text-xl m-5") Delete
+        button(type='submit' class="p-5 bg-accent hover:bg-accent-faded text-white text-xl m-5") Delete

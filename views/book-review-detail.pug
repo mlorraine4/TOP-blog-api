@@ -2,7 +2,7 @@ extends layout
 
 block content
 
-    div(class="flex flex-col bg-white text-black mx-auto my-20 py-10 w-[60%] min-w-[500px] max-w-[1000px] p-4 min-h-[calc(100vh-330px)]")
+    div(class="flex flex-col mx-auto w-[60%] min-w-[500px] max-w-[1000px] p-4 min-h-[calc(100vh-330px)]")
         div(class="text-4xl m-10 text-center") A Review of #{review.book.title} by #{review.book.author}
         div
             div
@@ -18,19 +18,19 @@ block content
 
         if user && user.is_admin
             div(class="flex justify-center")      
-                a(href=`${review.book.review_url}/update` class="rounded-lg bg-ptwo hover:bg-faded text-white text-xl m-5 p-2") Edit
-                a(href=`${review.book.review_url}/delete` class="rounded-lg bg-ptwo hover:bg-faded text-white text-xl m-5 p-2") Delete
+                a(href=`${review.book.review_url}/update` class="rounded-lg bg-edit hover:bg-edit-faded text-white text-xl m-5 p-2") Edit
+                a(href=`${review.book.review_url}/delete` class="rounded-lg bg-delete hover:bg-delete-faded text-white text-xl m-5 p-2") Delete
 
         div#comments(class="w-[80%] m-auto relative text-center")
             div#comments-header(class="text-lg m-5") #{review.comments.length} Comment(s)
-            button#open-form(class="bg-ptwo p-2 w-min hover:bg-faded text-white m-5") Comment
+            button#open-form(class="bg-accent p-2 w-min hover:bg-accent-faded text-white m-5") Comment
             form#comment-form(class="hide pop-up")
                 button#close-form(type="button" class="text-orange text-lg") x
                 label(for='name' class="text-xl") Name
                 input#name(name='name' type='text' class="bg-neutral-100 w-4/6" value=(undefined===guest ? '' : guest.name))
                 label(for='text' class="text-xl") Comment
                 textarea#text(name='text'  type='text' class="bg-neutral-100 w-5/6 p-5 max-h-[100px]" required value=(undefined===guest ? '' : guest.text))
-                button(type='submit' class="bg-ptwo p-2 w-min hover:bg-faded text-white text-lg m-5") Submit
+                button(type='submit' class="bg-accent p-2 w-min hover:bg-accent-faded text-white text-lg m-5") Submit
                 #error-container
                     ul
 

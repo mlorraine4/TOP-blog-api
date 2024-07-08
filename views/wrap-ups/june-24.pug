@@ -2,11 +2,14 @@ extends ../layout
 
 block content 
     div(class="mx-40")
-        //- div(class="font-bold text-3xl m-10") #{month} #{year}
+        div(class="font-bold text-3xl") #{month} #{year}
         div(class="flex justify-between py-10")
             div(class="mx-20")
-                div(class="italic text-5xl my-20 text-left font-thin") “You can’t run from your demons forever—sometimes you have to walk into them head-on.”  
-            div(class="w-2/5")
+                div(class="italic text-5xl my-20 text-left font-thin") “You can’t run from your demons forever—sometimes you have to walk into them head-on.”
+                div(class="text-2xl") 
+                    span(class="italic") July 1995. 
+                    | April and Eddie have taken a wrong turn. They’re looking for the small resort town where they plan to spend their honeymoon. When they spot what appears to be a lone hitchhiker along the deserted road, they stop to help. But not long after the hitchhiker gets into their car, they see the blood seeping from her jacket and a truck barreling down Atticus Line after them.
+            div(class="w-1/2")
                 each book in books
                         if book.title == "Murder Road"
                             img(class="w-full" src=book.book_cover_url alt="Murder Road Book Cover")

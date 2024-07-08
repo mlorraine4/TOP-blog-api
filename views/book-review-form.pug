@@ -18,7 +18,7 @@ block content
                             button(class='delete-button') X
             input(type="text" id="input-tag" placeholder="author, title, genre, etc")
         input#review-hidden(type="text" hidden name='review-hidden' value=(undefined===bookReview ? '' : he.decode(bookReview.body)))
-        button.form-submit-button(type="submit" class='p-5 bg-ptwo hover:bg-faded text-white text-xl m-5 disabled:opacity-50 disabled:bg-ptwo') save
+        button.form-submit-button(type="submit" class='p-5 bg-accent hover:bg-accent-faded text-white text-xl m-5 disabled:opacity-50 disabled:bg-accent') save
     #message(class="text-xl bold")
     
     script(type="application/javascript" src="/tinymce/tinymce.min.js")

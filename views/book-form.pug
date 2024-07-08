@@ -30,7 +30,7 @@ block content
         //-                 label(for='date_read') Date read
         //-                 input#date_read(name='date_read' type='date' value=(undefined===book ? '' : moment.utc(date).format("yyyy-MM-DD") ))
         //-                 button(class='delete-button' type='button' onclick="{(e) => e.target.parentNode.remove()}") X
-        button#submit-form(type="button" class='p-5 bg-ptwo hover:bg-faded text-white text-xl m-5 disabled:opacity-50 disabled:bg-ptwo' disabled) Save
+        button#submit-form(type="button" class='p-5 bg-accent hover:bg-accent-faded text-white text-xl m-5 disabled:opacity-50 disabled:bg-accent' disabled) Save
     #message(class="text-xl bold")
                 
     script(type="application/javascript" src="/javascripts/book-form.js" defer)

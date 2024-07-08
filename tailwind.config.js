@@ -4,17 +4,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        accent: "#dda73c",
-        "light-purple": "#a474d8",
-        cornflower: "#6495ED",
-        "light-cornflower": "#d1dffa",
-        "dark-gray": "#111922",
         bg: "#111110",
-        ptwo: "#751c4d",
-        faded: "#9e6082",
-        pthree: "#8e677b",
-        orange: "#fc6a0e",
-        "orange-faded": "#FDA56E",
+        accent: "#8a4ccd",
+        "accent-faded": "#7d38c7",
+        edit: "#4E4A4E",
+        "edit-faded": "#7B7F89",
+        delete: "#A10000",
+        "delete-faded": "#5c0101",
       },
     },
   },

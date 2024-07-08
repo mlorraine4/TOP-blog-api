@@ -23,7 +23,10 @@ router.get("/monthly-wrap-ups", wrapUpController.wrapUp_list_get);
 router.get("/new-monthly-wrap-up", wrapUpController.wrapUp_form_get);
 router.post("/new-monthly-wrap-up", wrapUpController.wrapUp_form_post);
 router.get("/monthly-wrap-up/:year", wrapUpController.wrapUp_yearly_list_get);
-// router.get("/monthly-wrap-up/:year/:month", wrapUpController.wrapUp_detail_get);
+// Custom wrap ups
+router.get("/monthly-wrap-up/2024/june", wrapUpController.wrapUp_2024_june_get);
+// Older wrap ups
+router.get("/monthly-wrap-up/:year/:month", wrapUpController.wrapUp_detail_get);
 router.get(
   "/monthly-wrap-up/:year/:month/update",
   wrapUpController.wrapUp_update_get
@@ -41,7 +44,6 @@ router.post(
   "/monthly-wrap-up/:year/:month/comment/:id/delete",
   commentController.wrap_up_comment_delete_post
 );
-router.get("/monthly-wrap-up/2024/june", wrapUpController.wrapUp_2024_june_get);
 
 /// BOOK
 router.get("/library", bookController.book_list_get);

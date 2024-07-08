@@ -17,7 +17,7 @@ block content
   if user && user.is_admin
     if review!==undefined
       div(class="flex justify-center")
-        a(href=`${book.review_form_url}` class='rounded p-2 bg-orange hover:bg-orange-faded text-white text-lg m-5') Add Review
+        a(href=`${book.review_form_url}` class='rounded p-2 bg-accent hover:bg-accent-faded text-white text-lg m-5') Add Review
     div(class="flex justify-center")
-      a(href=`${book.url}/update` class='rounded p-2 bg-ptwo hover:bg-faded text-white text-lg m-5') Edit
-      a(href=`${book.url}/delete` class='rounded p-2 bg-ptwo hover:bg-faded text-white text-lg m-5') Delete
+      a(href=`${book.url}/update` class='rounded p-2 bg-edit hover:bg-edit-faded text-white text-lg m-5') Edit
+      a(href=`${book.url}/delete` class='rounded p-2 bg-delete hover:bg-delete-faded text-white text-lg m-5') Delete
