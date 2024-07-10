@@ -2,19 +2,17 @@ const initScroll = (() => {
   let review_ids = [];
   let wrap_ids = [];
   let skip = 0;
-  const container = document.getElementById("container");
   const post_list = document.getElementById("post-list");
 
-  container.onscroll = (e) => {
-    handleScroll(e);
+  window.onscroll = () => {
+    handleScroll();
   };
 
   getPosts();
 
-  function handleScroll(e) {
-    const { offsetHeight, scrollTop, scrollHeight } = e.target;
-
-    if (offsetHeight + scrollTop === scrollHeight) {
+  function handleScroll() {
+    // is this compatible with OS?
+    if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
       // user hits bottom of page, load more content
       console.log("end of page");
       getPosts();
@@ -30,8 +28,8 @@ const initScroll = (() => {
 
     postData("/posts", data).then((response) => {
       displayPosts(response.posts);
-      counter();
     });
+    counter();
   }
 
   function displayPosts(posts) {

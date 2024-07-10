@@ -1,16 +1,16 @@
 extends layout
 
 block content
-
-    div(class="text-4xl text-center p-5 pt-[60px]") Log In
-    
-    form(action='' method='POST' class="w-[400px]")
-        label(for='username') Username
-        input#username(name='username' type='text' required value=(undefined===user ? '' : user.username) class="w-5/6 text-black")
-        label(for='password') Password
-        input#password(name='password' autocomplete="on" type='password' required class="w-5/6 text-black")
-        button(type='submit' class="p-2 bg-accent hover:bg-accent-faded text-white text-lg m-5") Log In
+    #log-in
+        div(class="text-4xl text-center p-5 pt-[60px]") Log In
         
-    if errors
-        each error in errors
-            li!= error.msg
+        form(action='' method='POST' class="w-[400px]")
+            label(for='username') Username
+            input#username(name='username' type='text' required value=(undefined===user ? '' : user.username) class="w-5/6")
+            label(for='password') Password
+            input#password(name='password' autocomplete="on" type='password' required class="w-5/6")
+            button(type='submit' class="p-2 bg-accent hover:bg-accent-faded text-lg m-5") Log In
+            
+        if errors
+            each error in errors
+                li!= error.msg

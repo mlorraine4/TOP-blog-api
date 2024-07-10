@@ -28,8 +28,13 @@
   src: local("Truculenta"), url("../fonts/Truculenta.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Bitter";
+  src: local("Bitter"), url("../fonts/Bitter.ttf") format("truetype");
+}
+
 body {
-  font: 14px "Truculenta";
+  font: 14px "Bitter";
   margin: 0;
   position: relative;
   color: white;
@@ -94,7 +99,22 @@ label {
   display: block;
 }
 
-/* KEEP THESE! */
+#log-in,
+#sign-up {
+  & input,
+  textarea {
+    background-color: rgb(41, 41, 41);
+    transition: transform 0.3s cubic-bezier(0.57, 0.21, 0.69, 1.25);
+  }
+
+  & input:focus,
+  textarea:focus {
+    outline: none;
+    background-color: rgb(29, 21, 36);
+    transform: scale(1.1);
+  }
+}
+
 .pop-up {
   position: fixed;
   bottom: 145px;
@@ -128,13 +148,16 @@ label {
 }
 
 .dropdown-content {
-  border: 2px solid black;
   position: absolute;
   top: 52px;
-  background-color: #f1f1f1;
   width: 100%;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
+}
+
+#search:focus {
+  outline: 1px solid var(--accent);
+  background-color: rgb(29, 21, 36);
 }
 
 /* COMMENT */
@@ -191,8 +214,6 @@ label {
 #error-container li {
   list-style: disc;
 }
-
-/* i think i need these */
 
 /* book review form */
 .tags-input {

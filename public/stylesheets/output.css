@@ -630,10 +630,6 @@ video {
   top: 0.5rem;
 }
 
-.z-10 {
-  z-index: 10;
-}
-
 .float-left {
   float: left;
 }
@@ -677,6 +673,11 @@ video {
   margin-right: 10rem;
 }
 
+.mx-5 {
+  margin-left: 1.25rem;
+  margin-right: 1.25rem;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -708,10 +709,6 @@ video {
   margin-top: 1.25rem;
 }
 
-.mt-\[230px\] {
-  margin-top: 230px;
-}
-
 .block {
   display: block;
 }
@@ -740,8 +737,8 @@ video {
   height: 1.5rem;
 }
 
-.h-\[150px\] {
-  height: 150px;
+.h-\[100px\] {
+  height: 100px;
 }
 
 .h-\[225px\] {
@@ -760,12 +757,12 @@ video {
   height: 450px;
 }
 
-.h-\[80px\] {
-  height: 80px;
+.h-\[60px\] {
+  height: 60px;
 }
 
-.h-\[calc\(100vh-230px\)\] {
-  height: calc(100vh - 230px);
+.h-\[80px\] {
+  height: 80px;
 }
 
 .h-full {
@@ -776,8 +773,8 @@ video {
   max-height: 100px;
 }
 
-.max-h-\[760px\] {
-  max-height: 760px;
+.min-h-\[calc\(100vh-100px\)\] {
+  min-height: calc(100vh - 100px);
 }
 
 .min-h-\[calc\(100vh-230px\)\] {
@@ -820,10 +817,6 @@ video {
   width: 2rem;
 }
 
-.w-\[100vw\] {
-  width: 100vw;
-}
-
 .w-\[150px\] {
   width: 150px;
 }
@@ -860,8 +853,8 @@ video {
   width: 80%;
 }
 
-.w-auto {
-  width: auto;
+.w-\[99vw\] {
+  width: 99vw;
 }
 
 .w-full {
@@ -905,6 +898,10 @@ video {
   align-items: center;
 }
 
+.justify-start {
+  justify-content: flex-start;
+}
+
 .justify-end {
   justify-content: flex-end;
 }
@@ -929,10 +926,6 @@ video {
   overflow: hidden;
 }
 
-.overflow-y-scroll {
-  overflow-y: scroll;
-}
-
 .text-ellipsis {
   text-overflow: ellipsis;
 }
@@ -951,6 +944,10 @@ video {
 
 .rounded-lg {
   border-radius: 0.5rem;
+}
+
+.border-2 {
+  border-width: 2px;
 }
 
 .border-y-2 {
@@ -984,6 +981,11 @@ video {
 .bg-bg {
   --tw-bg-opacity: 1;
   background-color: rgb(17 17 16 / var(--tw-bg-opacity));
+}
+
+.bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
 .bg-delete {
@@ -1029,6 +1031,11 @@ video {
 .px-\[16px\] {
   padding-left: 16px;
   padding-right: 16px;
+}
+
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
 }
 
 .py-10 {
@@ -1111,6 +1118,11 @@ video {
   line-height: 1.75rem;
 }
 
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
@@ -1136,6 +1148,11 @@ video {
 .text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
+}
+
+.text-gray-300 {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
 }
 
 .text-white {
@@ -1189,8 +1206,14 @@ video {
   src: local("Truculenta"), url("../fonts/Truculenta.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Bitter";
+
+  src: local("Bitter"), url("../fonts/Bitter.ttf") format("truetype");
+}
+
 body {
-  font: 14px "Truculenta";
+  font: 14px "Bitter";
   margin: 0;
   position: relative;
   color: white;
@@ -1255,7 +1278,20 @@ label {
   display: block;
 }
 
-/* KEEP THESE! */
+#log-in,
+#sign-up {
+  & input,
+  textarea {
+    background-color: rgb(41, 41, 41);
+    transition: transform 0.3s cubic-bezier(0.57, 0.21, 0.69, 1.25);
+  }
+  & input:focus,
+  textarea:focus {
+    outline: none;
+    background-color: rgb(29, 21, 36);
+    transform: scale(1.1);
+  }
+}
 
 .pop-up {
   position: fixed;
@@ -1288,13 +1324,16 @@ label {
 }
 
 .dropdown-content {
-  border: 2px solid black;
   position: absolute;
   top: 52px;
-  background-color: #f1f1f1;
   width: 100%;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
+}
+
+#search:focus {
+  outline: 1px solid var(--accent);
+  background-color: rgb(29, 21, 36);
 }
 
 /* COMMENT */
@@ -1352,8 +1391,6 @@ label {
 #error-container li {
   list-style: disc;
 }
-
-/* i think i need these */
 
 /* book review form */
 
@@ -1416,6 +1453,11 @@ label {
   width: 2.25rem;
 }
 
+.hover\:bg-accent:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(138 76 205 / var(--tw-bg-opacity));
+}
+
 .hover\:bg-accent-faded:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(125 56 199 / var(--tw-bg-opacity));
@@ -1439,6 +1481,11 @@ label {
 .hover\:text-accent:hover {
   --tw-text-opacity: 1;
   color: rgb(138 76 205 / var(--tw-text-opacity));
+}
+
+.hover\:text-white:hover {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
 .disabled\:bg-accent:disabled {

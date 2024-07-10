@@ -4,38 +4,39 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/output.css')
 
-  body
-    div(class="fixed top-0 z-10")
-      div(class="w-[100vw] bg-white")
-        img(src="/images/book-review-header.jpg" class='block h-[150px] w-auto m-auto')
-      form(action="/search" method="POST" class="absolute top-1 right-5 w-[250px] flex flex-row")
-        img(src="/images/search.png" class="w-[20px] absolute right-[20px]")
-        input#search(name="search" class="w-full text-black rounded-full pl-4 pr-[40px]")
-      div(class='w-full h-[80px] flex justify-around items-center bg-bg border-b border-accent text-xl')
-        a(href="/" class="hover:text-accent") Home 
-        a(href="/book-reviews" class="hover:text-accent") Book Reviews
-        div(class="dropDownContainer")
-          button#drop-btn(class="hover:text-accent") Monthly Wrap Ups
-          div(id="drop-down" class="dropdown-content hide")
-            a(href="/monthly-wrap-ups" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') All
-            a(href="/monthly-wrap-up/2024" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') 2024
-            a(href="/monthly-wrap-up/2023" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') 2023
-            a(href="/monthly-wrap-up/2022" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') 2022
-            a(href="/monthly-wrap-up/2021" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') 2021
-        //- a(href="/tbr-list" class="hover:text-accent") TBR Masterlist
-        a(href="/upcoming-releases" class="hover:text-accent") Upcoming Releases
-        if user 
-          a(href="/log-out" class="hover:text-accent") Log Out
-        else
-          a(href="/log-in" class="hover:text-accent") Log In
+  body(class="bg-bg")
+    div(class="bg-black")
+      div(class="flex justify-between h-[60px] text-lg text-gray-300")
+        div(class="flex items-center justify-start")
+          a(href="/" class="m-5")
+            img(src="/images/book-review-header.png" class='block h-[60px] p-2')
+          a(href="/book-reviews" class="hover:text-accent m-5") Book Reviews
+          div(class="dropDownContainer")
+            button#drop-btn(class="hover:text-accent m-5") Monthly Wrap Ups
+            div(id="drop-down" class="dropdown-content hide text-center bg-bg text-white border-2 border-accent")
+              a(href="/monthly-wrap-ups" class='hover:bg-accent px-[16px] py-[12px] block  border-t border-accent') All
+              a(href="/monthly-wrap-up/2024" class='hover:bg-accent px-[16px] py-[12px] block  border-t border-accent') 2024
+              a(href="/monthly-wrap-up/2023" class='hover:bg-accent px-[16px] py-[12px] block  border-t border-accent') 2023
+              a(href="/monthly-wrap-up/2022" class='hover:bg-accent px-[16px] py-[12px] block  border-t border-accent') 2022
+              a(href="/monthly-wrap-up/2021" class='hover:bg-accent px-[16px] py-[12px] block  border-t border-accent') 2021
+          //- a(href="/tbr-list" class="hover:text-accent") TBR Masterlist
+          a(href="/upcoming-releases" class="hover:text-accent m-5") Upcoming Releases
+        div(class="flex items-center justify-end")
+          form(action="/search" method="POST" class="w-[250px] flex flex-row relative")
+              img(src="/images/search.png" class="w-[20px] absolute right-[20px]")
+              input#search(name="search" class="w-full rounded-full py-1 pl-4 pr-[40px] bg-bg text-gray-300 text-sm m-auto")
+          if user 
+            a(href="/log-out" class="hover:text-accent mx-5") Log Out
+          else
+            a(href="/log-in" class="hover:text-accent mx-5") Log In
     if user
       img#dash-btn(src="/images/plus.png" class="w-8 h-8 fixed bottom-[15px] right-[30px] hover:w-9 hover:h-9 transition-all")
-      div#dashboard-pop-up(class="fixed right-[46px] bottom-[60px] bg-white text-xl hide")
-        a(href="/new-book" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') Add Book
-        a(href="/new-book-review" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') Add Review
-        a(href="/new-monthly-wrap-up" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') Add Wrap Up
-        a(href="/library" class='hover:bg-gray-300 px-[16px] py-[12px] block text-black border-t border-black') View Library
-    div(class="mt-[230px] bg-bg min-h-[calc(100vh-230px)] p-20")
+      div#dashboard-pop-up(class="fixed right-[46px] bottom-[60px] bg-bg text-xl hide border-2 border-accent")
+        a(href="/new-book" class=' px-[16px] py-[12px] block  border-t hover:bg-accent border-accent') Add Book
+        a(href="/new-book-review" class=' px-[16px] py-[12px] block  border-t hover:bg-accent border-accent') Add Review
+        a(href="/new-monthly-wrap-up" class=' px-[16px] py-[12px] block  border-t hover:bg-accent border-accent') Add Wrap Up
+        a(href="/library" class=' px-[16px] py-[12px] block  border-t hover:bg-accent border-accent') View Library
+    div(class="min-h-[calc(100vh-100px)] mt-10")
       block content 
 
   script(type="application/javascript" src="/javascripts/drop-down.js" defer)

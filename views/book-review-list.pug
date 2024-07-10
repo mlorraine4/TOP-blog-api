@@ -1,8 +1,7 @@
 extends layout
 
 block content
-  div(class="text-4xl text-center p-5") Book Reviews
-  div(class='flex flex-wrap justify-evenly w-2/3 max-w-[1000px] m-auto pt-20 pb-20')
+  div(class='flex flex-wrap justify-evenly w-2/3 max-w-[1000px] m-auto pb-20')
     each review in reviews
       div(class='hover:text-accent w-[300px] h-[450px] relative m-4 overflow-hidden whitespace-nowrap text-ellipsis flex flex-col justify-center')
         img(class='shadow-lg h-[400px] w-[300px]' src=he.decode(review.book.book_cover_url))

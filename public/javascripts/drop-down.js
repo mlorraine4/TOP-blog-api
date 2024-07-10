@@ -5,7 +5,9 @@ const initLayout = (() => {
   const dropBtn = document.getElementById("drop-btn");
 
   dropBtn.onclick = toggleDrop;
-  plusBtn.onclick = togglePopUp;
+  if (plusBtn !== null) {
+    plusBtn.onclick = togglePopUp;
+  }
 
   function toggleDrop() {
     dropDown.classList.toggle("hide");
