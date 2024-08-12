@@ -355,6 +355,67 @@ exports.wrapUp_update_post = [
   }),
 ];
 
+exports.wrapUp_2024_july_get = asyncHandler(async (req, res, next) => {
+  try {
+    const req = {
+      month: "July",
+      year: 2024,
+    };
+
+    const dateString = req.month + " 1, " + req.year;
+    const date = new Date(dateString);
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const startDate = new Date(year, month, 1);
+    const endDate = new Date(year, month + 1, 0);
+
+    const wrapUp = await MonthlyWrapUp.findOne({
+      month: req.month,
+      year: req.year,
+    })
+      .populate({ path: "comments", options: { sort: { timestamp: -1 } } })
+      .exec();
+
+    if (wrapUp !== null) {
+      // Wrap Up exists. Query for books read during the month.
+      const books = await Book.find({
+        date_read: {
+          $gte: startDate,
+          $lt: endDate,
+        },
+      });
+
+      // let totalPages = 0;
+      // let ratings = 0;
+      // wrapUp.books.forEach((book) => {
+      //   totalPages += book.pages;
+      //   ratings += book.rating;
+      // });
+
+      // const avgRating = ratings / wrapUp.books.length;
+      // const formattedPages = totalPages.toLocaleString("en-US");
+
+      return res.render("wrap-ups/july-24", {
+        title: `${wrapUp.month} ${wrapUp.year} - Garden of Pages`,
+        user: req.user,
+        wrapUp: wrapUp,
+        books: books,
+        month: req.month,
+        year: req.year,
+      });
+    } else {
+      const err = new Error("Wrap up does not exist.");
+      err.status = 404;
+      return next(err);
+    }
+  } catch (err) {
+    console.log(err);
+    const publicErr = new Error("An error occurred processing your request.");
+    publicErr.status = 500;
+    return next(err);
+  }
+});
+
 exports.wrapUp_2024_june_get = asyncHandler(async (req, res, next) => {
   try {
     const req = {
