@@ -12,6 +12,7 @@ const compression = require("compression");
 const helmet = require("helmet");
 const favicon = require("serve-favicon");
 require("dotenv").config();
+const MockStrategy = require("passport-mock-strategy");
 
 const siteRouter = require("./routes/gardenofpages");
 
@@ -30,38 +31,87 @@ async function main() {
   await mongoose.connect(mongoDB);
 }
 
-// Passport
-passport.use(
-  new LocalStrategy(async (username, password, done) => {
+if (process.env.NODE_ENV === "development") {
+  // In Development, set up Mock Passport Local Strategy & Sessions
+  console.log("In Development");
+
+  passport.use(
+    new MockStrategy(
+      {
+        name: "my-mock",
+        user: {
+          id: 1,
+          is_admin: true,
+        },
+      },
+      (user, done) => {
+        // Perform actions on user, call done once finished
+        return done(null, user);
+      }
+    )
+  );
+
+  app.use(
+    session({
+      secret: process.env.SECRET,
+      resave: false,
+      saveUninitialized: true,
+    })
+  );
+
+  MockStrategy.setupSerializeAndDeserialize(passport, null, (id, done) => {
+    // custom deserializeUser function
+    done(null, {
+      id: 1,
+      is_admin: true,
+    });
+  });
+
+  MockStrategy.connectPassport(app, passport);
+
+  app.get("/", passport.authenticate("my-mock"));
+} else {
+  // In Production, set up Passport & Sessions
+  passport.use(
+    new LocalStrategy(async (username, password, done) => {
+      try {
+        const user = await User.findOne({ username: username });
+        if (!user) {
+          return done(null, false, { message: "Incorrect username" });
+        }
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) {
+          // passwords do not match!
+          return done(null, false, { message: "Incorrect password" });
+        }
+        return done(null, user);
+      } catch (err) {
+        return done(err);
+      }
+    })
+  );
+
+  app.use(
+    session({
+      secret: process.env.SECRET,
+      resave: false,
+      saveUninitialized: true,
+    })
+  );
+
+  passport.serializeUser((user, done) => {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(async (id, done) => {
     try {
-      const user = await User.findOne({ username: username });
-      if (!user) {
-        return done(null, false, { message: "Incorrect username" });
-      }
-      const match = await bcrypt.compare(password, user.password);
-      if (!match) {
-        // passwords do not match!
-        return done(null, false, { message: "Incorrect password" });
-      }
-      return done(null, user);
+      const user = await User.findById(id);
+      done(null, user);
     } catch (err) {
-      return done(err);
+      done(err);
     }
-  })
-);
-
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err);
-  }
-});
+  });
+}
 
 // view engine setup, updated to handle subdirectories in view folder
 app.set("view engine", "pug");
@@ -97,13 +147,7 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   next();
 });
-app.use(
-  session({
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: true,
-  })
-);
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(logger("dev"));
