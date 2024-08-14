@@ -25,6 +25,7 @@ router.post("/new-monthly-wrap-up", wrapUpController.wrapUp_form_post);
 router.get("/monthly-wrap-up/:year", wrapUpController.wrapUp_yearly_list_get);
 // Custom wrap ups
 router.get("/monthly-wrap-up/2024/june", wrapUpController.wrapUp_2024_june_get);
+router.get("/monthly-wrap-up/2024/july", wrapUpController.wrapUp_2024_july_get);
 // Older wrap ups
 router.get("/monthly-wrap-up/:year/:month", wrapUpController.wrapUp_detail_get);
 router.get(
