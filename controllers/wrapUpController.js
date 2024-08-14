@@ -385,15 +385,15 @@ exports.wrapUp_2024_july_get = asyncHandler(async (req, res, next) => {
         },
       });
 
-      // let totalPages = 0;
+      let totalPages = 0;
       // let ratings = 0;
-      // wrapUp.books.forEach((book) => {
-      //   totalPages += book.pages;
-      //   ratings += book.rating;
-      // });
+      books.forEach((book) => {
+        totalPages += book.pages;
+        // ratings += book.rating;
+      });
 
       // const avgRating = ratings / wrapUp.books.length;
-      // const formattedPages = totalPages.toLocaleString("en-US");
+      const formattedPages = totalPages.toLocaleString("en-US");
 
       return res.render("wrap-ups/july-24", {
         title: `${wrapUp.month} ${wrapUp.year} - Garden of Pages`,
@@ -402,6 +402,7 @@ exports.wrapUp_2024_july_get = asyncHandler(async (req, res, next) => {
         books: books,
         month: req.month,
         year: req.year,
+        totalPages: formattedPages,
       });
     } else {
       const err = new Error("Wrap up does not exist.");
