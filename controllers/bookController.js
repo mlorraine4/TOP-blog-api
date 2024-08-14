@@ -23,18 +23,18 @@ exports.book_list_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.book_form_get = asyncHandler(async (req, res, next) => {
-  if (req.user) {
-    return res.render("book-form", {
-      title: "Add Book - Garden of Pages",
-      user: req.user,
-      header: "Add Book",
-    });
-  } else {
-    // User is not logged in.
-    const err = new Error("You must be an authorized user.");
-    err.status = 401;
-    return next(err);
-  }
+  // if (req.user) {
+  return res.render("book-form", {
+    title: "Add Book - Garden of Pages",
+    user: req.user,
+    header: "Add Book",
+  });
+  // } else {
+  //   // User is not logged in.
+  //   const err = new Error("You must be an authorized user.");
+  //   err.status = 401;
+  //   return next(err);
+  // }
 });
 
 // TODO: custom sanitizor for image data (data url)
@@ -122,10 +122,11 @@ exports.book_form_post = [
               date_read: [req.body.date_read],
               encodedTitle: req.body.encoded_title,
               encodedAuthor: req.body.encoded_author,
+              is_favorite: req.body.is_favorite,
             });
 
             const result = await book.save();
-            // console.log(result);
+            console.log(result);
             return res.status(200).send({ url: result.url });
           }
         }
@@ -286,6 +287,7 @@ exports.book_update_post = [
               date_read: [req.body.date_read],
               encodedTitle: req.body.encoded_title,
               encodedAuthor: req.body.encoded_author,
+              is_favorite: req.body.is_favorite,
             });
 
             const result = await Book.findByIdAndUpdate(

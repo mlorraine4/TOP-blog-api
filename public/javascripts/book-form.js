@@ -58,6 +58,7 @@ const init = (() => {
         pages: form.elements["pages"].value,
         rating: form.elements["rating"].value,
         image: imageData,
+        is_favorite: form.elements["is_favorite"].checked,
       };
 
       const response = await postData(document.URL, data);

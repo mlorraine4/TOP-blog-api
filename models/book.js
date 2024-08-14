@@ -14,6 +14,7 @@ const BookSchema = new Schema(
     date_read: [{ type: Date }],
     encodedTitle: { type: String, required: true },
     encodedAuthor: { type: String, required: true },
+    is_favorite: { type: Boolean },
   },
   opts
 );
