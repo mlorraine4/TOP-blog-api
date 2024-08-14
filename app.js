@@ -13,12 +13,14 @@ const helmet = require("helmet");
 const favicon = require("serve-favicon");
 require("dotenv").config();
 const MockStrategy = require("passport-mock-strategy");
+const MongoStore = require("connect-mongo");
 
+// Routes
 const siteRouter = require("./routes/gardenofpages");
 
 var app = express();
 
-// favicon
+// Favicon
 app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
 
 // Set up mongoose connection
@@ -70,6 +72,9 @@ if (process.env.NODE_ENV === "development") {
   MockStrategy.connectPassport(app, passport);
 
   app.get("/", passport.authenticate("my-mock"));
+  app.get("/new-book-review", passport.authenticate("my-mock"));
+  app.get("/new-book", passport.authenticate("my-mock"));
+  app.get("/new-monthly-wrap-up", passport.authenticate("my-mock"));
 } else {
   // In Production, set up Passport & Sessions
   passport.use(
@@ -91,11 +96,13 @@ if (process.env.NODE_ENV === "development") {
     })
   );
 
+  // Mongodb session
   app.use(
     session({
       secret: process.env.SECRET,
       resave: false,
       saveUninitialized: true,
+      store: MongoStore.create({ mongoUrl: process.env.MONGO_URL }),
     })
   );
 
