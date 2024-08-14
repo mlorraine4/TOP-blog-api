@@ -5,8 +5,8 @@ const Book = require("../models/book");
 const Tags = require("../models/tags");
 const MonthlyWrapUp = require("../models/monthlyWrapUp");
 
-// TODO: not sure if this is the best way to handle aggregation of all posts
 exports.post_list = asyncHandler(async (req, res, next) => {
+  console.log(req.user);
   try {
     const aggregate = await BookReview.aggregate([
       // {
@@ -98,7 +98,10 @@ exports.home_get = asyncHandler(async (req, res, next) => {
 
 exports.book_review_list_get = asyncHandler(async (req, res, next) => {
   try {
-    const bookReviews = await BookReview.find().populate("book").exec();
+    const bookReviews = await BookReview.find()
+      .sort({ timestamp: -1 })
+      .populate("book")
+      .exec();
     return res.render("book-review-list", {
       title: "Book Reviews - Garden of Pages",
       user: req.user,
