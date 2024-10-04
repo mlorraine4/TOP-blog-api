@@ -1,13 +1,6 @@
 extends layout
 
 block content
-  div(class="text-4xl text-center p-5") #{year}
-  div(class='flex flex-wrap justify-evenly w-2/3 max-w-[1000px] m-auto pb-20')
-    each wrapUp in wrapUps
-      div(class=' hover:text-accent w-[300px] h-[450px] relative m-4 overflow-hidden whitespace-nowrap text-ellipsis flex flex-col justify-center')
-          img(class='shadow-lg h-[400px] w-[300px]' src=wrapUp.cover_url)
-          a(href=wrapUp.url class='w-full h-full absolute top-0 left-0 opacity-0 ') url
-          a(href=wrapUp.url class='post-date') #{moment(wrapUp.timestamp).utc().format("MMM Do, YYYY")}
-          a(href=wrapUp.url class='text-xl overflow-hidden whitespace-nowrap text-ellipsis') #{wrapUp.month}
-    else  
-      p There are no monthly wrap ups.
+  div
+    each post in wrapUps
+      include shared/monthly-wrap-up-preview.pug

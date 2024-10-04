@@ -1,0 +1,27 @@
+div(class="mx-10 mb-10 flex flex-col bg-black max-w-[900px]")
+    div(class="relative image-container")
+        img(class='m-auto w-2/3 p-10 h-auto' src="/images/monthly_wrap_up_banner.png")
+        div(class="hover-div flex justify-center items-center")
+            img(class="w-[45px] opacity-80" src="/images/writing.png")
+        a(href=`${post.url}` class='absolute w-full h-full top-0 left-0') 
+    hr(class="border-t-2 border-accent-faded border-dotted")
+    a(href="/monthly-wrap-ups" class="p-2 text-purple-400") MONTHLY WRAP UPS
+    a(href=`${post.url}` class='text-4xl overflow-hidden whitespace-nowrap text-ellipsis bg-accent p-5') #{post.month} Wrap Up
+    div(class="flex p-5")
+        a(class="m-5" href=`${post.url}`) #{moment(post.timestamp).format("MMM Do")}
+        a(class="m-5" href="/author/maria") MARIA @ GARDENOFPAGES
+        a(class="m-5" href=`${post.url}/#comments`) #{post.comments.length} COMMENTS
+    hr(class="border-t-2 border-accent-faded border-dotted")
+    if post.books.length !== 0
+        div(class="flex flex-wrap justify-evenly")
+            each book in post.books
+                div
+                    div(class='flex flex-col m-5 text-center')
+                    div(class="bg-accent-faded w-[150px] h-[200px] flex justify-center items-center")
+                        img(class='w-auto h-[150px]' src=he.decode(book.book_cover_url))
+                    //- a(href=book.url class="text-lg bg-accent p-2") #{book.title}
+                    //- p By: #{book.author}
+    img(class="w-1/3 h-auto m-auto" src="/images/kitty_sm.png")
+    p Summary
+    button Read More
+
