@@ -1,11 +1,11 @@
 const asyncHandler = require("express-async-handler");
-const Tags = require("../models/tags");
+const Tag = require("../models/tag");
 const BookReview = require("../models/bookReview");
 const Book = require("../models/book");
 
 exports.tag_detail_get = asyncHandler(async (req, res, next) => {
   try {
-    const tag = await Tags.findOne({ name: req.params.name });
+    const tag = await Tag.findOne({ name: req.params.name });
     const reviews = await BookReview.find({
       tags: tag,
     })
@@ -38,7 +38,7 @@ exports.search_post = asyncHandler(async (req, res, next) => {
 
 exports.search_get = asyncHandler(async (req, res, next) => {
   try {
-    const tags = await Tags.find({
+    const tags = await Tag.find({
       $text: {
         $search: req.query.q,
       },
