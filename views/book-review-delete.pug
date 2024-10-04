@@ -2,7 +2,7 @@ extends layout
 
 block content
     div(class="text-4xl text-center p-5") Delete Review
-    div(class="text-2xl text-center p-5") Do you really want to delete review of #{book_review.book.title} by #{book_review.book.author}?
+    div(class="text-2xl text-center p-5") Do you really want to delete review of #{bookReview.book.title} by #{bookReview.book.author}?
     form(method='POST' action='')
-        input#bookreviewid(type='hidden',name='bookreviewid', required='true', value=book_review._id )
+        input#bookReviewId(type='hidden',name='bookReviewId', required='true', value=bookReview._id )
         button(type='submit' class="p-5 bg-accent hover:bg-accent-faded text-white text-xl m-5") Delete
