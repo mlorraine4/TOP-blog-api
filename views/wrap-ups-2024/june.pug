@@ -1,0 +1,85 @@
+extends ../layout 
+
+block content 
+    div(class="mx-40")
+        div(class="font-bold text-3xl") #{month} #{year}
+        div(class="flex justify-between py-10")
+            div(class="mx-20")
+                div(class="italic text-5xl my-20 text-left font-thin") “You can’t run from your demons forever—sometimes you have to walk into them head-on.”
+                div(class="text-2xl") 
+                    span(class="italic") July 1995. 
+                    | April and Eddie have taken a wrong turn. They’re looking for the small resort town where they plan to spend their honeymoon. When they spot what appears to be a lone hitchhiker along the deserted road, they stop to help. But not long after the hitchhiker gets into their car, they see the blood seeping from her jacket and a truck barreling down Atticus Line after them.
+            div(class="w-1/2")
+                each book in books
+                        if book.title == "Murder Road"
+                            img(class="w-full" src=book.book_cover_url alt="Murder Road Book Cover")
+                div(class="flex justify-center mt-5")
+                            img(class="w-16 h-16 m-2" src="/images/star.png")
+                            img(class="w-16 h-16 m-2" src="/images/star.png")
+                            img(class="w-16 h-16 m-2" src="/images/star.png")
+
+        div(class="flex justify-center pb-20 flex-wrap")
+            each book in books
+                if book.title !== "Murder Road"
+                    div(class="m-5") 
+                        img(class='w-[200px] h-[300px] m-5' src=he.decode(book.book_cover_url))
+                        - var n = 0;
+                        div(class="flex justify-center")
+                            while n < book.rating
+                                img(class="w-12 h-12 m-2" src="/images/star.png" id=n++)
+
+        div(class="pb-20")                 
+            div(class="font-bold text-4xl text-center m-10") Genres 
+            img(class="w-1/2 m-auto" src="https://firebasestorage.googleapis.com/v0/b/book-blog-951ba.appspot.com/o/graphs%2Fjune-24.png?alt=media&token=8dd3e213-a169-437f-ab38-1cc5bebf2e25" alt="genre graph")
+
+        div(class="pb-20")
+            div(class="font-bold text-4xl text-center m-10") Reading Stats
+            div(class="flex justify-center")
+                div(class="mx-10 flex flex-col justify-end")
+                    div(class="text-6xl") 5 
+                    div(class="") books
+                div(class="mx-10 flex flex-col justify-end")
+                    div(class="text-6xl") 1,956 
+                    div pages read
+                div(class="mx-10 flex flex-col justify-end")
+                    div(class="flex")
+                            img(class="w-12 mr-2" src="/images/star.png")
+                            img(class="w-12 mr-2" src="/images/star.png")
+                            img(class="w-12" src="/images/star.png")
+                    div(class="") average rating
+        div(class="pb-20")
+            div(class="font-bold text-4xl text-center m-10") New Authors
+            div(class="flex justify-center")
+                div(class="m-5 text-xl") Simone St James
+                div(class="m-5 text-xl") Sophie Kim
+                div(class="m-5 text-xl") June Hurr
+                div(class="m-5 text-xl") Kristen Ciccarelli
+
+    if user && user.is_admin
+      div(class="flex justify-center")      
+        a(href=`${wrapUp.url}/update` class="rounded-lg bg-edit hover:bg-edit-faded text-white text-xl m-5 p-2") Edit
+        a(href=`${wrapUp.url}/delete` class="rounded-lg bg-delete hover:bg-delete-faded text-white text-xl m-5 p-2") Delete
+    
+    div#comments(class="w-[400px] m-auto text-center mt-10 p-10")
+      div#comments-header(class="text-2xl") #{wrapUp.comments.length} Comment(s)
+      button#open-form(class="p-2 bg-accent hover:bg-accent-faded text-white text-lg m-5") Comment
+      form#comment-form(class="hide pop-up")
+        button#close-form(type="button" class="text-orange text-lg") X
+        label(for='name' class="text-xl") Name
+        input#name(name='name' type='text' class="bg-neutral-100 w-4/6" value=(undefined===guest ? '' : guest.name))
+        label(for='text' class="text-xl") Comment
+        textarea#text(name='text'  type='text' class="bg-neutral-100 w-5/6 p-5 max-h-[100px]" required)
+        button(type='submit' class="p-2 bg-accent hover:bg-accent-faded text-white text-lg m-5") Submit
+        #error-container 
+          ul
+
+      each comment in wrapUp.comments 
+        div.comment-container(id=comment._id)
+          if user && user.is_admin
+            img.delete-comment(src="/images/delete.png")
+          div.comment-header
+            div.comment-name #{comment.name}
+            div.comment-date #{moment(comment.timestamp).fromNow()}
+          div.comment-text #{he.decode(comment.text)}
+          
+    script(type="application/javascript" src="/javascripts/comment-form.js")
