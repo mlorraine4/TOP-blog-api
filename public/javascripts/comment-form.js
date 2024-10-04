@@ -23,7 +23,7 @@ const initCommentForm = (() => {
       timestamp: Date.now(),
     };
 
-    postData(document.URL + "/new-comment", data).then(async (response) => {
+    postData(document.URL + "/comments", data).then(async (response) => {
       if (response.ok) {
         toggleForm();
         hideErrors();
@@ -123,14 +123,12 @@ const initCommentForm = (() => {
 
   function deleteComment(target) {
     const comment_id = target.parentElement.id;
-    postData(document.URL + "/comment/" + comment_id + "/delete", {}).then(
-      (response) => {
-        if (response.ok) {
-          commentSection.removeChild(target.parentElement);
-          decrementComments();
-        }
+    postData(document.URL + "/comments/" + comment_id, {}).then((response) => {
+      if (response.ok) {
+        commentSection.removeChild(target.parentElement);
+        decrementComments();
       }
-    );
+    });
   }
   function incrementComments() {
     let currentLength = commentsHeader.innerHTML.split(" ")[0];
