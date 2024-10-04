@@ -22,15 +22,15 @@ const BookSchema = new Schema(
 BookSchema.index({ title: "text", author: "text", series: "text" });
 
 BookSchema.virtual("url").get(function () {
-  return `/book/${this.encodedAuthor}/${this.encodedTitle}`;
+  return `/books/${this.encodedAuthor}/${this.encodedTitle}`;
 });
 
 BookSchema.virtual("review_url").get(function () {
-  return `/book-review/${this.encodedAuthor}/${this.encodedTitle}`;
+  return `/book-reviews/${this.encodedAuthor}/${this.encodedTitle}`;
 });
 
 BookSchema.virtual("review_form_url").get(function () {
-  return `/new-book-review/${this.encodedAuthor}/${this.encodedTitle}`;
+  return `/book-reviews/${this.encodedAuthor}/${this.encodedTitle}/add`;
 });
 
 // Export model
