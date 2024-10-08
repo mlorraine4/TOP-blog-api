@@ -3,11 +3,10 @@ const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
   title: { type: String, required: true },
-  formattedTitle: { type: String, required: true },
   author: { type: Schema.Types.ObjectId, ref: "User" },
   timestamp: { type: Date, required: true },
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-  tags: [{ type: Schema.Types.ObjectId, ref: "Tags", required: true }],
+  tags: [{ type: Schema.Types.ObjectId, ref: "Tag", required: true }],
 });
 
 // day returns next day?
