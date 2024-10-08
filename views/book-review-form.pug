@@ -1,8 +1,8 @@
-extends layout
+extends ./shared/navbar-content.pug
 
 block content
 
-    form#book-review-form(class="text-2xl w-full min-w-[400px] max-w-[960px]")
+    form#book-review-form(class="text-xl w-full min-w-[400px] max-w-[960px]")
         div(class="text-5xl mb-5") #{header}
         label Book
         input#title(name='title' class="w-2/3" type='text' placeholder='title' value=(undefined===book ? '' : book.title))
@@ -10,15 +10,15 @@ block content
         label Review
         textarea(id="my-expressjs-tinymce-app")
         label Tags
-        div(class="tags-input w-2/3")
+        div(class="tags-input w-2/3 flex flex-col items-center p-5")
             ul(id="tags")
                 if bookReview!==undefined
                     each tag in bookReview.tags
                         li #{tag.name}
                             button(class='delete-button') X
-            input(type="text" id="input-tag" placeholder="author, title, genre, etc")
-        input#review-hidden(type="text" hidden name='review-hidden' value=(undefined===bookReview ? '' : he.decode(bookReview.body)))
-        button.form-submit-button(type="submit" class='p-5 bg-accent hover:bg-accent-faded text-white text-xl m-5 disabled:opacity-50 disabled:bg-accent') save
+            input(type="text" id="input-tag" placeholder="author, title, genre, etc" class="w-3/5")
+        input#review-hidden(type="text" hidden name='review-hidden' value=(undefined===bookReview ? '' : he.decode(bookReview.review)))
+        button(type="submit" class='p-4 bg-accent hover:bg-accent-faded text-white text-xl m-5 disabled:opacity-50 disabled:bg-accent') save
     #message(class="text-xl bold")
     
     script(type="application/javascript" src="/tinymce/tinymce.min.js")

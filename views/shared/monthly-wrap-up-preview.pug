@@ -1,4 +1,4 @@
-div(class="mx-10 mb-10 flex flex-col bg-black max-w-[900px]")
+div(class="mx-10 mb-10 flex flex-col bg-black max-w-[900px] relative")
     div(class="relative image-container")
         img(class='m-auto w-2/3 p-10 h-auto' src="/images/monthly_wrap_up_banner.png")
         div(class="hover-div flex justify-center items-center")
@@ -7,21 +7,25 @@ div(class="mx-10 mb-10 flex flex-col bg-black max-w-[900px]")
     hr(class="border-t-2 border-accent-faded border-dotted")
     a(href="/monthly-wrap-ups" class="p-2 text-purple-400") MONTHLY WRAP UPS
     a(href=`${post.url}` class='text-4xl overflow-hidden whitespace-nowrap text-ellipsis bg-accent p-5') #{post.month} Wrap Up
-    div(class="flex p-5")
-        a(class="m-5" href=`${post.url}`) #{moment(post.timestamp).format("MMM Do")}
-        a(class="m-5" href="/author/maria") MARIA @ GARDENOFPAGES
-        a(class="m-5" href=`${post.url}/#comments`) #{post.comments.length} COMMENTS
-    hr(class="border-t-2 border-accent-faded border-dotted")
+    div(class="flex m-2")
+        a(class="m-2" href=`${post.url}`) #{moment(post.timestamp).format("MMM Do")}
+        a(class="m-2" href="/author/maria") MARIA @ GARDENOFPAGES
+        a(class="m-2" href=`${post.url}/#comments`) #{post.comments.length} COMMENTS
+    hr(class="border-t-2 border-accent-faded border-dotted mb-5")
     if post.books.length !== 0
-        div(class="flex flex-wrap justify-evenly")
+        div(class="text-center") books I read in #{post.month}
+        div(class="flex flex-wrap justify-evenly items-center m-5")
             each book in post.books
                 div
-                    div(class='flex flex-col m-5 text-center')
-                    div(class="bg-accent-faded w-[150px] h-[200px] flex justify-center items-center")
+                    div(class="bg-accent-faded w-[150px] h-[200px] flex justify-center items-center m-4")
                         img(class='w-auto h-[150px]' src=he.decode(book.book_cover_url))
                     //- a(href=book.url class="text-lg bg-accent p-2") #{book.title}
                     //- p By: #{book.author}
-    img(class="w-1/3 h-auto m-auto" src="/images/kitty_sm.png")
-    p Summary
-    button Read More
+        hr(class="border-t-2 border-accent-faded border-dotted my-5")
+    if post.summary
+        img(src="/images/my_thoughts.png" class="w-2/3 mx-auto my-5")
+        div(class="post-summary text-xl p-10")!=he.decode(post.summary)
+    img(class="w-1/3 h-auto mx-auto my-10" src="/images/kitty_sm.png")
+    div(class="h-min p-5 flex justify-end")
+        a(class="bg-accent rounded p-2 m-2 text-lg hover:opacity-80" href=post.url) Read More
 

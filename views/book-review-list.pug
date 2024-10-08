@@ -1,10 +1,8 @@
-extends layout
+extends ./shared/navbar-widgets-layout.pug
 
 block content
-  div(class='flex flex-wrap justify-evenly w-2/3 max-w-[1000px] m-auto pb-20')
-    each review in reviews
-      div(class='hover:text-accent w-[300px] h-[450px] relative m-4 overflow-hidden whitespace-nowrap text-ellipsis flex flex-col justify-center')
-        img(class='shadow-lg h-[400px] w-[300px]' src=he.decode(review.book.book_cover_url))
-        a(href=`/book-reviews/${review.book.encodedAuthor}/${review.book.encodedTitle}` class='w-full h-full absolute top-0 left-0 opacity-0')
-        a(href=`/book-reviews/${review.book.encodedAuthor}/${review.book.encodedTitle}` class='text-xl overflow-hidden whitespace-nowrap text-ellipsis') A Review: #{review.book.title} by #{review.book.author}
-        a(href=`/book-reviews/${review.book.encodedAuthor}/${review.book.encodedTitle}`) #{moment(review.timestamp).utc().format("MMM Do")}
+  div
+    each post in bookReviews
+      include ./shared/book-review-preview.pug
+
+  script(type="application/javascript" src="/javascripts/toggle-synopsis.js")
