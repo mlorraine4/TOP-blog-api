@@ -2,99 +2,7 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const BookReview = require("../models/bookReview");
 const Book = require("../models/book");
-const Tags = require("../models/tags");
-const MonthlyWrapUp = require("../models/monthlyWrapUp");
-
-exports.post_list = asyncHandler(async (req, res, next) => {
-  console.log(req.user);
-  try {
-    const aggregate = await BookReview.aggregate([
-      // {
-      //   $match: {
-      //     _id: { $nin: req.body.reviews },
-      //   },
-      // },
-      {
-        $group: {
-          _id: "$_id",
-          book: { $first: "$book" },
-          timestamp: { $first: "$timestamp" },
-        },
-      },
-      {
-        $lookup: {
-          from: "books",
-          localField: "book",
-          foreignField: "_id",
-          as: "book",
-        },
-      },
-      {
-        $unwind: "$book",
-      },
-      {
-        $unionWith: {
-          coll: "monthlywrapups",
-          pipeline: [
-            {
-              $project: {
-                month: 1,
-                cover_url: 1,
-                timestamp: 1,
-                year: 1,
-              },
-            },
-            // {
-            //   $match: {
-            //     _id: {
-            //       $nin: req.body.wraps,
-            //     },
-            //   },
-            // },
-          ],
-        },
-      },
-    ])
-      .sort({ timestamp: -1 })
-      .skip(req.body.skip)
-      .limit(6)
-      .exec();
-
-    // Hydrate aggregate results to get access to model virtuals
-    const documents = aggregate.map((doc) => {
-      if (doc.month !== undefined) {
-        return MonthlyWrapUp.hydrate(doc);
-      } else {
-        const review = {};
-        const result = Book.hydrate(doc.book);
-
-        review.review_url = result.review_url;
-        review.book_cover_url = doc.book.book_cover_url;
-        review.title = doc.book.title;
-        review.author = doc.book.author;
-        review.timestamp = doc.timestamp;
-        review._id = doc._id;
-        return review;
-      }
-    });
-
-    return res.status(200).send({ posts: documents });
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
-  }
-});
-
-exports.home_get = asyncHandler(async (req, res, next) => {
-  try {
-    return res.render("index", {
-      title: "Garden of Pages",
-      user: req.user,
-    });
-  } catch (err) {
-    return next(err);
-  }
-});
+const Tags = require("../models/tag");
 
 exports.book_review_list_get = asyncHandler(async (req, res, next) => {
   try {
@@ -105,7 +13,7 @@ exports.book_review_list_get = asyncHandler(async (req, res, next) => {
     return res.render("book-review-list", {
       title: "Book Reviews - Garden of Pages",
       user: req.user,
-      reviews: bookReviews,
+      bookReviews: bookReviews,
     });
   } catch (err) {
     return next(err);
@@ -202,73 +110,75 @@ exports.book_review_form_post = [
   body("tags").trim().escape(),
   asyncHandler(async (req, res, next) => {
     try {
-      if (req.user) {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-          // Form data has errors.
-          return res.status(400).send(errors.array());
-        } else {
-          // Form data is valid.
-          const book = await Book.findOne({
-            title: req.body.title,
-            author: req.body.author,
-          }).exec();
-
-          const existing_review = await BookReview.findOne({ book: book });
-
-          if (book !== null && existing_review === null) {
-            // Book exists and there is not a review yet.
-            let tagsDBArr = [];
-            for (const tag of req.body.tags) {
-              // Save tags.
-              const tagRes = await Tags.findOne({ name: tag }).exec();
-              if (tagRes !== null) {
-                // Tag exists, add to array.
-                tagsDBArr.push(tagRes);
-              } else {
-                // Tag does not exist, save to db.
-                const tagData = new Tags({
-                  name: tag,
-                });
-                await tagData.save();
-                tagsDBArr.push(tagData);
-              }
-            }
-
-            const book_review = new BookReview({
-              title: req.body.title,
-              body: req.body.review,
-              book: book,
-              tags: tagsDBArr,
-              timestamp: Date.now(),
-            });
-
-            // Save book review.
-            await book_review.save();
-            return res.status(200).send({ url: book.review_url });
-          } else if (book === null) {
-            // Book does not exist yet. Send error.
-            return res.status(400).send([
-              {
-                msg: `You need to add book: ${req.body.title} by ${req.body.author} before saving review.`,
-              },
-            ]);
-          } else {
-            // There is already a review.
-            return res.status(409).send([
-              {
-                msg: `A review for ${req.body.title} by ${req.body.author} already exists.`,
-              },
-            ]);
-          }
-        }
-      } else {
+      if (!req.user) {
         // User is not logged in.
         return res
           .status(401)
           .send([{ msg: "You must be an authorized user." }]);
       }
+
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        // Form data has errors.
+        return res.status(400).send(errors.array());
+      }
+
+      // Check if book exists
+      const book = await Book.findOne({
+        title: req.body.title,
+        author: req.body.author,
+      }).exec();
+
+      if (book === null) {
+        // Book does not exist yet. Send error.
+        return res.status(404).send([
+          {
+            msg: `You need to add book: ${req.body.title} by ${req.body.author} before saving review.`,
+          },
+        ]);
+      }
+
+      // Check if review already exists
+      const existingReview = await BookReview.findOne({ book: book });
+      if (existingReview !== null) {
+        // There is already a review. Send error.
+        return res.status(409).send([
+          {
+            msg: `A review for ${req.body.title} by ${req.body.author} already exists.`,
+          },
+        ]);
+      }
+
+      // Save tags
+      let tagsDBArr = [];
+      for (const tag of req.body.tags) {
+        const tagRes = await Tags.findOne({ name: tag }).exec();
+        if (tagRes !== null) {
+          // Tag exists, add to array.
+          tagsDBArr.push(tagRes);
+        } else {
+          // Tag does not exist, save to db.
+          const tagData = new Tags({
+            name: tag,
+          });
+          await tagData.save();
+          tagsDBArr.push(tagData);
+        }
+      }
+
+      // Create review.
+      const bookReview = new BookReview({
+        title: `A Review of ${book.title} by ${book.author}`,
+        review: req.body.review,
+        book: book,
+        tags: tagsDBArr,
+        timestamp: Date.now(),
+      });
+
+      // Save book review.
+      await bookReview.save();
+      return res.status(200).send({ url: book.reviewUrl });
     } catch (err) {
       console.log(err);
       return res.status(500).send([{ msg: "An internal error occurred" }]);
@@ -288,22 +198,21 @@ exports.book_review_update_get = asyncHandler(async (req, res, next) => {
         .populate("tags")
         .exec();
 
-      if (bookReview !== null) {
-        // Book review exists.
-        return res.render("book-review-form", {
-          title: "Update Review - Garden of Pages",
-          header: "Update Review",
-          user: req.user,
-          title: "Edit Book Review",
-          bookReview: bookReview,
-          book: book,
-        });
-      } else {
+      if (bookReview === null) {
         // No results.
         const err = new Error("Book Review does not exist.");
         err.status = 404;
         return next(err);
       }
+
+      return res.render("book-review-form", {
+        title: "Update Review - Garden of Pages",
+        header: "Update Review",
+        user: req.user,
+        title: "Edit Book Review",
+        bookReview: bookReview,
+        book: book,
+      });
     } else {
       // User is not logged in.
       const err = new Error("You must be an authorized user.");
@@ -331,69 +240,65 @@ exports.book_review_update_post = [
   body("tags").trim().escape(),
   asyncHandler(async (req, res, next) => {
     try {
-      if (req.user) {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-          // Form data is not valid.
-          return res.status(400).send(errors.array());
-        } else {
-          // Form data is valid. Update book review.
-          const book = await Book.findOne({
-            encodedTitle: req.params.title,
-            encodedAuthor: req.params.author,
-          }).exec();
-
-          const bookReview = await BookReview.findOne({ book: book })
-            .populate("book")
-            .exec();
-
-          if (bookReview !== null) {
-            // Book review exists. Save all tags.
-            let tagsDBArr = [];
-            for (const tag of req.body.tags) {
-              const tagRes = await Tags.findOne({ name: tag }).exec();
-              if (tagRes !== null) {
-                // Tag exists, add to array.
-                tagsDBArr.push(tagRes);
-              } else {
-                // Tag does not exist, save to db.
-                const tagData = new Tags({
-                  name: tag,
-                });
-                const result = await tagData.save();
-                tagsDBArr.push(tagData);
-              }
-            }
-
-            // keeps original timestamp of book review
-            const newBookReview = new BookReview({
-              body: req.body.review,
-              book: bookReview.book,
-              tags: tagsDBArr,
-              timestamp: bookReview.timestamp,
-              _id: bookReview._id,
-            });
-
-            await BookReview.findByIdAndUpdate(
-              bookReview._id,
-              newBookReview,
-              {}
-            );
-            return res.status(200).send({ url: book.review_url });
-          } else {
-            // No results.
-            return res
-              .status(404)
-              .send([{ msg: "Book review does not exist." }]);
-          }
-        }
-      } else {
+      if (!req.user) {
         // User is not logged in.
         return res
           .status(401)
           .send([{ msg: "You must be an authorized user." }]);
       }
+
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        // Form data is not valid.
+        return res.status(400).send(errors.array());
+      }
+
+      // Find associated book
+      const book = await Book.findOne({
+        encodedTitle: req.params.title,
+        encodedAuthor: req.params.author,
+      }).exec();
+
+      // Get book review
+      const bookReview = await BookReview.findOne({ book: book })
+        .populate("book")
+        .exec();
+
+      if (bookReview === null) {
+        // No results.
+        return res.status(404).send([{ msg: "Book review does not exist." }]);
+      }
+
+      // Save tags
+      let tagsDBArr = [];
+      for (const tag of req.body.tags) {
+        const tagRes = await Tags.findOne({ name: tag }).exec();
+        if (tagRes !== null) {
+          // Tag exists, add to array.
+          tagsDBArr.push(tagRes);
+        } else {
+          // Tag does not exist, save to db.
+          const tagData = new Tags({
+            name: tag,
+          });
+          const result = await tagData.save();
+          tagsDBArr.push(tagData);
+        }
+      }
+
+      // Create new book review (keeps original timestamp)
+      const updatedBookReview = new BookReview({
+        review: req.body.review,
+        book: bookReview.book,
+        tags: tagsDBArr,
+        timestamp: bookReview.timestamp,
+        _id: bookReview._id,
+      });
+
+      // Update existing review
+      await BookReview.findByIdAndUpdate(bookReview._id, updatedBookReview, {});
+      return res.status(200).send({ url: book.reviewUrl });
     } catch (err) {
       console.log(err);
       return res.status(500).send([{ msg: "An internal error occurred" }]);
@@ -404,6 +309,7 @@ exports.book_review_update_post = [
 exports.book_review_delete_get = asyncHandler(async (req, res, next) => {
   try {
     if (req.user) {
+      console.log("getting form");
       const book = await Book.findOne({
         encodedTitle: req.params.title,
         encodedAuthor: req.params.author,
@@ -419,7 +325,7 @@ exports.book_review_delete_get = asyncHandler(async (req, res, next) => {
         return res.render("book-review-delete", {
           title: "Delete Review - Garden of Pages",
           user: req.user,
-          book_review: bookReview,
+          bookReview: bookReview,
         });
       } else {
         // No results.
@@ -434,6 +340,7 @@ exports.book_review_delete_get = asyncHandler(async (req, res, next) => {
       return next(err);
     }
   } catch (err) {
+    console.log(err);
     return next(err);
   }
 });
@@ -441,10 +348,9 @@ exports.book_review_delete_get = asyncHandler(async (req, res, next) => {
 exports.book_review_delete_post = asyncHandler(async (req, res, next) => {
   try {
     if (req.user) {
-      const book = await Book.findOne({
-        encodedTitle: req.params.title,
-        encodedAuthor: req.params.author,
-      }).exec();
+      const bookReview = await BookReview.findById(
+        req.body.bookReviewId
+      ).exec();
 
       await BookReview.findOneAndDelete({ book: book }).exec();
       return res.redirect("/book-reviews");
