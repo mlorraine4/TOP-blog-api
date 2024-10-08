@@ -1,0 +1,39 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/output.css')
+
+  body(class="bg-bg")
+    div(class="bg-black")
+      div(class="flex justify-between h-[60px] text-lg text-gray-300")
+        div(class="flex items-center justify-start")
+          a(href="/" class="m-5")
+            img(src="/images/header.png" class='block h-[60px] p-2')
+          a(href="/book-reviews" class="hover:text-accent m-5") Book Reviews
+          div(class="dropDownContainer")
+            button#drop-btn(class="hover:text-accent m-5") Monthly Wrap Ups
+            div(id="drop-down" class="dropdown-content hide text-center bg-bg text-white border-2 border-accent")
+              a(href="/monthly-wrap-ups" class='hover:bg-accent px-[16px] py-[12px] block  border-t border-accent') All
+              a(href="/2024/monthly-wrap-ups" class='hover:bg-accent px-[16px] py-[12px] block  border-t border-accent') 2024
+              a(href="/2023/monthly-wrap-ups" class='hover:bg-accent px-[16px] py-[12px] block  border-t border-accent') 2023
+          //- a(href="/tbr-list" class="hover:text-accent") TBR Masterlist
+          a(href="/upcoming-releases" class="hover:text-accent m-5") Upcoming Releases
+          a(href="/author/maria" class="hover:text-accent m-5") About
+        div(class="flex items-center justify-end")
+          form(action="/search" method="POST" class="w-[250px] flex flex-row relative")
+              img(src="/images/search.png" class="w-[20px] absolute right-[20px]")
+              input#search(name="search" class="w-full rounded-full py-1 pl-4 pr-[40px] bg-bg text-gray-300 text-sm m-auto")
+          if user 
+            a(href="/log-out" class=" bg-accent rounded-md hover:bg-accent-faded mx-5 p-[6px] text-center") Log Out
+          else
+            a(href="/log-in" class="bg-accent rounded-md hover:bg-accent-faded mx-5 p-[6px] text-center") Log In
+    if user
+      img#dash-btn(src="/images/plus.png" class="w-8 h-8 fixed bottom-[15px] right-[30px] hover:w-9 hover:h-9 transition-all")
+      div#dashboard-pop-up(class="fixed right-[46px] bottom-[60px] bg-bg text-xl hide border-2 border-accent")
+        a(href="/books/add" class=' px-[16px] py-[12px] block  border-t hover:bg-accent border-accent') Add Book
+        a(href="/book-reviews/add" class=' px-[16px] py-[12px] block  border-t hover:bg-accent border-accent') Add Review
+        a(href="/monthly-wrap-ups/add" class=' px-[16px] py-[12px] block  border-t hover:bg-accent border-accent') Add Wrap Up
+        a(href="/library" class=' px-[16px] py-[12px] block  border-t hover:bg-accent border-accent') View Library
+
+  script(type="application/javascript" src="/javascripts/drop-down.js" defer)

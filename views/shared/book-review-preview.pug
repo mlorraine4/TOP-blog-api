@@ -1,0 +1,40 @@
+div(class="mx-10 mb-10 flex flex-col bg-black max-w-[900px] relative")
+    div(class="relative image-container")
+        img(class='m-auto w-2/3 p-10 h-auto' src="/images/book_review_banner.png")
+        div(class="hover-div flex justify-center items-center")
+            img(class="w-[45px] opacity-80" src="/images/writing.png")
+        a(href=`${post.book.reviewUrl}` class='absolute w-full h-full top-0 left-0') 
+    hr(class="border-t-2 border-accent-faded border-dotted")
+    a(href="/book-reviews" class="p-2 text-purple-400") BOOK REVIEWS
+    a(href=`${post.book.reviewUrl}` class='text-4xl overflow-hidden whitespace-nowrap text-ellipsis bg-accent p-5') #{post.title}
+    div(class="flex m-2")
+        a(class="m-2" href=`${post.book.reviewUrl}`) #{moment(post.timestamp).format("MMM Do")}
+        a(class="m-2" href="/author/maria") MARIA @ GARDENOFPAGES
+        a(class="m-2" href=`${post.book.reviewUrl}/#comments`) #{post.comments.length} COMMENTS
+    hr(class="border-t-2 border-accent-faded border-dotted mb-5")
+    div(class="p-10 m-auto")
+        div(class="flex")
+            div(class="bg-accent-faded w-[220px] h-[320px] flex justify-center items-center")
+                img(class='w-auto h-[300px]' src=he.decode(post.book.book_cover_url))
+            div(class="w-1/2")
+                div(class="mb-4 ml-4")
+                    div(class="text-2xl") #{post.book.title}
+                    div(class="text-xl italic") #{post.book.author}
+                - var n = 0;
+                div(class="mb-4 ml-4")
+                    div(class="mr-5 font-bold text-xl") My Rating
+                    div(class="flex justify-start")
+                        while n < post.book.rating
+                            img(class="w-10 h-10" src="/images/star.png" id=n++)
+        div(class="py-5")
+            a(href=post.book.goodreadsUrl class="font-bold text-xl my-5") 📚 Goodreads
+            div(class="flex w-min justify-center items-center my-5")
+                div(class="mr-5 font-bold text-xl whitespace-nowrap hover:cursor-pointer" onclick=`toggleSynopsis(event)`) ✍️ Synopsis
+                div(class="arrow triangle-right" onclick=`toggleSynopsis(event)`)
+            div(class="synopsis-detail text-xl w-4/5 m-auto")!=he.decode(post.book.synopsis || "")
+                   
+    hr(class="border-t-2 border-accent-faded border-dotted my-5")
+    img(class="w-1/3 h-auto mx-auto my-10" src="/images/kitty_sm.png")
+    div(class="h-min p-5 flex justify-end")
+        a(class="bg-accent rounded p-2 m-2 text-lg hover:opacity-80" href=post.book.reviewUrl) Read More
+
