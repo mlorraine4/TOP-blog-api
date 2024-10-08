@@ -4,7 +4,10 @@
 
 :root {
   --accent: #8a4ccd;
-  --accent-faded: #a474d8;
+  --accent-faded: #58278b;
+  --bg: #111110;
+  --navbar: black;
+  --input: #2b2b29;
 }
 
 /* width */
@@ -14,7 +17,7 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: var(--accent-faded);
+  background: #cbb0e9;
 }
 
 /* Handle */
@@ -35,6 +38,8 @@
 
 body {
   font: 14px "Bitter";
+  font-weight: 600;
+  letter-spacing: 1px;
   margin: 0;
   position: relative;
   color: white;
@@ -49,6 +54,13 @@ form {
   flex-direction: column;
   align-items: center;
   margin: auto;
+
+  input,
+  select {
+    background-color: var(--input);
+    border-radius: 8px;
+    padding: 10px;
+  }
 }
 
 button {
@@ -63,7 +75,18 @@ a:hover {
 
 input {
   margin: 10px;
-  padding: 10px;
+}
+
+input:focus {
+  outline: 1px solid var(--accent);
+}
+
+input::file-selector-button {
+  background-color: var(--input);
+  border-radius: 8px;
+  border: none;
+  color: white;
+  padding: 5px;
 }
 
 h1 {
@@ -74,8 +97,23 @@ label {
   margin: 10px;
 }
 
+p {
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+#message {
+  border-radius: 8px;
+  text-align: center;
+}
+
 #message li {
   list-style-type: disc;
+  width: 80%;
+  margin: auto;
 }
 
 #message button {
@@ -89,6 +127,11 @@ label {
 
 #message a {
   font-weight: bold;
+}
+
+.post-summary a {
+  font-weight: bold;
+  color: rgb(192 132 252);
 }
 
 .hide {
@@ -156,7 +199,6 @@ label {
 }
 
 #search:focus {
-  outline: 1px solid var(--accent);
   background-color: rgb(29, 21, 36);
 }
 
@@ -216,15 +258,6 @@ label {
 }
 
 /* book review form */
-.tags-input {
-  display: inline-block;
-  position: relative;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 20px;
-  box-shadow: 2px 2px 5px #00000033;
-  background-color: white;
-}
 
 .tags-input ul {
   list-style: none;
@@ -235,7 +268,6 @@ label {
 .tags-input li {
   display: inline-block;
   background-color: var(--accent);
-  color: white;
   border-radius: 20px;
   padding: 5px 10px;
   margin-right: 5px;
@@ -264,4 +296,61 @@ label {
 /* forms */
 .no-opacity {
   opacity: 0;
+}
+
+/* Preview Hover */
+.image-container {
+  display: inline-block;
+}
+
+.hover-div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(88, 39, 139, 0.5);
+  transition: opacity 0.5s ease-in-out;
+}
+
+.image-container:hover .hover-div {
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+}
+
+.synopsis-detail {
+  height: 0px;
+  transition: height 1s ease-in-out;
+  transition: opacity 1s linear;
+  opacity: 0;
+}
+
+.active {
+  opacity: 1;
+}
+
+.triangle-right,
+.triangle-bottom {
+  width: 0;
+  height: 0;
+}
+.triangle-right {
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+.triangle-bottom {
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+}
+
+.triangle-right {
+  border-left: 20px solid var(--accent);
+}
+
+.triangle-bottom {
+  border-top: 20px solid var(--accent);
 }
