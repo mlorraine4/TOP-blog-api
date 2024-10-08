@@ -1,12 +1,18 @@
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const MonthlyWrapUp = require("../models/monthlyWrapUp");
+const Tag = require("../models/tag");
 const Book = require("../models/book");
 const moment = require("moment");
+const httpStatusCodes = require("http-status-codes");
 
 exports.wrapUp_list_get = asyncHandler(async (req, res, next) => {
   try {
-    const wrapUps = await MonthlyWrapUp.find().sort({ timestamp: -1 }).exec();
+    const wrapUps = await MonthlyWrapUp.find()
+      .populate("books")
+      .sort({ timestamp: -1 })
+      .limit(6)
+      .exec();
 
     return res.render("wrap-up-list", {
       user: req.user,
@@ -15,8 +21,10 @@ exports.wrapUp_list_get = asyncHandler(async (req, res, next) => {
     });
   } catch (err) {
     console.log(err);
-    const publicErr = new Error("An error occurred processing your request.");
-    publicErr.status = 500;
+    const publicErr = new Error(
+      httpStatusCodes.ReasonPhrases.INTERNAL_SERVER_ERROR
+    );
+    publicErr.status = httpStatusCodes.StatusCodes.INTERNAL_SERVER_ERROR;
     return next(publicErr);
   }
 });
@@ -35,8 +43,10 @@ exports.wrapUp_yearly_list_get = asyncHandler(async (req, res, next) => {
     });
   } catch (err) {
     console.log(err);
-    const publicErr = new Error("An error occurred processing your request.");
-    publicErr.status = 500;
+    const publicErr = new Error(
+      httpStatusCodes.ReasonPhrases.INTERNAL_SERVER_ERROR
+    );
+    publicErr.status = httpStatusCodes.StatusCodes.INTERNAL_SERVER_ERROR;
     return next(publicErr);
   }
 });
@@ -48,64 +58,70 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
       req.params.month.substring(1);
 
     const wrapUp = await MonthlyWrapUp.findOne({
-      month: month_format,
       year: req.params.year,
+      month: month_format,
     })
+      .populate("books")
       .populate({ path: "comments", options: { sort: { timestamp: -1 } } })
       .exec();
 
-    if (wrapUp !== null) {
-      // Wrap Up exists. Query for books read during the month.
-      const dateString = req.params.month + " 1, " + req.params.year;
-      const date = new Date(dateString);
-      const month = date.getMonth();
-      const year = date.getFullYear();
-      const startDate = new Date(year, month, 1);
-      const endDate = new Date(year, month + 1, 0);
-
-      const books = await Book.find({
-        date_read: {
-          $gte: startDate,
-          $lt: endDate,
-        },
-      });
-
-      // let totalPages = 0;
-      // let ratings = 0;
-      // wrapUp.books.forEach((book) => {
-      //   totalPages += book.pages;
-      //   ratings += book.rating;
-      // });
-
-      // const avgRating = ratings / wrapUp.books.length;
-      // const formattedPages = totalPages.toLocaleString("en-US");
-
-      return res.render("wrap-up-detail", {
-        title: `${wrapUp.month} ${wrapUp.year} - Garden of Pages`,
-        user: req.user,
-        wrapUp: wrapUp,
-        books: books,
-        month: month_format,
-        year: req.params.year,
-        // totalPages: formattedPages,
-        // avgRating: avgRating,
-      });
-    } else {
-      const err = new Error("Wrap up does not exist.");
-      err.status = 404;
+    if (wrapUp === null) {
+      // No results
+      const err = new Error(httpStatusCodes.ReasonPhrases.NOT_FOUND);
+      err.status = httpStatusCodes.StatusCodes.NOT_FOUND;
       return next(err);
     }
+
+    let totalPages = 0;
+    let ratings = 0;
+    wrapUp.books.forEach((book) => {
+      totalPages += book.pages;
+      ratings += book.rating;
+    });
+
+    // TODO: round up or down
+    // const avgRating = ratings / books.length;
+    const formattedPages = totalPages.toLocaleString("en-US");
+
+    return res.render("wrap-ups-" + req.params.year + "/" + req.params.month, {
+      title: `${wrapUp.month} ${wrapUp.year} - Garden of Pages`,
+      user: req.user,
+      wrapUp: wrapUp,
+      books: wrapUp.books,
+      month: wrapUp.month,
+      year: req.params.year,
+      totalPages: formattedPages,
+      // avgRating: avgRating,
+    });
   } catch (err) {
     console.log(err);
-    console.log(err);
-    const publicErr = new Error("An error occurred processing your request.");
-    publicErr.status = 500;
+    const publicErr = new Error(
+      httpStatusCodes.ReasonPhrases.INTERNAL_SERVER_ERROR
+    );
+    publicErr.status = httpStatusCodes.StatusCodes.INTERNAL_SERVER_ERROR;
     return next(publicErr);
   }
 });
 
 exports.wrapUp_form_get = asyncHandler(async (req, res, next) => {
   if (req.user) {
+    if (req.params.month && req.params.year) {
+      const monthFormat =
+        req.params.month.substring(0, 1).toUpperCase() +
+        req.params.month.substring(1);
+
+      const wrapUp = await MonthlyWrapUp.findOne({
+        month: monthFormat,
+        year: req.params.year,
+      }).exec();
+
+      return res.render("wrap-up-form", {
+        user: req.user,
+        wrapUp: wrapUp,
+        title: "Add Monthly Wrap Up - Garden of Pages",
+      });
+    }
+
     return res.render("wrap-up-form", {
       user: req.user,
       title: "Add Monthly Wrap Up - Garden of Pages",
@@ -118,362 +134,223 @@ exports.wrapUp_form_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.wrapUp_form_post = [
-  body("cover_url", "Photo url is required.")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
+  body("year", "Year is required.").trim().notEmpty().isNumeric(),
+  body("month", "Month is required.").trim().notEmpty().escape(),
+  body("summary").trim().escape(),
+  asyncHandler(async (req, res, next) => {
+    try {
+      console.log(req.body);
+      if (!req.user) {
+        // User is not logged in.
+        return res.status(httpStatusCodes.StatusCodes.UNAUTHORIZED).send({
+          errors: [{ msg: httpStatusCodes.ReasonPhrases.UNAUTHORIZED }],
+        });
+      }
+
+      // Check if wrap up exists.
+      const wrapUpDB = await MonthlyWrapUp.findOne({
+        month: req.body.month,
+        year: req.body.year,
+      }).exec();
+
+      if (wrapUpDB !== null) {
+        // Wrap up already exists. Return error.
+        return res.status(httpStatusCodes.StatusCodes.CONFLICT).send({
+          errors: [
+            {
+              msg: `${req.body.month} ${req.body.year} wrap up already exists.`,
+            },
+          ],
+        });
+      }
+
+      // Check if month is valid.
+      const monthArr = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+
+      const dateString = req.body.month + "1, " + req.body.year;
+      const date = new Date(dateString);
+      const month = date.getMonth();
+      const year = date.getFullYear();
+      const timestamp = new Date(year, month + 1, 1);
+      const startDate = new Date(year, month, 1);
+      const endDate = new Date(year, month + 1, 0);
+
+      const tag = await Tag.findOne({ name: "monthlywrapup" });
+
+      // Find books read during the month and year
+      const books = await Book.find({
+        date_read: {
+          $gte: startDate,
+          $lt: endDate,
+        },
+      });
+
+      const wrapUp = new MonthlyWrapUp({
+        author: req.user,
+        year: req.body.year,
+        month: req.body.month,
+        title: req.body.month + " Monthly Wrap Up",
+        summary: req.body.summary,
+        comments: [],
+        tags: [tag],
+        books: books,
+        timestamp: timestamp,
+      });
+
+      const errors = validationResult(req);
+
+      if (!monthArr.includes(req.body.month)) {
+        // Month provided is not a valid month.
+        return res.status(httpStatusCodes.StatusCodes.BAD_REQUEST).send({
+          errors: [
+            ...errors.array(),
+            { msg: `${req.body.month} is not a correct month format.` },
+          ],
+        });
+      }
+
+      if (!errors.isEmpty()) {
+        // Form data is not valid. Re-render form with data and errors.
+        return res.status(httpStatusCodes.StatusCodes.BAD_REQUEST).send({
+          errors: [...errors.array()],
+        });
+      }
+
+      // Save wrap up.
+      const result = await wrapUp.save();
+      return res.status(200).send({ url: result.url });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(httpStatusCodes.StatusCodes.INTERNAL_SERVER_ERROR)
+        .send({
+          errors: [httpStatusCodes.ReasonPhrases.INTERNAL_SERVER_ERROR],
+        });
+    }
+  }),
+];
+
+exports.wrapUp_update_post = [
   body("summary").trim().escape(),
   body("year", "Year is required.").trim().notEmpty().isNumeric(),
   body("month", "Month is required.").trim().notEmpty().escape(),
 
   asyncHandler(async (req, res, next) => {
     try {
-      if (req.user) {
-        const errors = validationResult(req);
-        const dateString = req.body.month + "1, " + req.body.year;
-        const date = new Date(dateString);
-        const month = date.getMonth();
-        const year = date.getFullYear();
-        const myDate = new Date(year, month + 1, 1);
-
-        const wrapUp = new MonthlyWrapUp({
-          year: req.body.year,
-          month: req.body.month,
-          summary: req.body.summary,
-          cover_url: req.body.cover_url,
-          timestamp: myDate,
-        });
-
-        if (!errors.isEmpty()) {
-          // Form data is not valid. Re-render form with data and errors.
-          return res.render("wrap-up-form", {
-            user: req.user,
-            title: "Add Wrap Up - Garden of Pages",
-            wrapUp: wrapUp,
-            errors: errors.array(),
-          });
-        } else {
-          // Form data is valid. Check if month is valid.
-          const monthArr = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-          ];
-
-          if (!monthArr.includes(req.body.month)) {
-            // Month provided is not a valid month.
-            return res.render("wrap-up-form", {
-              user: req.user,
-              title: "Add Wrap Up - Garden of Pages",
-              wrapUp: wrapUp,
-              errors: [
-                ...errors.array(),
-                { msg: `${req.body.month} is not a correct month format.` },
-              ],
-            });
-          } else {
-            // All form data is valid.
-            const wrapUpDB = await MonthlyWrapUp.findOne({
-              month: req.body.month,
-              year: req.body.year,
-            }).exec();
-
-            if (wrapUpDB === null) {
-              // Wrap up does not already exist. Save new wrap up.
-              const result = await wrapUp.save();
-              return res.redirect(result.url);
-            } else {
-              // Wrap up already exists. Return error.
-              return res.render("wrap-up-form", {
-                user: req.user,
-                title: "Add Wrap Up - Garden of Pages",
-                wrapUp: wrapUp,
-                errors: [
-                  {
-                    msg: `${req.body.month} ${req.body.year} wrap up already exists.`,
-                  },
-                ],
-              });
-            }
-          }
-        }
-      } else {
+      if (!req.user) {
         // User is not logged in.
-        const err = new Error("You must be an authorized user.");
-        err.status = 401;
-        return next(err);
+        return res.status(httpStatusCodes.StatusCodes.UNAUTHORIZED).send({
+          errors: [{ msg: httpStatusCodes.ReasonPhrases.UNAUTHORIZED }],
+        });
       }
-    } catch (err) {
-      console.log(err);
-      const publicErr = new Error("An error occurred processing your request.");
-      publicErr.status = 500;
-      return next(publicErr);
-    }
-  }),
-];
 
-exports.wrapUp_update_get = asyncHandler(async (req, res, next) => {
-  try {
-    if (req.user) {
-      const monthFormat =
-        req.params.month.substring(0, 1).toUpperCase() +
-        req.params.month.substring(1);
+      const errors = validationResult(req);
 
       const wrapUp = await MonthlyWrapUp.findOne({
-        month: monthFormat,
+        month:
+          req.params.month.substring(0, 1).toUpperCase() +
+          req.params.month.substring(1),
         year: req.params.year,
       }).exec();
 
-      if (wrapUp !== null) {
-        return res.render("wrap-up-form", {
-          user: req.user,
-          wrapUp: wrapUp,
-          title: "Update Monthly Wrap Up - Garden of Pages",
-        });
-      } else {
+      if (wrapUp === null) {
         // No results.
-        const err = new Error("Wrap Up does not exist.");
-        err.status = 404;
-        return next(err);
+        return res
+          .status(httpStatusCodes.StatusCodes.NOT_FOUND)
+          .send({ errors: [{ msg: httpStatusCodes.ReasonPhrases.NOT_FOUND }] });
       }
-    } else {
-      // User is not logged in.
-      const err = new Error("You must be an authorized user.");
-      err.status = 401;
-      return next(err);
-    }
-  } catch (err) {
-    console.log(err);
-    const publicErr = new Error("An error occurred processing your request.");
-    publicErr.status = 500;
-    return next(publicErr);
-  }
-});
 
-// TODO: write custom sanitizer for month instead of checking array separately
-exports.wrapUp_update_post = [
-  body("cover_url", "Photo url is required.")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
-  body("summary").trim().escape(),
-  body("year", "Year is required.").trim().notEmpty().isNumeric(),
-  body("month", "Month is required.").trim().notEmpty().escape(),
+      const monthArr = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
 
-  asyncHandler(async (req, res, next) => {
-    try {
-      if (req.user) {
-        const errors = validationResult(req);
+      const dateString = req.body.month + "1, " + req.body.year;
+      const date = new Date(dateString);
+      const month = date.getMonth();
+      const year = date.getFullYear();
+      const timestamp = new Date(year, month + 1, 1);
+      const startDate = new Date(year, month, 1);
+      const endDate = new Date(year, month + 1, 0);
 
-        const existingWrapUp = await MonthlyWrapUp.findOne({
-          month: req.params.month,
-          year: req.params.year,
-        }).exec();
+      const tag = await Tag.findOne({ name: "monthlywrapup" });
 
-        if (existingWrapUp !== null) {
-          const monthArr = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-          ];
+      // Find books read during the month and year
+      const books = await Book.find({
+        date_read: {
+          $gte: startDate,
+          $lt: endDate,
+        },
+      });
 
-          const dateString = req.body.month + "1, " + req.body.year;
-          const date = new Date(dateString);
-          const month = date.getMonth();
-          const year = date.getFullYear();
-          const myDate = new Date(year, month + 1, 0);
+      const updatedWrapUp = new MonthlyWrapUp({
+        _id: wrapUp._id,
+        author: req.user,
+        year: req.body.year,
+        month: req.body.month,
+        title: req.body.month + " Monthly Wrap Up",
+        formattedTitle: "monthly-wrap-ups",
+        summary: req.body.summary,
+        comments: [],
+        tags: [tag],
+        books: books,
+        timestamp: timestamp,
+      });
 
-          const updatedWrapUp = new MonthlyWrapUp({
-            year: req.body.year,
-            month: req.body.month,
-            summary: req.body.summary,
-            cover_url: req.body.cover_url,
-            timestamp: myDate,
-          });
-
-          if (!monthArr.includes(req.body.month)) {
-            return res.render("wrap-up-form", {
-              user: req.user,
-              title: "Update Wrap Up - Garden of Pages",
-              wrapUp: updatedWrapUp,
-              errors: [
-                ...errors.array(),
-                { msg: `${req.body.month} is not a correct month format.` },
-              ],
-            });
-          } else if (!errors.isEmpty()) {
-            return res.render("wrap-up-form", {
-              user: req.user,
-              title: "Update Wrap Up - Garden of Pages",
-              wrapUp: updatedWrapUp,
-              errors: errors.array(),
-            });
-          } else {
-            // Data is valid. Update monthly wrap up.
-            const result = await MonthlyWrapUp.findByIdAndUpdate(
-              existingWrapUp.id,
-              updatedWrapUp,
-              {}
-            );
-            return res.redirect(result.url);
-          }
-        } else {
-          // No results.
-          const err = new Error("Wrap up does not exist.");
-          err.status = 404;
-          return next(err);
-        }
-      } else {
-        const err = new Error("You must be an authorized user.");
-        err.status = 401;
-        return next(err);
+      if (!monthArr.includes(req.body.month)) {
+        // Month provided is not a valid month.
+        return res.status(httpStatusCodes.StatusCodes.BAD_REQUEST).send({
+          errors: [
+            ...errors.array(),
+            { msg: `${req.body.month} is not a correct month format.` },
+          ],
+        });
       }
+
+      if (!errors.isEmpty()) {
+        // Form data is not valid. Re-render form with data and errors.
+        return res.status(httpStatusCodes.StatusCodes.BAD_REQUEST).send({
+          errors: [...errors.array()],
+        });
+      }
+
+      // Data is valid. Update monthly wrap up.
+      const result = await MonthlyWrapUp.findByIdAndUpdate(
+        wrapUp.id,
+        updatedWrapUp,
+        {}
+      );
+      return res.status(200).send({ url: result.url });
     } catch (err) {
       console.log(err);
-      const publicErr = new Error("An error occurred processing your request.");
-      publicErr.status = 500;
-      return next(publicErr);
+      return res
+        .status(httpStatusCodes.StatusCodes.INTERNAL_SERVER_ERROR)
+        .send({
+          errors: [httpStatusCodes.ReasonPhrases.INTERNAL_SERVER_ERROR],
+        });
     }
   }),
 ];
-
-exports.wrapUp_2024_july_get = asyncHandler(async (req, res, next) => {
-  try {
-    const req = {
-      month: "July",
-      year: 2024,
-    };
-
-    const dateString = req.month + " 1, " + req.year;
-    const date = new Date(dateString);
-    const month = date.getMonth();
-    const year = date.getFullYear();
-    const startDate = new Date(year, month, 1);
-    const endDate = new Date(year, month + 1, 0);
-
-    const wrapUp = await MonthlyWrapUp.findOne({
-      month: req.month,
-      year: req.year,
-    })
-      .populate({ path: "comments", options: { sort: { timestamp: -1 } } })
-      .exec();
-
-    if (wrapUp !== null) {
-      // Wrap Up exists. Query for books read during the month.
-      const books = await Book.find({
-        date_read: {
-          $gte: startDate,
-          $lt: endDate,
-        },
-      });
-
-      let totalPages = 0;
-      // let ratings = 0;
-      books.forEach((book) => {
-        totalPages += book.pages;
-        // ratings += book.rating;
-      });
-
-      // const avgRating = ratings / wrapUp.books.length;
-      const formattedPages = totalPages.toLocaleString("en-US");
-
-      return res.render("wrap-ups/july-24", {
-        title: `${wrapUp.month} ${wrapUp.year} - Garden of Pages`,
-        user: req.user,
-        wrapUp: wrapUp,
-        books: books,
-        month: req.month,
-        year: req.year,
-        totalPages: formattedPages,
-      });
-    } else {
-      const err = new Error("Wrap up does not exist.");
-      err.status = 404;
-      return next(err);
-    }
-  } catch (err) {
-    console.log(err);
-    const publicErr = new Error("An error occurred processing your request.");
-    publicErr.status = 500;
-    return next(err);
-  }
-});
-
-exports.wrapUp_2024_june_get = asyncHandler(async (req, res, next) => {
-  try {
-    const req = {
-      month: "June",
-      year: 2024,
-    };
-
-    const dateString = req.month + " 1, " + req.year;
-    const date = new Date(dateString);
-    const month = date.getMonth();
-    const year = date.getFullYear();
-    const startDate = new Date(year, month, 1);
-    const endDate = new Date(year, month + 1, 0);
-
-    const wrapUp = await MonthlyWrapUp.findOne({
-      month: req.month,
-      year: req.year,
-    })
-      .populate({ path: "comments", options: { sort: { timestamp: -1 } } })
-      .exec();
-
-    if (wrapUp !== null) {
-      // Wrap Up exists. Query for books read during the month.
-      const books = await Book.find({
-        date_read: {
-          $gte: startDate,
-          $lt: endDate,
-        },
-      });
-
-      // let totalPages = 0;
-      // let ratings = 0;
-      // wrapUp.books.forEach((book) => {
-      //   totalPages += book.pages;
-      //   ratings += book.rating;
-      // });
-
-      // const avgRating = ratings / wrapUp.books.length;
-      // const formattedPages = totalPages.toLocaleString("en-US");
-
-      return res.render("wrap-ups/june-24", {
-        title: `${wrapUp.month} ${wrapUp.year} - Garden of Pages`,
-        user: req.user,
-        wrapUp: wrapUp,
-        books: books,
-        month: req.month,
-        year: req.year,
-      });
-    } else {
-      const err = new Error("Wrap up does not exist.");
-      err.status = 404;
-      return next(err);
-    }
-  } catch (err) {
-    console.log(err);
-    const publicErr = new Error("An error occurred processing your request.");
-    publicErr.status = 500;
-    return next(err);
-  }
-});
