@@ -16,7 +16,7 @@ const MonthlyWrapUpSchema = new Schema(
 MonthlyWrapUpSchema.virtual("url").get(function () {
   const month = this.month.toLowerCase();
   // We don't use an arrow function as we'll need the this object
-  return `/${this.year}/${month}/monthly-wrap-ups`;
+  return `/monthly-wrap-ups/${this.year}/${month}`;
 });
 
 // Export model

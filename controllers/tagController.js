@@ -6,7 +6,7 @@ const Book = require("../models/book");
 exports.tag_detail_get = asyncHandler(async (req, res, next) => {
   try {
     const tag = await Tag.findOne({ name: req.params.name });
-    const reviews = await BookReview.find({
+    const bookReviews = await BookReview.find({
       tags: tag,
     })
       .populate("book")
@@ -20,7 +20,7 @@ exports.tag_detail_get = asyncHandler(async (req, res, next) => {
     return res.render("tag-detail", {
       title: title,
       user: req.user,
-      reviews: reviews,
+      posts: bookReviews,
     });
   } catch (err) {
     return next(err);

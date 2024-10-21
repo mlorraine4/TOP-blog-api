@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const opts = { toJSON: { virtuals: true }, toObject: { virtuals: true } };
 
+// TODO: change to camel case
 const BookSchema = new Schema(
   {
     title: { type: String, required: true },
@@ -14,6 +15,8 @@ const BookSchema = new Schema(
     date_read: [{ type: Date }],
     encodedTitle: { type: String, required: true },
     encodedAuthor: { type: String, required: true },
+    goodreads_url: { type: String },
+    synopsis: { type: String },
     is_favorite: { type: Boolean },
   },
   opts
@@ -25,11 +28,11 @@ BookSchema.virtual("url").get(function () {
   return `/books/${this.encodedAuthor}/${this.encodedTitle}`;
 });
 
-BookSchema.virtual("review_url").get(function () {
+BookSchema.virtual("reviewUrl").get(function () {
   return `/book-reviews/${this.encodedAuthor}/${this.encodedTitle}`;
 });
 
-BookSchema.virtual("review_form_url").get(function () {
+BookSchema.virtual("reviewFormUrl").get(function () {
   return `/book-reviews/${this.encodedAuthor}/${this.encodedTitle}/add`;
 });
 
