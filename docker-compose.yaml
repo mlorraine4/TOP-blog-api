@@ -5,6 +5,10 @@ services:
     build: .
     networks:
       - websites
+    environment:
+      - VIRTUAL_HOST=gardenofpages.mariasilvia.me
+      - LETSENCRYPT_HOST=gardenofpages.mariasilvia.me
+      - LETSENCRYPT_EMAIL=maria.lorraine.silvia4@gmail.com
 networks:
   websites:
     name: websites
