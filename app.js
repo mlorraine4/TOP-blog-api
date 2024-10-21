@@ -12,11 +12,14 @@ const compression = require("compression");
 const helmet = require("helmet");
 const favicon = require("serve-favicon");
 require("dotenv").config();
-const MockStrategy = require("passport-mock-strategy");
 const MongoStore = require("connect-mongo");
 
 // Routes
 const siteRouter = require("./routes/gardenofpages");
+const monthlyWrapUpRouter = require("./routes/monthlyWrapUp");
+const bookReviewRouter = require("./routes/bookReview");
+const bookRouter = require("./routes/book");
+const userRouter = require("./routes/user");
 
 var app = express();
 
@@ -34,6 +37,7 @@ async function main() {
 }
 
 if (process.env.NODE_ENV === "development") {
+  const MockStrategy = require("passport-mock-strategy");
   // In Development, set up Mock Passport Local Strategy & Sessions
   console.log("In Development");
 
@@ -72,9 +76,9 @@ if (process.env.NODE_ENV === "development") {
   MockStrategy.connectPassport(app, passport);
 
   app.get("/", passport.authenticate("my-mock"));
-  app.get("/new-book-review", passport.authenticate("my-mock"));
-  app.get("/new-book", passport.authenticate("my-mock"));
-  app.get("/new-monthly-wrap-up", passport.authenticate("my-mock"));
+  app.get("/book-reviews/add", passport.authenticate("my-mock"));
+  app.get("/books/add", passport.authenticate("my-mock"));
+  app.get("/monthly-wrap-up/add", passport.authenticate("my-mock"));
 } else {
   // In Production, set up Passport & Sessions
   passport.use(
@@ -180,7 +184,12 @@ app.use(
 );
 app.locals.moment = require("moment");
 
+// Routes
 app.use("/", siteRouter);
+app.use("/monthly-wrap-ups", monthlyWrapUpRouter);
+app.use("/book-reviews", bookReviewRouter);
+app.use("/books", bookRouter);
+app.use("/me", userRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
