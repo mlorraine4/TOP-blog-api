@@ -78,7 +78,7 @@ if (process.env.NODE_ENV === "development") {
   app.get("/", passport.authenticate("my-mock"));
   app.get("/book-reviews/add", passport.authenticate("my-mock"));
   app.get("/books/add", passport.authenticate("my-mock"));
-  app.get("/monthly-wrap-up/add", passport.authenticate("my-mock"));
+  app.get("/monthly-wrap-ups/add", passport.authenticate("my-mock"));
 } else {
   // In Production, set up Passport & Sessions
   passport.use(
