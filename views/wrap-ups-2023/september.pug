@@ -1,0 +1,81 @@
+extends ../shared/navbar-content.pug
+
+block content 
+    div(class="mx-40 mt-10")
+        hr(class="border-t-2 border-accent-faded border-dotted")
+        div(class="font-bold text-3xl p-2") My #{month} #{year} Wrap Up
+        hr(class="border-t-2 border-accent-faded border-dotted")
+
+        div(class="bg-black p-10")
+            div(class="flex flex-wrap justify-center")
+                each book in books
+                    div(class="m-5 w-1/5 flex flex-col items-center")
+                        div(class="bold text-xl bg-accent-faded p-2")!=he.decode(book.title)
+                        div(class="text-lg")!="by " + he.decode(book.author)
+                        div(class="flex")
+                            div(class="flex justify-center pb-20 flex-wrap min-w-[33%]")
+                                div(class="m-5 flex items-center flex-col")
+                                    img(class='w-[200px] h-[300px] my-5' src=he.decode(book.book_cover_url))
+                                    div(class="flex justify-center")
+                                        - var n = 0;
+                                        div(class="flex justify-center")
+                                            while n < book.rating
+                                                img(class="w-8 h-8 m-1" src="/images/star.png" id=n++)
+
+        div(class="pb-20")
+            div(class="font-bold text-4xl text-center m-10") Reading Stats
+            div(class="flex justify-center")
+                div(class="mx-10 flex flex-col justify-end")
+                    div(class="text-6xl") #{books.length}
+                    div(class="") books
+                div(class="mx-10 flex flex-col justify-end")
+                    div(class="text-6xl") #{totalPages}
+                    div pages read
+                div(class="mx-10 flex flex-col justify-end")
+                    div(class="flex")
+                        - var n = 0;
+                        div(class="flex justify-center")
+                            while n <= avgRating
+                                img(class="w-12 h-12 m-1" src="/images/star.png" id=n++)
+                    div average rating
+                
+        div(class="")
+            div(class="font-bold text-4xl text-center m-10") New Authors
+            div(class="flex justify-center text-purple-400")
+                a(href="https://www.goodreads.com/author/show/16170636.Carissa_Broadbent" class="m-5 text-xl") Carissa Broadbent
+
+        div(class="font-bold text-4xl text-center m-10") DNF's
+        div(class="flex justify-center") No DNF's this month
+            
+
+    if user && user.is_admin
+      div(class="flex justify-center")      
+        a(href=`${wrapUp.url}/update` class="rounded-lg bg-edit hover:bg-edit-faded text-white text-xl m-5 p-2") Edit
+        a(href=`${wrapUp.url}/delete` class="rounded-lg bg-delete hover:bg-delete-faded text-white text-xl m-5 p-2") Delete
+    
+    hr(class="border-t-2 border-accent-faded border-dotted m-20")
+    
+    div#comments(class="w-[400px] m-auto text-center")
+      div#comments-header(class="text-2xl") #{wrapUp.comments.length} Comment(s)
+      button#open-form(class="p-2 bg-accent hover:bg-accent-faded text-white text-lg m-5") Comment
+      form#comment-form(class="hide pop-up")
+        button#close-form(type="button" class="text-orange text-lg") X
+        label(for='name' class="text-xl") Name
+        input#name(name='name' type='text' class="bg-neutral-100 w-4/6" value=(undefined===guest ? '' : guest.name))
+        label(for='text' class="text-xl") Comment
+        textarea#text(name='text'  type='text' class="bg-neutral-100 w-5/6 p-5 max-h-[100px]" required)
+        button(type='submit' class="p-2 bg-accent hover:bg-accent-faded text-white text-lg m-5") Submit
+        #error-container 
+          ul
+
+      each comment in wrapUp.comments 
+        div.comment-container(id=comment._id)
+          if user && user.is_admin
+            img.delete-comment(src="/images/delete.png")
+          div.comment-header
+            div.comment-name #{comment.name}
+            div.comment-date #{moment(comment.timestamp).fromNow()}
+          div.comment-text #{he.decode(comment.text)}
+          
+    script(type="application/javascript" src="/javascripts/comment-form.js")
+    script(type="application/javascript" src="/javascripts/toggle-synopsis.js")
