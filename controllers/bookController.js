@@ -3,6 +3,7 @@ const { body, validationResult } = require("express-validator");
 const Book = require("../models/book");
 const BookReview = require("../models/bookReview");
 const firebaseStorage = require("firebase/storage");
+const firebase_app = require("../firebase");
 
 exports.book_list_get = asyncHandler(async (req, res, next) => {
   try {
@@ -105,7 +106,7 @@ exports.book_form_post = [
       }
 
       // Create storage reference
-      const storage = firebaseStorage.getStorage();
+      const storage = firebaseStorage.getStorage(firebase_app);
       const storageRef = firebaseStorage.ref(
         storage,
         `book-covers/${req.body.encoded_author}/${req.body.encoded_title}`
