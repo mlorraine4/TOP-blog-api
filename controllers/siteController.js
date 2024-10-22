@@ -6,20 +6,57 @@ const bcrypt = require("bcryptjs");
 
 exports.home_get = asyncHandler(async (req, res, next) => {
   try {
+    const count = await Post.countDocuments();
+    let totalPages = Math.ceil(count / 5);
+
+    if (req.params.pageNumber) {
+      if (req.params.pageNumber > 0 && req.params.pageNumber <= totalPages) {
+        let skip = (Number(req.params.pageNumber) - 1) * 5;
+        const posts = await Post.find()
+          .populate("books book")
+          .sort({ timestamp: -1 })
+          .skip(skip)
+          .limit(5)
+          .exec();
+
+        return res.render("index", {
+          title: "Garden of Pages",
+          user: req.user,
+          posts: posts,
+          currentPage: req.params.pageNumber,
+          totalPages: totalPages,
+        });
+      }
+      // Not a valid page number
+      const err = new Error("Not Found");
+      err.status = 404;
+      return next(err);
+    }
+
     const posts = await Post.find()
       .populate("books book")
       .sort({ timestamp: -1 })
+      .limit(5)
       .exec();
-    console.log(posts);
+
     return res.render("index", {
       title: "Garden of Pages",
       user: req.user,
       posts: posts,
+      currentPage: 1,
+      totalPages: totalPages,
     });
   } catch (err) {
     console.log(err);
-    res.sendStatus(500);
+    return next(err);
   }
+});
+
+exports.profile_get = asyncHandler(async (req, res) => {
+  return res.render("about-me", {
+    title: "About Me",
+    user: req.user,
+  });
 });
 
 exports.log_in_GET = asyncHandler(async (req, res, next) => {
