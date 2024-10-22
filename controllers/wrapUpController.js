@@ -32,6 +32,7 @@ exports.wrapUp_list_get = asyncHandler(async (req, res, next) => {
 exports.wrapUp_yearly_list_get = asyncHandler(async (req, res, next) => {
   try {
     const wrapUps = await MonthlyWrapUp.find({ year: req.params.year })
+      .populate("books")
       .sort({ timestamp: -1 })
       .exec();
 
@@ -79,8 +80,7 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
       ratings += book.rating;
     });
 
-    // TODO: round up or down
-    // const avgRating = ratings / books.length;
+    const avgRating = Math.floor(ratings / wrapUp.books.length);
     const formattedPages = totalPages.toLocaleString("en-US");
 
     return res.render("wrap-ups-" + req.params.year + "/" + req.params.month, {
@@ -91,7 +91,7 @@ exports.wrapUp_detail_get = asyncHandler(async (req, res, next) => {
       month: wrapUp.month,
       year: req.params.year,
       totalPages: formattedPages,
-      // avgRating: avgRating,
+      avgRating: avgRating,
     });
   } catch (err) {
     console.log(err);
@@ -237,7 +237,9 @@ exports.wrapUp_form_post = [
       return res
         .status(httpStatusCodes.StatusCodes.INTERNAL_SERVER_ERROR)
         .send({
-          errors: [httpStatusCodes.ReasonPhrases.INTERNAL_SERVER_ERROR],
+          errors: [
+            { msg: httpStatusCodes.ReasonPhrases.INTERNAL_SERVER_ERROR },
+          ],
         });
     }
   }),
