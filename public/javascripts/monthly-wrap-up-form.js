@@ -79,7 +79,7 @@ const initMonthlyWrapUp = (() => {
       messageDiv.innerHTML = "";
       let ul = document.createElement("ul");
       let p = (document.createElement("p").innerHTML = "Error(s) saving book:");
-      for (const error of result) {
+      for (const error of result.errors) {
         let li = document.createElement("li");
         li.innerHTML = error.msg;
         ul.append(li);
