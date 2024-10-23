@@ -354,3 +354,23 @@ p {
 .triangle-bottom {
   border-top: 20px solid var(--accent);
 }
+
+#pageNavBar {
+  display: flex;
+  width: min-content;
+  font-size: 2rem;
+  margin: 0 auto 20px auto;
+}
+
+#pageNavBar a {
+  margin: 10px;
+  white-space: nowrap;
+}
+
+#pageNavBar a:hover {
+  color: var(--accent-faded);
+}
+
+.current-page {
+  color: var(--accent);
+}
