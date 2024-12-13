@@ -11,7 +11,7 @@ router.get("/add", bookController.book_form_get);
 router.post("/add", bookController.book_form_post);
 // Get book detail
 router.get("/:author/:title/", bookController.book_detail_get);
-// TODO: why
+// TODO: change form get to work with update (get and post)
 // Get update book form
 router.get("/:author/:title/update", bookController.book_update_get);
 // Post update book form
