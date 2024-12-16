@@ -80,7 +80,9 @@ const initReview = (() => {
     } else {
       messageDiv.innerHTML = "";
       let ul = document.createElement("ul");
-      let p = (document.createElement("p").innerHTML = "Error(s) saving book:");
+      let p = document.createElement("p");
+      p.innerHTML = "Error(s) saving book:";
+      p.classList.add("text-xl");
       for (const error of result) {
         let li = document.createElement("li");
         li.innerHTML = error.msg;
