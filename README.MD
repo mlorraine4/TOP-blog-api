@@ -15,6 +15,7 @@ This is my project submission for The Odin Project's [Blog API](https://www.theo
 ## Back End
 
 - NodeJS
+- Express
 - Mongoose
 - Firebase Storage
 
@@ -22,7 +23,8 @@ This is my project submission for The Odin Project's [Blog API](https://www.theo
 
 - Passport: User Authentication
 - Passport Local: User session persistence
-- BcryptJS: creates a hashed password to save in database for better security
+- Mongoose Storage: Session storage
+- BcryptJS: password security
 - TinyMCE: a rich text editor
 
 # Features
