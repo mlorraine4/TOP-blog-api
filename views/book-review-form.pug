@@ -2,7 +2,7 @@ extends ./shared/navbar-content.pug
 
 block content
 
-    form#book-review-form(class="text-xl w-full min-w-[400px] max-w-[960px]")
+    form#book-review-form(class="text-xl p-10 w-full min-w-[400px] max-w-[960px]")
         div(class="text-5xl mb-5") #{header}
         label Book
         input#title(name='title' class="w-2/3" type='text' placeholder='title' value=(undefined===book ? '' : book.title))
