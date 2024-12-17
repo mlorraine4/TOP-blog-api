@@ -7,5 +7,12 @@ block content
         include shared/monthly-wrap-up-preview.pug
       else if post.__t === "BookReview"
         include shared/book-review-preview.pug
+
   script(src="/he/he.js")
   script(src="/moment/moment.js")
+  script(type="application/javascript" src="/javascripts/toggle-synopsis.js")
+  script.
+    currentPage="#{currentPage}";
+  script.
+    totalPages="#{totalPages}";
+  script(type="application/javascript" src="/javascripts/pagination.js" defer)
