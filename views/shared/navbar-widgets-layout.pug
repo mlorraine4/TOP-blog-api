@@ -2,4 +2,7 @@ include navbar.pug
 include logo_lg.pug
 div(class="flex w-4/5 m-auto max-w-[1200px]")
   block content
-  include goodreads-currently-reading-widget.pug
+  div(class="w-1/5")
+    include bio.pug
+    include goodreads-currently-reading-widget.pug
+include page-nav-bar.pug
