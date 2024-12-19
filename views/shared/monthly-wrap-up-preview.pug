@@ -14,7 +14,7 @@ div(class="mx-10 mb-10 flex flex-col bg-black max-w-[900px] relative")
     hr(class="border-t-2 border-accent-faded border-dotted mb-5")
     if post.books.length !== 0
         div(class="text-center") books I read in #{post.month}
-        div(class="flex flex-wrap justify-evenly items-center m-5")
+        div(class="flex flex-wrap justify-center items-center m-5")
             each book in post.books
                 div
                     div(class="bg-accent-faded w-[150px] h-[200px] flex justify-center items-center m-4")
